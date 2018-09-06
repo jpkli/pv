@@ -60,41 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "int", function() { return int; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "short", function() { return short; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "float", function() { return float; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "double", function() { return double; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "string", function() { return string; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "time", function() { return time; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "temporal", function() { return temporal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "integer", function() { return integer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "numeric", function() { return numeric; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nominal", function() { return nominal; });
-const int      = Int32Array;
-const short    = Int16Array;
-const float    = Float32Array;
-const double   = Float64Array;
-const string   = Uint16Array;
-const time     = Float64Array;
-const temporal = Float64Array;
-const integer  = Int32Array;
-const numeric  = Float32Array;
-const nominal  = Uint16Array;
-
-
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 var g;
@@ -121,7 +91,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -151,6 +121,36 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "int", function() { return int; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "short", function() { return short; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "float", function() { return float; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "double", function() { return double; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "string", function() { return string; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "time", function() { return time; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "temporal", function() { return temporal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "integer", function() { return integer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "numeric", function() { return numeric; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nominal", function() { return nominal; });
+const int      = Int32Array;
+const short    = Int16Array;
+const float    = Float32Array;
+const double   = Float64Array;
+const string   = Uint16Array;
+const time     = Float64Array;
+const temporal = Float64Array;
+const integer  = Int32Array;
+const numeric  = Float32Array;
+const nominal  = Uint16Array;
+
+
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -158,7 +158,7 @@ module.exports = function(originalModule) {
 /* unused harmony export seq */
 /* unused harmony export seqInt */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return seqFloat; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ctypes__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ctypes__ = __webpack_require__(2);
 
 
 function seq(dtype, start, end, interval) {
@@ -957,198 +957,6 @@ function reveal($p) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = interact;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__metavis_brush__ = __webpack_require__(39);
-
-
-function interact($p, options) {
-    var viewTags = options.view || [$p.views[0].id];
-
-    if(!Array.isArray(viewTags)) viewTags = [viewTags];
-
-    var actions = options.actions || options.events || [],
-        condition = options.condition || {},
-        callback = options.callback || function() {};
-
-    if($p._update) return;
-
-    viewTags.forEach(function(viewTag){
-        var vis = $p.views.filter(v=>v.id == viewTag)[0];
-
-        if(!Array.isArray(actions)) {
-            actions = [actions];
-        }
-        var vmap = vis.vmap,
-            p = vis.padding || $p.padding,
-            w = vis.width - p.left - p.right,
-            h = vis.height - p.top - p.bottom;
-
-        var interactor = vis.chart.svg.append("g")
-                .attr("class", "selector")
-
-        var rect = interactor.append("rect")
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width", w)
-          .attr("height", h)
-          .attr("fill-opacity", 0)
-          .attr("stroke", "none");
-
-        var svg = interactor.svg,
-            box = rect.svg.getBoundingClientRect();
-
-        var sx, sy,
-            tx = 0, ty = 0,
-            dy = 1;
-
-        function updatePos(e) {
-            tx += (e.clientX - sx) / dy;
-            ty += (e.clientY - sy) / dy;
-            sx = e.clientX;
-            sy = e.clientY;
-            $p.uniform.uPosOffset.data = [tx / w, ty / h];
-        }
-
-        function getSelection(e) {
-            var dx = e.clientX - box.left;
-            var dy = e.clientY - box.top;
-            var selection = {};
-            if(vmap.x) {
-                selection[vmap.x] = [vis.chart.x.invert(dx)];
-            }
-            if(vmap.y) {
-                selection[vmap.y] = [vis.chart.y.invert(dy)];
-            }
-            return selection;
-        }
-
-        actions.forEach(function(action){
-            if(action == 'brush') {
-                svg.style.cursor = "crosshair";
-                var brushOptions = {
-                    container: interactor,
-                    width: w,
-                    height: h
-                };
-
-                if(!Array.isArray(vmap.x) && !Array.isArray(vmap.y)) {
-                    if(!condition.x && !condition.y) {
-                        condition.x = condition.y = true;
-                    }
-                    brushOptions.brush = function(d) {
-                        var selection = {};
-                        if(vmap.x && d.x) selection[vmap.x] = d.x;
-                        if(vmap.y && d.y) selection[vmap.y] = d.y.reverse();
-                        callback(selection);
-                    }
-                    if(condition.x && typeof(vis.chart.x.invert) == 'function')
-                        brushOptions.x = vis.chart.x.invert;
-
-                    if(condition.y && typeof(vis.chart.y.invert) == 'function')
-                        brushOptions.y = vis.chart.y.invert
-
-                    new __WEBPACK_IMPORTED_MODULE_0__metavis_brush__["a" /* default */](brushOptions);
-                }
-
-                var dims = ['x', 'y'],
-                    selections = {};
-
-                dims.forEach(function(dim){
-                    if(Array.isArray(vmap[dim]) && Array.isArray(vis.chart[dim])){
-                        var axisDist = (dim == 'x') ? h : w,
-                            selectors = vis.chart.svg.append('g');
-
-                        axisDist =  axisDist / (vmap[dim].length-1);
-
-                        vmap[dim].forEach(function(d, i) {
-
-                            var axisSelect = selectors.append("g");
-                            if(dim == 'x') {
-                                brushOptions.height = axisDist * 0.2;
-                                axisSelect.translate(0, axisDist * (i - 0.1));
-                                brushOptions.brush = function(range) {
-                                    selections[d] = range[dim];
-                                    callback(selections);
-                                }
-                            } else {
-                                brushOptions.width = axisDist * 0.2;
-                                axisSelect.translate(axisDist * (i - 0.1), 0);
-                                brushOptions.brush = function(range) {
-                                    selections[d] = range[dim].reverse();
-                                    callback(selections);
-                                }
-                            }
-                            brushOptions.container = axisSelect;
-                            brushOptions[dim] = vis.chart[dim][i].invert;
-
-                            new __WEBPACK_IMPORTED_MODULE_0__metavis_brush__["a" /* default */](brushOptions);
-                        });
-                    }
-                })
-            } else if(action == 'zoom') {
-                svg.onmousewheel = function(e) {
-                    sx = e.clientX - box.left;
-                    sy = e.clientY - box.top;
-                    var ny =  dy * Math.exp(e.deltaY / 1000);
-                    var delta = ny - dy;
-                    dy = ny;
-                    $p.uniform.uPosOffset.data = [-sx * delta / w, -sy * delta / h];
-                    $p.uniform.uVisScale.data = [dy, dy];
-
-                    callback();
-                }
-
-            } else if(action == 'pan') {
-                svg.style.cursor = 'move';
-                svg.onmousedown = function(e) {
-                    sx = e.clientX;
-                    sy = e.clientY;
-                    svg.style.cursor = 'move';
-
-                    svg.onmousemove = function(e) {
-                        tx += (e.clientX - sx) / dy;
-                        ty += (e.clientY - sy);
-
-                        callback();
-                    }
-
-                    svg.onmouseup = function(e) {
-                        updatePos(e);
-                        svg.style.cursor = 'default';
-                        svg.onmousemove = null;
-                        svg.onmouseup = null;
-                    }
-                }
-
-            } else if(action == 'click') {
-                svg.onclick = function(e) {
-                    callback(getSelection(e));
-                }
-            } else if(action == 'hover') {
-                svg.onmouseover = function(e) {
-                    callback(getSelection(e));
-                    svg.onmousemove = function(e) {
-                        callback(getSelection(e));
-                    }
-
-                    // svg.onmouseout = function(e) {
-                    //     updatePos(e);
-                    //     svg.style.cursor = 'default';
-                    //     svg.onmousemove = null;
-                    //     svg.onmouseover = null;
-                    // }
-                }
-            }
-        })
-    })
-}
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = Svg;
 function setAttr(elem, attr) {
     for( var key in attr ){
@@ -1288,12 +1096,12 @@ function publicMethods(context) {
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = axis;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scale__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scale__ = __webpack_require__(11);
 
 
 function axis(arg) {
@@ -1559,7 +1367,7 @@ function axis(arg) {
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1645,12 +1453,12 @@ function Scale(arg) {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = printformat;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrays__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrays__ = __webpack_require__(41);
 
 
 function printformat(spec) {
@@ -1694,12 +1502,12 @@ function printformat(spec) {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_main__ = __webpack_require__(15);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_main__ = __webpack_require__(14);
 
 
 var root = typeof self == 'object' && self.self === self && self ||
@@ -1712,34 +1520,42 @@ root.p5 = __WEBPACK_IMPORTED_MODULE_0__src_main__["a" /* default */];
 
 if(typeof module != 'undefined' && module.exports)
     module.exports = __WEBPACK_IMPORTED_MODULE_0__src_main__["a" /* default */];
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0), __webpack_require__(1)(module)))
+
+/***/ }),
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_p_4__ = __webpack_require__(15);
+
+
+/* harmony default export */ __webpack_exports__["a"] = (function(arg) {
+    let p5 = Object(__WEBPACK_IMPORTED_MODULE_0_p_4__["a" /* default */])(Object.assign({preserveDrawingBuffer: true}, arg));
+
+    p5.data = function (data) {
+        console.log('data size: ', data.length);
+    }
+
+    p5.progress = function(newData) {
+        p5.updateData(newData)
+        p5.ctx._progress = true;
+        p5.head().run()
+    }
+
+    return p5;
+});
 
 /***/ }),
 /* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_p_4__ = __webpack_require__(16);
-
-
-/* harmony default export */ __webpack_exports__["a"] = (function(arg) {
-    let p5 = Object(__WEBPACK_IMPORTED_MODULE_0_p_4__["a" /* default */])(arg);
-
-    p5.data = (data) => {
-        console.log('data size: ', data.length);
-    }
-});
-
-/***/ }),
-/* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_pipeline__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_cstore__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_ctypes__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_ajax__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_parse__ = __webpack_require__(46);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_pipeline__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_cstore__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_ctypes__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_ajax__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_parse__ = __webpack_require__(47);
 
 
 
@@ -1760,20 +1576,20 @@ root.p4.parse = __WEBPACK_IMPORTED_MODULE_4__src_parse__["a" /* default */];
 
 if(typeof module != 'undefined' && module.exports)
     module.exports = root.p4;
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0), __webpack_require__(1)(module)))
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = pipeline;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__allocate__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__output__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__initialize__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__allocate__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__output__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__initialize__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__compile__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__derive__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__interact__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__interact__ = __webpack_require__(43);
 
 
 
@@ -1811,7 +1627,7 @@ function pipeline(options) {
         }
     }
 
-    pipeline.ctx = $p.ctx;
+    pipeline.ctx = $p;
 
     pipeline.data = function(dataOptions) {
         Object(__WEBPACK_IMPORTED_MODULE_0__allocate__["a" /* default */])($p, dataOptions);
@@ -2125,7 +1941,6 @@ function pipeline(options) {
                 viewIndex: viewIndex
             });
             pipeline.interact();
-
         }
         return pipeline;
     }
@@ -2174,6 +1989,18 @@ function pipeline(options) {
         })
     }
 
+    pipeline.updateData = function(newData) {
+        console.log(newData)
+        pipeline.head();
+        for (let [ai, attr] of $p.fields.slice($p.indexes.length).entries()) {
+            let buf = new Float32Array(newData[ai]);
+            $p.texture.tData.update(
+                buf, [0, $p.dataDimension[1] * ai], $p.dataDimension
+            );
+        }
+        return pipeline;
+    }
+
     pipeline.exportImage = function(beforeExport) {
         var beforeExport = beforeExport || function() { pipeline.head().run() };
         if(typeof operation.visualize.chart.exportImage === 'function') {
@@ -2192,7 +2019,7 @@ function pipeline(options) {
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2344,15 +2171,23 @@ const vecId = ['x', 'y', 'z'];
         indexCount: $p.indexes.length
     });
 
-    $p.fields.slice($p.indexes.length).forEach(function(attr, ai) {
-        var buf = new Float32Array($p.dataDimension[0] * $p.dataDimension[1]);
-        for (var i = 0, l = data[attr].length; i < l; i++) {
-            buf[i] = data[attr][i];
-        }
+    // $p.fields.slice($p.indexes.length).forEach(function(attr, ai) {
+    //     // var buf = new Float32Array($p.dataDimension[0] * $p.dataDimension[1]);
+    //     // for (var i = 0, l = data[attr].length; i < l; i++) {
+    //     //     buf[i] = data[attr][i];
+    //     // }
+    //     var buf = new Float32Array(data[attr]);
+    //     $p.texture.tData.update(
+    //         buf, [0, $p.dataDimension[1] * ai], $p.dataDimension
+    //     );
+    // });
+
+    for (let [ai, attr] of $p.fields.slice($p.indexes.length).entries()) {
+        let buf = new Float32Array(data[attr]);
         $p.texture.tData.update(
             buf, [0, $p.dataDimension[1] * ai], $p.dataDimension
         );
-    });
+    }
 
     //TODO: get data statistics using the GPU
     if(stats !== null) {
@@ -2424,7 +2259,7 @@ const vecId = ['x', 'y', 'z'];
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2498,19 +2333,20 @@ function output($p) {
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = init;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__flexgl_src_flexgl__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__flexgl__ = __webpack_require__(20);
 
 
 function init(options) {
     var $p = options.context || null,
         container = options.container || document.body,
         viewport = options.viewport || [800, 450],
-        padding = {left:0, right: 0,top: 0, bottom: 0};
+        padding = {left:0, right: 0,top: 0, bottom: 0},
+        glAttr = options.attributes || {};
 
     var defaultLayout = [
         {
@@ -2521,11 +2357,12 @@ function init(options) {
         }
     ];
     if ($p === null) {
-        $p = new __WEBPACK_IMPORTED_MODULE_0__flexgl_src_flexgl__["a" /* default */]({
+        $p = new __WEBPACK_IMPORTED_MODULE_0__flexgl__["a" /* default */]({
             container: container,
             width: viewport[0],
             height: viewport[1],
-            padding: padding
+            padding: padding,
+            attributes: glAttr
         });
         $p.padding = padding;
         $p.viewport = viewport;
@@ -2535,6 +2372,26 @@ function init(options) {
     return $p;
 }
 
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_main__ = __webpack_require__(21);
+
+
+var root = typeof self == 'object' && self.self === self && self ||
+           typeof global == 'object' && global.global === global && global ||
+           this;
+
+root.flexgl = __WEBPACK_IMPORTED_MODULE_0__src_main__["a" /* default */];
+
+/* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__src_main__["a" /* default */]);
+
+if(typeof module != 'undefined' && module.exports)
+    module.exports = __WEBPACK_IMPORTED_MODULE_0__src_main__["a" /* default */];
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0), __webpack_require__(1)(module)))
 
 /***/ }),
 /* 21 */
@@ -2568,6 +2425,7 @@ function FlexGL(arg) {
         ctx = options.context || options.ctx || null,
         kernels = {},
         program = null,
+        glAttr = options.attributes || {},
         sharedFunction = options.sharedFunction || {};
 
 
@@ -2623,7 +2481,7 @@ function FlexGL(arg) {
         var gl = null;
         for (var i = 0; i < names.length; ++i) {
             try {
-                gl = canvas.getContext(names[i]);
+                gl = canvas.getContext(names[i], glAttr);
             } catch (e) {}
             if (gl) break;
         }
@@ -3368,8 +3226,10 @@ function aggregate($p) {
         gl.ext.vertexAttribDivisorANGLE($p.attribute.aDataValy.location, 1);
 
         $p.uniform.uGroupFields = groupFieldIds;
-        gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        if(!$p._progress) {
+            gl.clearColor(0.0, 0.0, 0.0, 0.0);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        }
         gl.disable(gl.CULL_FACE);
         gl.disable(gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
@@ -3402,7 +3262,7 @@ function aggregate($p) {
         });
         
         if (getAvgValues) {
-            console.log('*** Second Pass for Aggregation');
+            // console.log('*** Second Pass for Aggregation');
             var fieldCount = $p.uniform.uFieldCount.data,
                 preAggrData = $p.uniform.uDataInput.data;
 
@@ -3478,7 +3338,8 @@ function aggregate($p) {
                 return Object.keys(newFieldSpec[newFieldNames[i]])[0];
             });
 
-        if (!$p._update) {
+        if (!$p._update && !$p._progress) {
+            console.log('allocate new framework for aggregation result')
             $p.framebuffer(
                 "fGroupResults",
                 "float", [$p.resultDimension[0], $p.resultDimension[1] * resultFields.length]
@@ -3511,7 +3372,7 @@ function aggregate($p) {
         var newFieldDomains = oldFieldIds.map(function(f) {
             return $p.fieldDomains[f];
         });
-        var newFieldWidths = newFieldIds.map(function(f) {
+        var newFieldWidths = oldFieldIds.map(function(f) {
             return $p.fieldWidths[f];
         });
         $p.fieldDomains = newFieldDomains;
@@ -4038,15 +3899,10 @@ function extent(fxgl) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = visualize;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__color__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ctypes__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__render__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__reveal__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__encode__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__interact__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__metavis_layout__ = __webpack_require__(40);
-
-
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__render__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reveal__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__encode__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__metavis_layout__ = __webpack_require__(39);
 
 
 
@@ -4055,6 +3911,7 @@ function extent(fxgl) {
 
 const visualEncodings = ['x', 'y', 'color', 'opacity', 'width', 'height', 'size'];
 const userActions = ['click', 'hover', 'brush', 'zoom', 'pan'];
+const visMarks = ['dot', 'circle', 'line', 'rect'];
 
 function visualize($p) {
 
@@ -4065,7 +3922,7 @@ function visualize($p) {
             $p.viewport[1],
         ];
 
-    var vis = new __WEBPACK_IMPORTED_MODULE_6__metavis_layout__["a" /* default */]({
+    var vis = new __WEBPACK_IMPORTED_MODULE_4__metavis_layout__["a" /* default */]({
         container: $p.container,
         width: viewport[0] + chartPadding.left + chartPadding.right,
         height: viewport[1] + chartPadding.top + chartPadding.bottom,
@@ -4075,7 +3932,7 @@ function visualize($p) {
 
     $p.uniform('uVisualEncodings',  'int',   new Array(visualEncodings.length).fill(-1))
         .uniform('uViewDim',        'vec2',  $p.viewport)
-        .uniform('uVisShape',       'int',   1)
+        .uniform('uVisMark',        'int',   1)
         .uniform('uInterleaveX',    'int',   0)
         .uniform('uVisDomains',     'vec2',  $p.fieldDomains.map(d=>d.slice()))
         .uniform('uVisScale',       'vec2', [1.0, 1.0])
@@ -4091,7 +3948,7 @@ function visualize($p) {
         .uniform('uColorMode',      'int',   1)
         .varying('vColorRGBA',      'vec4'   );
 
-    var enhance = Object(__WEBPACK_IMPORTED_MODULE_3__reveal__["a" /* default */])($p);
+    var enhance = Object(__WEBPACK_IMPORTED_MODULE_2__reveal__["a" /* default */])($p);
 
     $p.framebuffer('offScreenFBO', 'float', $p.viewport);
     $p.framebuffer('visStats', 'float', [1, 1]);
@@ -4099,7 +3956,7 @@ function visualize($p) {
     // $p.framebuffer.enableRead('offScreenFBO');
     $p.renderMode = 'instancedXY';
 
-    var renderer = Object(__WEBPACK_IMPORTED_MODULE_2__render__["a" /* default */])($p);
+    var renderer = Object(__WEBPACK_IMPORTED_MODULE_1__render__["a" /* default */])($p);
 
     function updateInstancedAttribute(vm) {
         if(Array.isArray(vm)){
@@ -4123,6 +3980,10 @@ function visualize($p) {
             viewIndex = options.viewIndex,
             viewTag = $p.views[viewIndex].id;
 
+        // if(!vmap.height && vmap.y) {
+        //     vmap.height = vmap.y;
+        // }
+
         var visDomain = {},
             visDimension = vmap.viewport || [$p.views[viewIndex].width, $p.views[viewIndex].height] || viewport;
 
@@ -4131,8 +3992,7 @@ function visualize($p) {
             padding = $p.views[viewIndex].padding || chartPadding,
             offset = $p.views[viewIndex].offset || [0, 0];
 
-
-        var dimSetting = Object(__WEBPACK_IMPORTED_MODULE_4__encode__["a" /* default */])($p, vmap, colorManager);
+        var dimSetting = Object(__WEBPACK_IMPORTED_MODULE_3__encode__["a" /* default */])($p, vmap, colorManager);
 
         if(!$p._update){
             $p.fields.forEach(function(f, i){
@@ -4140,6 +4000,8 @@ function visualize($p) {
                 if(vmap.zero && (f == vmap.height || f == vmap.width ) && visDomain[f][0]>0) visDomain[f][0] = 0;
             });
         }
+
+        $p.uniform.uVisMark.data = visMarks.indexOf(mark);
 
         var gl = $p.program($p.renderMode);
         $p.framebuffer.enableRead('fFilterResults');
@@ -4255,8 +4117,10 @@ function visualize($p) {
                 gl.ext.drawArraysInstancedANGLE(primitive, 0, 6, $p.dataSize);
             } else {
                 if(primitive == gl.LINE_STRIP) {
-                    console.log($p.dataDimension);
+                    console.log($p.dataDimension, $p.renderMode);
+                    gl.lineWidth(1.0);
                     gl.ext.drawArraysInstancedANGLE(primitive, 0, $p.dataDimension[0], $p.dataDimension[1]);
+                    // gl.drawArrays(primitive, 0, $p.dataDimension[0], $p.dataDimension[1]);
                 } else {
                     gl.ext.drawArraysInstancedANGLE(primitive, 0, $p.dataDimension[0], $p.dataDimension[1]);
                 }
@@ -4692,7 +4556,7 @@ instancedXY.vs  = function() {
 instancedXY.fs = function() {
     var valid = new Bool();
     valid = this.vResult <= this.uVisLevel + 0.01 && this.vResult >= this.uVisLevel - 0.01;
-    if(this.uVisShape == 1) {
+    if(this.uVisMark == 1) {
         var dist = length(gl_PointCoord.xy - vec2(0.5, 0.5));
         if (dist > 0.5) discard;
         var delta = 0.15;
@@ -4901,12 +4765,12 @@ function encode($p, vmap, colorManager) {
             ext = $p.fieldDomains[vmapIndex[0]];
         if($p.categoryLookup.hasOwnProperty(vmap.x)){
             viewSetting.scaleX = 'categorical';
-             viewSetting.domainX = new Array(len).fill(0).map(
-                 (d,i)=>$p.categoryLookup[vmap.x][i]
-             );
+            viewSetting.domainX = new Array(len).fill(0).map(
+                (d,i)=>$p.categoryLookup[vmap.x][i]
+            );
          } else if (isRect) {
-             viewSetting.scaleX = 'ordinal';
-             viewSetting.domainX = new Array(len).fill(0).map((d,i)=>ext[0] + i);
+            viewSetting.scaleX = 'ordinal';
+            viewSetting.domainX = new Array(len).fill(0).map((d,i)=>ext[0] + i);
          }
          markSpace[0] = 0.02;
     }
@@ -4915,10 +4779,10 @@ function encode($p, vmap, colorManager) {
             ext = $p.fieldDomains[vmapIndex[1]];
 
         if($p.categoryLookup.hasOwnProperty(vmap.y)){
-             viewSetting.scaleY = 'categorical';
-             viewSetting.domainY = new Array(len).fill(0).map(
-                 (d,i)=>$p.categoryLookup[vmap.y][i]
-             ).reverse();
+            viewSetting.scaleY = 'categorical';
+            viewSetting.domainY = new Array(len).fill(0).map(
+                (d,i)=>$p.categoryLookup[vmap.y][i]
+            ).reverse();
         } else if (isRect) {
             viewSetting.scaleY = 'ordinal';
             viewSetting.domainY = new Array(len).fill(0).map((d,i)=>ext[0] + i).reverse();
@@ -4967,154 +4831,9 @@ function encode($p, vmap, colorManager) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = brush;
-function brush(arg){
-
-    var option = arg || {},
-        container = option.container || this.svg[0],
-        width = option.width || this.width,
-        height = option.height || this.height,
-        x = function(s) {return s},
-        y = function(s) {return s},
-        base = option.base || null,
-        selectX = option.x || false,
-        selectY = option.y || false,
-        border = option.border || "#FFF",
-        color = option.color || "#111",
-        brush = option.brush || function() {},
-        brushstart = option.brushstart || function() {},
-        brushend = option.brushend || function() {};
-
-    if(typeof(selectX) === "function") {
-        x = selectX;
-        selectX = true;
-    }
-    if(typeof(selectY) === "function") {
-        y = selectY;
-        selectY = true;
-    }
-    if(base === null){
-        base = container.append("g").attr("class", "selector");
-    } else {
-        base = container;
-    };
-
-    base.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", width)
-        .attr("height", height)
-        .attr("fill-opacity", 0)
-        .attr("stroke", "none")
-        .css("cursor", "crosshair");
-
-    var selector = base.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 0)
-        .attr("height", 0)
-        .attr("fill-opacity", 0.1)
-        .css("fill", color)
-        .css("stroke", border)
-        .css("cursor", "move");
-
-    var sx, sy,
-        dx, dy,
-        bx, by,
-        selection = {},
-        intStart = false,
-        drag = false;
-
-    base.svg.addEventListener("mousedown", function(evt){
-        evt.preventDefault();
-        brushstart.call(this);
-        intStart = true;
-        sx = evt.clientX;
-        sy = evt.clientY;
-
-        var sp = selector.svg.getBoundingClientRect();
-        var box = base.svg.getBoundingClientRect();
-        var x0, y0, nw, nh;
-
-        if(sx>sp.left && sy>sp.top && sx<sp.left+sp.width && sy<sp.top+sp.height) {
-            drag = true;
-            bx = sp.left;
-            by = sp.top;
-        }
-
-        if(!drag){
-            x0 = selectX ? sx - box.left : 0;
-            y0 = selectY ? sy - box.top : 0;
-            selector.attr("x", x0)
-                .attr("y", y0)
-                .attr("width", 0);
-        }
-
-        ondrag = function(evt){
-            if(intStart){
-                dx = evt.clientX - sx;
-                dy = evt.clientY - sy;
-                var selectorBox = selector.svg.getBoundingClientRect();
-                if(drag){
-
-                    var nx = bx + dx-box.left,
-                        ny = by + dy-box.top;
-
-                    if(bx+dx < box.left) nx = 0;
-                    if(bx+dx+selectorBox.width > box.right) nx = width - selectorBox.width ;
-                    if(by+dy < box.top) ny = 0;
-                    if(by+dy+selectorBox.height > box.bottom) ny = height - selectorBox.height;
-                    selector.attr("x", nx).attr("y", ny);
-                } else {
-                    if(evt.clientX < box.left) dx = box.left - sx;
-                    if(evt.clientX > box.right) dx = box.right - sx;
-                    if(evt.clientY > box.bottom) dy = box.bottom - sy;
-                    if(evt.clientY < box.top) dy = box.top - sy;
-
-                    x0 = selectX ? sx + dx - box.left: 0;
-                    y0 = selectY ? sy + dy - box.top : 0;
-                    nw = selectX ? Math.abs(dx) : width;
-                    nh = selectY ? Math.abs(dy) : height;
-
-                    if(dx<0 && dy>=0) selector.attr("x", x0);
-                    if(dy<0 && dx>=0) selector.attr("y", y0);
-                    if(dx<0 && dy<0) selector.attr("x", x0).attr("y", y0);
-                    selector.attr("width", nw).attr("height", nh);
-                }
-                if(selectX) {
-                    selection.x = [ x(selectorBox.left - box.left ), x(selectorBox.right - box.left )];
-                }
-                if(selectY) {
-                    selection.y = [y(selectorBox.top - box.top), y(selectorBox.bottom - box.top)];
-                }
-                brush.call(this, selection);
-            }
-        };
-
-        window.addEventListener("mousemove", ondrag, false);
-        window.addEventListener("mouseup", function(evt){
-            if(intStart){
-                ondrag(evt);
-                intStart = false;
-                if(drag){
-                    drag = false;
-                }
-            }
-            brushend.call(this, selection);
-            window.removeEventListener("mousemove", ondrag, false);
-        }, false);
-    });
-};
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = layout;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__svg__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chart__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__svg__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chart__ = __webpack_require__(40);
 
 
 
@@ -5302,15 +5021,15 @@ function layout(arg){
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = chart;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__axis__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__format__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scale__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__legend__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__axis__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__format__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scale__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__legend__ = __webpack_require__(42);
 
 
 
@@ -5574,7 +5293,7 @@ function chart(svg, arg) {
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5830,14 +5549,14 @@ function vectorAvg(vectors) {
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = color;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__svg__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__axis__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__format__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__svg__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__axis__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__format__ = __webpack_require__(12);
 
 
 
@@ -5994,12 +5713,349 @@ function color(arg){
 
 
 /***/ }),
+/* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = interact;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__metavis_brush__ = __webpack_require__(44);
+
+
+function interact($p, options) {
+    var viewTags = options.view || [$p.views[0].id];
+
+    if(!Array.isArray(viewTags)) viewTags = [viewTags];
+
+    var actions = options.actions || options.events || [],
+        condition = options.condition || {},
+        callback = options.callback || function() {};
+
+    if($p._update) return;
+
+    viewTags.forEach(function(viewTag){
+        var vis = $p.views.filter(v=>v.id == viewTag)[0];
+
+        if(!Array.isArray(actions)) {
+            actions = [actions];
+        }
+        var vmap = vis.vmap,
+            p = vis.padding || $p.padding,
+            w = vis.width - p.left - p.right,
+            h = vis.height - p.top - p.bottom;
+
+        var interactor = vis.chart.svg.append("g")
+                .attr("class", "selector")
+
+        var rect = interactor.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", w)
+          .attr("height", h)
+          .attr("fill-opacity", 0)
+          .attr("stroke", "none");
+
+        var svg = interactor.svg,
+            box = rect.svg.getBoundingClientRect();
+
+        var sx, sy,
+            tx = 0, ty = 0,
+            dy = 1;
+
+        function updatePos(e) {
+            tx += (e.clientX - sx) / dy;
+            ty += (e.clientY - sy) / dy;
+            sx = e.clientX;
+            sy = e.clientY;
+            $p.uniform.uPosOffset.data = [tx / w, ty / h];
+        }
+
+        function getSelection(e) {
+            var dx = e.clientX - box.left;
+            var dy = e.clientY - box.top;
+            var selection = {};
+            if(vmap.x) {
+                selection[vmap.x] = [vis.chart.x.invert(dx)];
+            }
+            if(vmap.y) {
+                selection[vmap.y] = [vis.chart.y.invert(dy)];
+            }
+            return selection;
+        }
+
+        actions.forEach(function(action){
+            if(action == 'brush') {
+                svg.style.cursor = "crosshair";
+                var brushOptions = {
+                    container: interactor,
+                    width: w,
+                    height: h
+                };
+
+                if(!Array.isArray(vmap.x) && !Array.isArray(vmap.y)) {
+                    if(!condition.x && !condition.y) {
+                        condition.x = condition.y = true;
+                    }
+                    brushOptions.brush = function(d) {
+                        var selection = {};
+                        if(vmap.x && d.x) selection[vmap.x] = d.x;
+                        if(vmap.y && d.y) selection[vmap.y] = d.y.reverse();
+                        callback(selection);
+                    }
+                    if(condition.x && typeof(vis.chart.x.invert) == 'function')
+                        brushOptions.x = vis.chart.x.invert;
+
+                    if(condition.y && typeof(vis.chart.y.invert) == 'function')
+                        brushOptions.y = vis.chart.y.invert
+
+                    new __WEBPACK_IMPORTED_MODULE_0__metavis_brush__["a" /* default */](brushOptions);
+                }
+
+                var dims = ['x', 'y'],
+                    selections = {};
+
+                dims.forEach(function(dim){
+                    if(Array.isArray(vmap[dim]) && Array.isArray(vis.chart[dim])){
+                        var axisDist = (dim == 'x') ? h : w,
+                            selectors = vis.chart.svg.append('g');
+
+                        axisDist =  axisDist / (vmap[dim].length-1);
+
+                        vmap[dim].forEach(function(d, i) {
+
+                            var axisSelect = selectors.append("g");
+                            if(dim == 'x') {
+                                brushOptions.height = axisDist * 0.2;
+                                axisSelect.translate(0, axisDist * (i - 0.1));
+                                brushOptions.brush = function(range) {
+                                    selections[d] = range[dim];
+                                    callback(selections);
+                                }
+                            } else {
+                                brushOptions.width = axisDist * 0.2;
+                                axisSelect.translate(axisDist * (i - 0.1), 0);
+                                brushOptions.brush = function(range) {
+                                    selections[d] = range[dim].reverse();
+                                    callback(selections);
+                                }
+                            }
+                            brushOptions.container = axisSelect;
+                            brushOptions[dim] = vis.chart[dim][i].invert;
+
+                            new __WEBPACK_IMPORTED_MODULE_0__metavis_brush__["a" /* default */](brushOptions);
+                        });
+                    }
+                })
+            } else if(action == 'zoom') {
+                svg.onmousewheel = function(e) {
+                    sx = e.clientX - box.left;
+                    sy = e.clientY - box.top;
+                    var ny =  dy * Math.exp(e.deltaY / 1000);
+                    var delta = ny - dy;
+                    dy = ny;
+                    $p.uniform.uPosOffset.data = [-sx * delta / w, -sy * delta / h];
+                    $p.uniform.uVisScale.data = [dy, dy];
+
+                    callback();
+                }
+
+            } else if(action == 'pan') {
+                svg.style.cursor = 'move';
+                svg.onmousedown = function(e) {
+                    sx = e.clientX;
+                    sy = e.clientY;
+                    svg.style.cursor = 'move';
+
+                    svg.onmousemove = function(e) {
+                        tx += (e.clientX - sx) / dy;
+                        ty += (e.clientY - sy);
+
+                        callback();
+                    }
+
+                    svg.onmouseup = function(e) {
+                        updatePos(e);
+                        svg.style.cursor = 'default';
+                        svg.onmousemove = null;
+                        svg.onmouseup = null;
+                    }
+                }
+
+            } else if(action == 'click') {
+                svg.onclick = function(e) {
+                    callback(getSelection(e));
+                }
+            } else if(action == 'hover') {
+                svg.onmouseover = function(e) {
+                    callback(getSelection(e));
+                    svg.onmousemove = function(e) {
+                        callback(getSelection(e));
+                    }
+
+                    // svg.onmouseout = function(e) {
+                    //     updatePos(e);
+                    //     svg.style.cursor = 'default';
+                    //     svg.onmousemove = null;
+                    //     svg.onmouseover = null;
+                    // }
+                }
+            }
+        })
+    })
+}
+
+
+/***/ }),
 /* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = brush;
+function brush(arg){
+
+    var option = arg || {},
+        container = option.container || this.svg[0],
+        width = option.width || this.width,
+        height = option.height || this.height,
+        x = function(s) {return s},
+        y = function(s) {return s},
+        base = option.base || null,
+        selectX = option.x || false,
+        selectY = option.y || false,
+        border = option.border || "#FFF",
+        color = option.color || "#111",
+        brush = option.brush || function() {},
+        brushstart = option.brushstart || function() {},
+        brushend = option.brushend || function() {};
+
+    if(typeof(selectX) === "function") {
+        x = selectX;
+        selectX = true;
+    }
+    if(typeof(selectY) === "function") {
+        y = selectY;
+        selectY = true;
+    }
+    if(base === null){
+        base = container.append("g").attr("class", "selector");
+    } else {
+        base = container;
+    };
+
+    base.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill-opacity", 0)
+        .attr("stroke", "none")
+        .css("cursor", "crosshair");
+
+    var selector = base.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 0)
+        .attr("height", 0)
+        .attr("fill-opacity", 0.1)
+        .css("fill", color)
+        .css("stroke", border)
+        .css("cursor", "move");
+
+    var sx, sy,
+        dx, dy,
+        bx, by,
+        selection = {},
+        intStart = false,
+        drag = false;
+
+    base.svg.addEventListener("mousedown", function(evt){
+        evt.preventDefault();
+        brushstart.call(this);
+        intStart = true;
+        sx = evt.clientX;
+        sy = evt.clientY;
+
+        var sp = selector.svg.getBoundingClientRect();
+        var box = base.svg.getBoundingClientRect();
+        var x0, y0, nw, nh;
+
+        if(sx>sp.left && sy>sp.top && sx<sp.left+sp.width && sy<sp.top+sp.height) {
+            drag = true;
+            bx = sp.left;
+            by = sp.top;
+        }
+
+        if(!drag){
+            x0 = selectX ? sx - box.left : 0;
+            y0 = selectY ? sy - box.top : 0;
+            selector.attr("x", x0)
+                .attr("y", y0)
+                .attr("width", 0);
+        }
+
+        ondrag = function(evt){
+            if(intStart){
+                dx = evt.clientX - sx;
+                dy = evt.clientY - sy;
+                var selectorBox = selector.svg.getBoundingClientRect();
+                if(drag){
+
+                    var nx = bx + dx-box.left,
+                        ny = by + dy-box.top;
+
+                    if(bx+dx < box.left) nx = 0;
+                    if(bx+dx+selectorBox.width > box.right) nx = width - selectorBox.width ;
+                    if(by+dy < box.top) ny = 0;
+                    if(by+dy+selectorBox.height > box.bottom) ny = height - selectorBox.height;
+                    selector.attr("x", nx).attr("y", ny);
+                } else {
+                    if(evt.clientX < box.left) dx = box.left - sx;
+                    if(evt.clientX > box.right) dx = box.right - sx;
+                    if(evt.clientY > box.bottom) dy = box.bottom - sy;
+                    if(evt.clientY < box.top) dy = box.top - sy;
+
+                    x0 = selectX ? sx + dx - box.left: 0;
+                    y0 = selectY ? sy + dy - box.top : 0;
+                    nw = selectX ? Math.abs(dx) : width;
+                    nh = selectY ? Math.abs(dy) : height;
+
+                    if(dx<0 && dy>=0) selector.attr("x", x0);
+                    if(dy<0 && dx>=0) selector.attr("y", y0);
+                    if(dx<0 && dy<0) selector.attr("x", x0).attr("y", y0);
+                    selector.attr("width", nw).attr("height", nh);
+                }
+                if(selectX) {
+                    selection.x = [ x(selectorBox.left - box.left ), x(selectorBox.right - box.left )];
+                }
+                if(selectY) {
+                    selection.y = [y(selectorBox.top - box.top), y(selectorBox.bottom - box.top)];
+                }
+                brush.call(this, selection);
+            }
+        };
+
+        window.addEventListener("mousemove", ondrag, false);
+        window.addEventListener("mouseup", function(evt){
+            if(intStart){
+                ondrag(evt);
+                intStart = false;
+                if(drag){
+                    drag = false;
+                }
+            }
+            brushend.call(this, selection);
+            window.removeEventListener("mousemove", ondrag, false);
+        }, false);
+    });
+};
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = ColumnStore;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ctypes__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ctypes__ = __webpack_require__(2);
 
 function ColumnStore(arg){
     var cstore   = (this instanceof ColumnStore) ? this : {},
@@ -6283,7 +6339,7 @@ function ColumnStore(arg){
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6355,7 +6411,7 @@ function post(arg) {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
