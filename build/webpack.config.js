@@ -3,8 +3,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        "p5": "./index.js"
-        // "p5-test": "./test/main.js"
+        "p5": "./index.js",
     },
     devtool: "source-map",
     target: 'web',
@@ -12,7 +11,7 @@ module.exports = {
         modules: [path.resolve(__dirname, '../..'), '../node_modules'],
         alias: {
             'p.3$': 'p3',
-            'p.4$': 'p4',
+            'p.4$': 'p4'
         }
     },
     output: {

@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node build/build.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.config.js",
-    "test": "npm run dev",
+    "test": "webpack-dev-server --inline --progress --config build/webpack.test.config.js",
     "start": "npm run dev"
   },
   "author": "Kelvin Li",
