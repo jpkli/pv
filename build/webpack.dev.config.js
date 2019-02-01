@@ -1,24 +1,22 @@
 const path = require('path');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-function resolve (dir) {
-    return path.join(__dirname, '..', dir)
-}
+const package = require(path.resolve(__dirname, '../package.json'));
+
 module.exports = {
     entry: {
-        "p5": "./index.js",
+        "p4": "./index.js"
     },
     devtool: "source-map",
     target: 'web',
     resolve: {
         modules: [path.resolve(__dirname, '../..'), '../node_modules'],
         alias: {
-            'p.3$': 'p3',
-            'p.4$': 'p4'
+            'p.3$': 'p3'
         }
     },
     output: {
         path: path.resolve(__dirname, "../dist"),
-        filename: "[name].js"
+        filename: "[name].v" + package.version + ".js"
     },
     module: {
         exprContextCritical: false,
@@ -41,7 +39,12 @@ module.exports = {
         historyApiFallback: true,
     },
     node: {
-        fs: "empty"
+        setImmediate: false,
+        dgram: 'empty',
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+        child_process: 'empty'
     }
     // plugins: [
     //     new UglifyJsPlugin({

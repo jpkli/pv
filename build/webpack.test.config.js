@@ -5,7 +5,7 @@ function resolve (dir) {
 }
 module.exports = {
     entry: {
-        "p5": "./index.js",
+        "p5-test": "./test/main.js"
     },
     devtool: "source-map",
     target: 'web',
@@ -17,7 +17,7 @@ module.exports = {
         }
     },
     output: {
-        path: path.resolve(__dirname, "../dist"),
+        path: path.resolve(__dirname, "../test"),
         filename: "[name].js"
     },
     module: {
@@ -36,17 +36,16 @@ module.exports = {
     },
     devServer: {
         compress: true,
-        publicPath: '/dist/',
+        publicPath: '/test/',
         clientLogLevel: "none",
         historyApiFallback: true,
     },
     node: {
-        fs: "empty"
+        setImmediate: false,
+        dgram: 'empty',
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+        child_process: 'empty'
     }
-    // plugins: [
-    //     new UglifyJsPlugin({
-    //         include: /\.min\.js$/,
-    //         sourceMap: true
-    //     })
-    // ]
 };

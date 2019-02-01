@@ -1,7 +1,7 @@
 {
   "name": "p5",
   "version": "0.1.0",
-  "description": "Progressive and portable parallel processing pipeline. ",
+  "description": "Progressive and portable parallel processing pipelines. ",
   "main": "index.js",
   "directories": {
     "example": "example"
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node build/build.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.config.js",
-    "test": "webpack-dev-server --inline --progress --config build/webpack.test.config.js",
+    "test": "webpack-dev-server --inline --progress --config build/webpack.test.config.js --host 0.0.0.0",
     "start": "npm run dev"
   },
   "author": "Kelvin Li",
