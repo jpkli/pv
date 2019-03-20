@@ -6,7 +6,6 @@ export default class Transpiler {
 
   transpile (rules) {
     let spec = []
-    console.log(rules)
     for (let rule of rules) {
       let opt = Object.keys(rule)[0]
       if(opt == '$aggregate') {

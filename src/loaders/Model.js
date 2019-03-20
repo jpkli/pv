@@ -13,7 +13,7 @@ let dataModels = {
   Babies: {}
 }
 
-export default class Synthetic {
+export default class Models {
   constructor({
     name = 'Babies',
     prop = {}
@@ -28,10 +28,11 @@ export default class Synthetic {
   fetch (nrows = 1000) {
     let modelProps = Object.assign(this.prop, dataModels[this.model])
     modelProps.size = nrows
-    modelProps.timesteps = nrows  
-    let data = p4.datasets[this.model](modelProps)
+    modelProps.timesteps = nrows
+    modelProps.type = 'array'
+    let dataset = p4.datasets[this.model](modelProps)
     return new Promise((resolve, reject) => {
-      resolve(data)
+      resolve(dataset.data)
     })
   }
 }

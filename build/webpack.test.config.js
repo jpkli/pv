@@ -5,19 +5,16 @@ function resolve (dir) {
 }
 module.exports = {
     entry: {
+        "p5": "./index.js",
         "p5-test": "./test/main.js"
     },
     devtool: "source-map",
     target: 'web',
     resolve: {
-        modules: [path.resolve(__dirname, '../..'), '../node_modules'],
-        alias: {
-            'p.3$': 'p3',
-            'p.4$': 'p4'
-        }
+        modules: ['../node_modules', path.resolve(__dirname, '../..')]
     },
     output: {
-        path: path.resolve(__dirname, "../test"),
+        path: path.resolve(__dirname, "../dist"),
         filename: "[name].js"
     },
     module: {
@@ -36,7 +33,7 @@ module.exports = {
     },
     devServer: {
         compress: true,
-        publicPath: '/test/',
+        publicPath: '/dust/',
         clientLogLevel: "none",
         historyApiFallback: true,
     },

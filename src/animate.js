@@ -47,7 +47,7 @@ function interpolateVec4($vec4_v0, $vec4_v1, $float_dv) {
     return vec3(x, y, z, w);
 }
 
-function getVisColor($float_x, $float_y) {
+function getVisColor({x = 'float', y = 'float'}) {
     var color, opacity;
     var rgb = new Vec3();
     color = this.getValue(this.uAnimationEncodings[2], x, y);
@@ -110,7 +110,6 @@ let fShader = function() {
 export default function($p) {
     $p.uniform('uAnimationInterval', 'float', 0.0);
     $p.uniform('uAnimationEncodings', 'int', $p.uniform.uVisualEncodings.data);
-
     $p.subroutine('getValue', 'float', getValue);
     $p.subroutine('getVisProps', 'vec3', getVisProps);
     $p.subroutine('getVisColor', 'vec4', getVisColor);
@@ -119,7 +118,6 @@ export default function($p) {
         $p.shader.vertex(vShader),
         $p.shader.fragment(fShader)
     );
-
     let animation = {
         elapsed : 0,
         interval : 500,
@@ -127,9 +125,7 @@ export default function($p) {
         step : 0,
         stop: false,
     }
-
     $p.animation = animation;
-
     let animate = function(now) {
         if (animation.elapsed > animation.interval) {
             animation.elapsed = 0;
