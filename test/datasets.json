@@ -1,0 +1,63 @@
+{
+    "brightkitedb": {
+        "type": "mysql",
+        "source": {
+            "host": "localhost",
+            "database": "brightkite",
+            "user": "pix",
+            "password": "AGreatVisToolkit",
+            "query": "SELECT uid, ts, X(geo) as lat, Y(geo) as lng from checkins"
+        },
+        "schema" : {
+            "uid": "int",
+            "ts": "time",
+            "lat": "float",
+            "lng": "float"
+        }
+    },
+    "brightkitefile": {
+        "type": "file",
+        "source": {
+            "path": "/home/kelvin/Workspace/datasets/brightkite.csv",
+            "delimiter": "\t",
+            "chunkSize": 4194304
+        },
+        "schema" : {
+            "uid": "int",
+            "time": "time",
+            "lat": "float",
+            "lng": "float",
+            "loc": "float"
+        }
+    },
+    "tsmodel": {
+        "type": "model",
+        "source": {
+            "name": "TimeSeries",
+            "series": 512,
+            "timesteps": 128
+        }
+    },
+    "babymodel": {
+        "type": "model",
+        "source": {
+            "name": "Babies",
+            "type": "array"
+        },
+        "schema": {
+            "BabyMonth": "int",
+            "BabyGender": "string",
+            "BabyWeight": "float",
+            "MotherAge": "int",
+            "MotherRace": "string",
+            "MotherStatus": "string",
+            "MotherEdu": "string",
+            "MotherHeight": "float",
+            "MotherWeight": "float",
+            "MotherWgtGain": "float",
+            "FatherAge": "int",
+            "FatherRace": "string",
+            "FatherEdu": "string"
+        }
+    }
+}
