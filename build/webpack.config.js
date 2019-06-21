@@ -6,7 +6,8 @@ function resolve (dir) {
 module.exports = {
     entry: {
         "p5": "./index.js",
-        "p5-test": "./test/main.js"
+        "p5-test": "./test/main.js",
+        "p5-benchmark": "./benchmark/index.js"
     },
     devtool: "source-map",
     cache: false,
