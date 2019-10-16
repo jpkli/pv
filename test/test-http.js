@@ -3,12 +3,12 @@ import p5 from '..'
 export default function() {
   let config = {
     container: 'p5',
-    viewport: [1180, 720]
+    viewport: [1280, 720]
   }
 
   let views = [
     {
-      id: 'v1', width: 760, height: 720, 
+      id: 'v1', width: 860, height: 680, 
       // gridlines: {y: true, x: true},
       padding: {left: 0, right: 0, top: 0, bottom: 0},
       offset: [0, 0],
@@ -21,17 +21,17 @@ export default function() {
     {
       id: 'v2', width: 380, height: 240, 
       padding: {left: 50, right: 10, top: 20, bottom: 50},
-      offset: [780, 0]
+      offset: [880, 0]
     },
     {
       id: 'v3', width: 380, height: 240, 
       padding: {left: 50, right: 10, top: 20, bottom: 50},
-      offset: [780, 240]
+      offset: [880, 240]
     },
     {
       id: 'v4', width: 380, height: 240, 
       padding: {left: 50, right: 10, top: 20, bottom: 50},
-      offset: [780, 480]
+      offset: [880, 480]
     },
   ];
 
@@ -158,13 +158,13 @@ export default function() {
         visualize: {
           id: 'v1',
           in: 'map',
-          mark: 'circle',
-          color: 'teal',
-          size: {
-            field: 'values',
-            exponent: '0.333'
-          },
-          opacity: {
+          mark: 'point',
+          // color: 'teal',
+          // size: {
+          //   field: 'values',
+          //   exponent: '0.333'
+          // },
+          color: {
             field: 'values',
             exponent: '0.15'
           },
@@ -213,6 +213,11 @@ export default function() {
         // }
       }
     ])
+
+  p.onEach(function(stats) {
+    console.log(stats)
+    document.getElementById('stats').innerHTML = '(completed: ' + stats.completed + ')';
+  })
 
   document.getElementById('next-button').onclick = () => { p.next() }
   document.getElementById('start-button').onclick = () => { p.start() }

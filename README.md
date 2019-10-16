@@ -1,11 +1,11 @@
-# P5: Portable Progressive Parallel Processing Pipelines
+# PV: Portable Progressive Parallel Processing Pipelines
 
-P5 is a JavaScript toolkit for progressive parallel processing and visualization. P5 leverages [P4](https://github.com/jpkli/p4) for parallel data processing and rendering, and provides an intuitive API for implementing progressive workflows. 
+PV is a JavaScript toolkit for progressive parallel processing and visualization. P5 leverages [P4](https://github.com/jpkli/p4) for parallel data processing and rendering, and provides an intuitive API for implementing progressive workflows. 
 
 
 ## Example 
 ```javascript
-let example = p5(config)
+let example = pv(config)
 .input({
   source: 'data.csv',
   method: 'file',
@@ -43,6 +43,6 @@ let example = p5(config)
 
 
 ## Visualizations
-P5 provides the following charts for progressive visualization:
+PV provides the following charts for progressive visualization:
 
 <img width=600 src="https://jpkli.github.io/demos/images/p5/charts.png">

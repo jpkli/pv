@@ -295,6 +295,21 @@ export default function(arg) {
     return merged;
   }
 
+  p5.setup = (jsonSpecs) => {
+    jsonSpecs.forEach((spec) => {
+      let opt = Object.keys(spec)[0]
+      if (typeof(p5[opt]) === 'function') {
+        p5[opt](spec[opt]);
+      }
+    })
+    return p5;
+  }
+
+  p5.runSpec = (jsonSpecs) => {
+    p5.setup(jsonSpecs);
+    p5.next();
+  }
+
   p5.interact = function(interactions) {
     interactions.forEach(interaction => {
       let spec = interaction;
@@ -363,7 +378,6 @@ export default function(arg) {
             return validate;
           })
           if(matches.length) {
-
             let result = p3.pipeline().aggregate({
               $group: view.vmap.x,
               $collect: {

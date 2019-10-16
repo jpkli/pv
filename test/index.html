@@ -9,12 +9,20 @@
   </style>
 </head>
 <body>
-    <div id="p5-control"></div>
-  <input type="button" id="start-button" value="auto progress" />
-  <input type="button" id="next-button" value="next" />
+  <div id="p5-control"></div>
+  <div style="position: fixed; top: 800px; left: 550px;">
+      <input type="button" id="start-button" value="auto progress" />
+      <input type="button" id="pause-button" value="pause" />
+      <input type="button" id="next-button" value="next" />
+      <span id="stats" style="font-weight: bold; font-size: 1.28em;">
+      (completed: 0)
+      </span>
+  </div>
+
 
   <div id="p5"></div>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script type="text/javascript" src="https://stardustjs.github.io/stardust/v0.1.1/stardust.bundle.min.js"></script>
   <script type="module" src="../dist/p5-test.js"></script>
 
 </body>
