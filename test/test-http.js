@@ -3,35 +3,31 @@ import p5 from '..'
 export default function() {
   let config = {
     container: 'p5',
-    viewport: [1280, 720]
+    viewport: [1200, 680]
   }
 
   let views = [
     {
-      id: 'v1', width: 860, height: 680, 
-      // gridlines: {y: true, x: true},
+      id: 'v1', width: 700, height: 600, 
       padding: {left: 0, right: 0, top: 0, bottom: 0},
-      offset: [0, 0],
-      // "color": {
-      //     "range": ["orange", "red"],
-      //     "interpolate": true
-      // },
-      legend: false
+      offset: [320, 0],
+      legend: true
     },
     {
-      id: 'v2', width: 380, height: 240, 
+      id: 'v2', width: 320, height: 240, 
       padding: {left: 90, right: 10, top: 20, bottom: 50},
-      offset: [880, 0]
+      offset: [0, 0]
     },
     {
-      id: 'v3', width: 380, height: 240, 
+      id: 'v3', width: 320, height: 225, 
       padding: {left: 90, right: 10, top: 20, bottom: 50},
-      offset: [880, 240]
+      offset: [0, 225]
     },
     {
-      id: 'v4', width: 380, height: 240, 
+      id: 'v4', width: 320, height: 225, 
       padding: {left: 90, right: 10, top: 20, bottom: 50},
-      offset: [880, 480]
+      offset: [0, 450],
+      legend: true
     },
   ];
 
@@ -39,7 +35,7 @@ export default function() {
     p.input({
       method: 'http',
       source: '/data/brightkitefile',
-      batchSize: 100000,
+      batchSize: 50000,
         "schema" : {
           "uid": "int",
           "time": "time",
@@ -120,10 +116,7 @@ export default function() {
           y: 'count',
           x: 'hour',
           color: 'teal',
-          zero: true,
-          // y: 'FatherAge',
-          // size: 10,
-          // opacity: "auto"
+          zero: true
         }
       },
       {
@@ -134,10 +127,7 @@ export default function() {
           y: 'count',
           x: 'month',
           zero: true,
-          color: 'teal',
-          // y: 'FatherAge',
-          // size: 10,
-          // opacity: "auto"
+          color: 'teal'
         }
       },
       {
@@ -148,10 +138,7 @@ export default function() {
           y: 'count',
           x: 'DayOfWeek',
           color: 'teal',
-          zero: true,
-          // y: 'FatherAge',
-          // size: 10,
-          // opacity: "auto"
+          zero: true
         }
       },
       {
@@ -159,25 +146,14 @@ export default function() {
           id: 'v1',
           in: 'map',
           mark: 'rect',
-          // color: 'teal',
-          // size: {
-          //   field: 'values',
-          //   exponent: '0.333'
-          // },
+          project: 'geo',
+          dropZeros: true,
           color: {
             field: 'values',
             exponent: '0.15'
           },
-          project: 'geo',
-          dropZeros: true,
-          // size: 'values',
           y: 'lat',
-          x: 'lng',
-          // brush: {
-          //   selected: {
-          //     color: 'red'
-          //   }
-          // }
+          x: 'lng'
         },
       }
     ])
@@ -196,22 +172,7 @@ export default function() {
           v4: {
             selected: { color: 'orange' }
           },
-        },
-        // callback: function (interaction) {
-        //   console.log(interaction)
-        //   p.pipeline.visualize({
-        //         id: 'v4',
-        //         in: 'byDayOfWeek',
-        //         mark: 'bar',
-        //         height: 'count',
-        //         x: 'DayOfWeek',
-        //         color: 'red'
-        //         // y: 'FatherAge',
-        //         // size: 10,
-        //         // opacity: "auto"
-        //       }
-        //   )
-        // }
+        }
       }
     ])
 

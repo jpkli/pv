@@ -45,9 +45,6 @@ export default function() {
         height: 'babies',
         x: 'BirthMonth',
         zero: true,
-        // y: 'FatherAge',
-        // size: 12,
-        // opacity: 0.5
       }
     }])
   }
