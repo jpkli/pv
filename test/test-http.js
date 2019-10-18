@@ -20,17 +20,17 @@ export default function() {
     },
     {
       id: 'v2', width: 380, height: 240, 
-      padding: {left: 50, right: 10, top: 20, bottom: 50},
+      padding: {left: 90, right: 10, top: 20, bottom: 50},
       offset: [880, 0]
     },
     {
       id: 'v3', width: 380, height: 240, 
-      padding: {left: 50, right: 10, top: 20, bottom: 50},
+      padding: {left: 90, right: 10, top: 20, bottom: 50},
       offset: [880, 240]
     },
     {
       id: 'v4', width: 380, height: 240, 
-      padding: {left: 50, right: 10, top: 20, bottom: 50},
+      padding: {left: 90, right: 10, top: 20, bottom: 50},
       offset: [880, 480]
     },
   ];
@@ -158,7 +158,7 @@ export default function() {
         visualize: {
           id: 'v1',
           in: 'map',
-          mark: 'point',
+          mark: 'rect',
           // color: 'teal',
           // size: {
           //   field: 'values',
@@ -169,6 +169,7 @@ export default function() {
             exponent: '0.15'
           },
           project: 'geo',
+          dropZeros: true,
           // size: 'values',
           y: 'lat',
           x: 'lng',

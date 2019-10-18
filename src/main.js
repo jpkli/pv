@@ -167,7 +167,7 @@ export default function(arg) {
     batchProcessing = batches.map(batch => {
       return p5.compile(p5.transpile(batch));
     });
-    console.log(batchProcessing);
+    // console.log(batchProcessing);
     return p5;
   }
 
@@ -341,7 +341,7 @@ export default function(arg) {
           let key = Object.keys(p)[0];
           return p[key].id === tv;
         }).visualize
-        
+
         let targetPipeline = {}
         
         batchProcessing.find(pipeline => {
@@ -360,16 +360,17 @@ export default function(arg) {
           targetView: tv
         })
       })
-      // console.log(crossViewProc)
+      console.log(crossViewProc)
 
       spec.callback = (selection) => {
 
-        let interactionStart = performance.now();
+        // let interactionStart = performance.now();
         let connections = crossViewProc.filter(p => p.sourceView === connection.sourceView);
         connections.forEach(conn => {
           let view = p4x.getViews().find(v => v.id === conn.targetView);
           // console.log(selection)
           // let matches = conn.result.filter(d => d.lng > selection.lng[0] && d.lng < selection.lng[1] && d.lat > selection.lat[0] && d.lat < selection.lat[1])
+          // console.log(conn.result)
           let matches = conn.result.filter(d => {
             let validate = true;
             Object.keys(selection).forEach(attr => {
@@ -393,8 +394,6 @@ export default function(arg) {
         })
         // console.log(performance.now() - interactionStart)
         
-        // let res = p4x.result({format: 'row', outputTag: 'interResult'})
-        // console.log(res)
       }
     })
 

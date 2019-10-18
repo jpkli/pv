@@ -7,8 +7,9 @@ module.exports = {
     entry: {
         "p5": "./index.js",
         "p5-test": "./test/main.js",
-        "p5-benchmark": "./benchmark/index.js"
+        "p5-benchmark": "./test/benchmark/index.js"
     },
+    mode: "development",
     devtool: "source-map",
     cache: false,
     target: 'web',
@@ -22,11 +23,11 @@ module.exports = {
     module: {
         exprContextCritical: false,
         rules: [
-          {
-            test: /\.js$/,
-            loader: 'babel-loader',
-            include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
-          },
+        //   {
+        //     test: /\.js$/,
+        //     loader: 'babel-loader',
+        //     include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        //   },
           {
             test: /\.css$/,
             use: ['style-loader', 'css-loader',]

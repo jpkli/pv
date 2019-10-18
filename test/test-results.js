@@ -1,5 +1,5 @@
 import p5 from '..'
-import pplot from 'p.plot'
+import {vis} from 'p3'
 
 import jsonResults from './results/p5-json-2m.json'
 import binaryResults from './results/p5-typedArray-2m.json'
@@ -29,5 +29,5 @@ export default function() {
     axes: true
   }
 
-  new pplot.Spline(data, view).render()
+  new vis.Spline(data, view).render()
 }
