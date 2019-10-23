@@ -1,8 +1,8 @@
-import p5 from '..'
+import pv from '..'
 
 export default function() {
   let config = {
-    container: 'p5',
+    container: 'pv-vis',
     viewport: [1200, 680]
   }
 
@@ -31,7 +31,7 @@ export default function() {
     },
   ];
 
-  let p = p5(config).view(views);
+  let p = pv(config).view(views);
     p.input({
       method: 'http',
       source: '/data/brightkitefile',

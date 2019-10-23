@@ -1,13 +1,11 @@
 const path = require('path');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-function resolve (dir) {
-    return path.join(__dirname, '..', dir)
-}
+
 module.exports = {
     entry: {
-        "p5": "./index.js",
-        "p5-test": "./test/main.js",
-        "p5-benchmark": "./test/benchmark/index.js"
+        "pv": "./index.js",
+        "pv-test": "./test/main.js",
+        "pv-benchmark": "./test/benchmark/index.js"
     },
     mode: "development",
     devtool: "source-map",
@@ -39,13 +37,5 @@ module.exports = {
         publicPath: '/dist/',
         clientLogLevel: "none",
         historyApiFallback: true,
-    },
-    node: {
-        setImmediate: false,
-        dgram: 'empty',
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
-        child_process: 'empty'
     }
 };

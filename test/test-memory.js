@@ -1,8 +1,8 @@
-import p5 from '..'
+import pv from '..'
 
 export default function() {
   let config = {
-    container: 'p5',
+    container: 'pv-vis',
     viewport: [960, 720],
     profiling: true
   }
@@ -29,17 +29,17 @@ export default function() {
     }
   ];
 
-  let p = p5(config).view(views);
+  let p = pv(config).view(views);
 
   p.input({
     method: 'memory',
     source: function(nrows) {
-      let dataset = p5.datasets.Babies({size: nrows, type: 'array'});
+      let dataset = pv.datasets.Babies({size: nrows, type: 'array'});
       let data = dataset.data;
       return data;
     },
-    batchSize: 500000,
-    schema: p5.datasets.Babies.schema
+    batchSize: 100000,
+    schema: pv.datasets.Babies.schema
   });
 
   p.batch([

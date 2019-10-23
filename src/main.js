@@ -9,7 +9,7 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
 
 export default function(arg) {
   let p4x = p4(Object.assign({preserveDrawingBuffer: true}, arg));
-  let p5 = {}
+  let pv = {}
   let dataSchema;
   let dataSource;
   let fetchData;
@@ -34,15 +34,15 @@ export default function(arg) {
 
   let interactionData = [];
 
-  p5.batchSize = 0;
-  p5.pipeline = p4x;
-  p5.mode = arg.mode || PROGRESS_MODES[2];
-  p5.data = function(arg) {p4x.data(arg); return p5};
+  pv.batchSize = 0;
+  pv.pipeline = p4x;
+  pv.mode = arg.mode || PROGRESS_MODES[2];
+  pv.data = function(arg) {p4x.data(arg); return pv};
 
-  p5.view = function(arg) {p4x.view(arg); return p5};
+  pv.view = function(arg) {p4x.view(arg); return pv};
 
-  p5.runSpec = p4x.runSpec;
-  p5.input = function({
+  pv.runSpec = p4x.runSpec;
+  pv.input = function({
     method = 'file',
     type = 'csv',
     delimiter = ',',
@@ -51,7 +51,7 @@ export default function(arg) {
     schema
   }) {
     dataSchema = schema;
-    p5.batchSize = batchSize;
+    pv.batchSize = batchSize;
     
     if(method == 'file') {
       dataSource = new FileLoader({
@@ -106,24 +106,24 @@ export default function(arg) {
       };
     }
   
-    return p5;
+    return pv;
   }
 
   for(let ops of OPERATIONS) {
-    p5[ops] = function(arg) {
+    pv[ops] = function(arg) {
       let job = {};
       job[ops] = arg;
       jobs.push(job);
-      return p5;
+      return pv;
     }
   }
 
-  p5.transpile = function(spec) {
+  pv.transpile = function(spec) {
     let tplr = new Transpiler(p4x.ctx.fields)
     return tplr.transpile(spec)
   }
 
-  p5.compile = function(specs) {
+  pv.compile = function(specs) {
     let jobs = [];
     if(Array.isArray(specs)) {
       specs.forEach(function(spec){
@@ -133,7 +133,7 @@ export default function(arg) {
         if (opt[0] === '$'){
           opt = opt.slice(1); // ignore $ sign 
         }
-        if(typeof p5[opt] == 'function') {
+        if(typeof pv[opt] == 'function') {
           job[opt] = arg;
         }
         jobs.push(job);
@@ -142,11 +142,11 @@ export default function(arg) {
     return jobs;
   }
 
-  p5.jobs = function() {
+  pv.jobs = function() {
     return jobs; 
   }
 
-  p5.jobsToPipeline = function(jobs) {
+  pv.jobsToPipeline = function(jobs) {
     let pipeline = [];
     Object.keys(jobs).forEach(opt => {
       let task = {};
@@ -159,33 +159,33 @@ export default function(arg) {
     return pipeline;
   }
 
-  p5.batch = function(jobs) {
+  pv.batch = function(jobs) {
     let batches = [];
     jobs.forEach(jobs => {
-      let opts = p5.jobsToPipeline(jobs)
+      let opts = pv.jobsToPipeline(jobs)
       batches.push(opts);
     })
     batchProcessing = batches.map(batch => {
-      return p5.compile(p5.transpile(batch));
+      return pv.compile(pv.transpile(batch));
     });
     // console.log(batchProcessing);
-    return p5;
+    return pv;
   }
 
-  p5.update = function(newData, specs) {
+  pv.update = function(newData, specs) {
     p4x.ctx._progress = true;
     p4x.head();
     p4x.updateData(newData);
-    p4x.run(p5.compile(p5.transpile(specs)));
-    return p5;
+    p4x.run(pv.compile(pv.transpile(specs)));
+    return pv;
   }
 
-  p5.progress = function(specs) {
-    progression = p5.compile(specs);
-    return p5;
+  pv.progress = function(specs) {
+    progression = pv.compile(specs);
+    return pv;
   }
 
-  p5.prepareData = function(data) {
+  pv.prepareData = function(data) {
 
     let cache = p4.cstore((strValues !== null) ? {strValues} : {})
     cache.import({
@@ -200,37 +200,36 @@ export default function(arg) {
     return cdata;
   }
 
-  p5.onEach = function(f) {
+  pv.onEach = function(f) {
     onEach = f;
-    return p5;
+    return pv;
   }
-  p5.onComplete = function() {}
+  pv.onComplete = function() {}
 
-  p5.autoProgress = function() {
-    p5.next().then(function(status){
+  pv.autoProgress = function() {
+    pv.next().then(function(status){
       if (!status.done) {
-        requestAnimationFrame(p5.autoProgress);
+        requestAnimationFrame(pv.autoProgress);
       }
     });
   }
 
-  p5.start = function() {
-    requestAnimationFrame(p5.autoProgress);
-    return p5;
+  pv.start = function() {
+    requestAnimationFrame(pv.autoProgress);
+    return pv;
   }
 
-  p5.next = function(callback) {
+  pv.next = function(callback) {
     if(typeof(callback) === 'function') {
       onEach = callback;
     }
 
     progressStep++;
-    progressedSize += p5.batchSize;
+    progressedSize += pv.batchSize;
     // let done = (progressedSize >= dataSize ) ? true : false;
 
     let status =  {
         count: progressStep,
-        // done: done,
         completed: progressedSize,
         // percentage: progressedSize / dataSize
     }
@@ -246,7 +245,7 @@ export default function(arg) {
         if(data._p4_cstore_version) {
           inputData = data;
         } else {
-          inputData = p5.prepareData(data);
+          inputData = pv.prepareData(data);
         }
         profile.LoadTime = performance.now() - loadStart;
         let processStart = performance.now()
@@ -266,13 +265,12 @@ export default function(arg) {
 
         if(crossViewProc.length) {
           crossViewProc.forEach(pp => {
-            p4x.head().run(p5.jobsToPipeline(pp.jobs));
+            p4x.head().run(pv.jobsToPipeline(pp.jobs));
             pp.result = p4x.result({outputTag: pp.jobs.out}).filter(d=>d.count !== 0)
           })
         }
 
         p4x.run(progression);
-        // console.log(p4x.result('row'))
         profile.ProcTime = performance.now() - loadStart;
         profile.AccuTime += profile.ProcTime;
         // console.log(profile)
@@ -282,7 +280,7 @@ export default function(arg) {
     })
   }
 
-  p5.mergedPipeline = function(p1, p2) {
+  pv.mergedPipeline = function(p1, p2) {
     let props = Object.keys(p1).concat(Object.keys(p2))
     .filter(prop => prop !== 'out')
     .reduce(function(b, c) {
@@ -303,22 +301,22 @@ export default function(arg) {
     return merged;
   }
 
-  p5.setup = (jsonSpecs) => {
+  pv.setup = (jsonSpecs) => {
     jsonSpecs.forEach((spec) => {
       let opt = Object.keys(spec)[0]
-      if (typeof(p5[opt]) === 'function') {
-        p5[opt](spec[opt]);
+      if (typeof(pv[opt]) === 'function') {
+        pv[opt](spec[opt]);
       }
     })
-    return p5;
+    return pv;
   }
 
-  p5.runSpec = (jsonSpecs) => {
-    p5.setup(jsonSpecs);
-    p5.next();
+  pv.runSpec = (jsonSpecs) => {
+    pv.setup(jsonSpecs);
+    pv.next();
   }
 
-  p5.interact = function(interactions) {
+  pv.interact = function(interactions) {
     interactions.forEach(interaction => {
       let spec = interaction;
 
@@ -359,7 +357,7 @@ export default function(arg) {
         .forEach(p => Object.assign(targetPipeline, p));
         // console.log(targetPipeline);
  
-        let interProc = p5.mergedPipeline(sourcePipeline, targetPipeline);
+        let interProc = pv.mergedPipeline(sourcePipeline, targetPipeline);
         interProc.out = ['interResult', connection.sourceView, tv].join('-');
         crossViewProc.push({
           jobs: interProc,
@@ -388,9 +386,7 @@ export default function(arg) {
           
           let matches = conn.result.filter(d => {
             let validate = true;
-            // console.log( selectedAttrs);
             selectedAttrs.forEach(attr => {
-              // console.log(selection[attr])
               if (selection[attr].length === 1) {
                 validate = validate && (d[attr] === parseInt(selection[attr][0]));
               } else {
@@ -423,12 +419,12 @@ export default function(arg) {
       }
     })
 
-    p5.getProfile = function() {
+    pv.getProfile = function() {
       return profile;
     }
 
-    return p5
+    return pv
   }
 
-  return p5;
+  return pv;
 }

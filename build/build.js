@@ -4,8 +4,9 @@ process.env.NODE_ENV = 'production'
 const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
-const webpackConfig = require('./webpack.node.config')
+const webpackConfig = require('./webpack.config')
 
+webpackConfig.mode = 'production'
 webpack(webpackConfig, (err, stats) => {
   if (err) throw err
   
