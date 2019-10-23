@@ -77,11 +77,11 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/server.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./demos/demo.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -20593,7 +20593,7 @@ class Spline extends _plot__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _src_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/main */ "../p4/flexgl/src/main.js");
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _src_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/main */ "../p4/flexgl/src/main.js");
 
 
 var root = typeof self == 'object' && self.self === self && self ||
@@ -20606,7 +20606,7 @@ root.flexgl = _src_main__WEBPACK_IMPORTED_MODULE_0__["default"];
 
 if( true && module.exports)
     module.exports = _src_main__WEBPACK_IMPORTED_MODULE_0__["default"];
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../p5/node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../p5/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../p5/node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
 
 /***/ }),
 
@@ -21879,7 +21879,7 @@ function Varying(glContext) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _src_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/main */ "../p4/src/main.js");
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _src_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/main */ "../p4/src/main.js");
 /* harmony import */ var _src_cstore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/cstore */ "../p4/src/cstore.js");
 /* harmony import */ var _src_ctypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/ctypes */ "../p4/src/ctypes.js");
 /* harmony import */ var _src_io_ajax__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./src/io/ajax */ "../p4/src/io/ajax.js");
@@ -21908,6 +21908,15780 @@ _src_main__WEBPACK_IMPORTED_MODULE_0__["default"].datasets = {Babies: _test_data
 root.p4 = _src_main__WEBPACK_IMPORTED_MODULE_0__["default"];
 /* harmony default export */ __webpack_exports__["default"] = (root.p4);
 
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../p5/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "../p4/node_modules/assertion-error/index.js":
+/*!***************************************************!*\
+  !*** ../p4/node_modules/assertion-error/index.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * assertion-error
+ * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Return a function that will copy properties from
+ * one object to another excluding any originally
+ * listed. Returned function will create a new `{}`.
+ *
+ * @param {String} excluded properties ...
+ * @return {Function}
+ */
+
+function exclude () {
+  var excludes = [].slice.call(arguments);
+
+  function excludeProps (res, obj) {
+    Object.keys(obj).forEach(function (key) {
+      if (!~excludes.indexOf(key)) res[key] = obj[key];
+    });
+  }
+
+  return function extendExclude () {
+    var args = [].slice.call(arguments)
+      , i = 0
+      , res = {};
+
+    for (; i < args.length; i++) {
+      excludeProps(res, args[i]);
+    }
+
+    return res;
+  };
+};
+
+/*!
+ * Primary Exports
+ */
+
+module.exports = AssertionError;
+
+/**
+ * ### AssertionError
+ *
+ * An extension of the JavaScript `Error` constructor for
+ * assertion and validation scenarios.
+ *
+ * @param {String} message
+ * @param {Object} properties to include (optional)
+ * @param {callee} start stack function (optional)
+ */
+
+function AssertionError (message, _props, ssf) {
+  var extend = exclude('name', 'message', 'stack', 'constructor', 'toJSON')
+    , props = extend(_props || {});
+
+  // default values
+  this.message = message || 'Unspecified AssertionError';
+  this.showDiff = false;
+
+  // copy from properties
+  for (var key in props) {
+    this[key] = props[key];
+  }
+
+  // capture stack trace
+  ssf = ssf || AssertionError;
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, ssf);
+  } else {
+    try {
+      throw new Error();
+    } catch(e) {
+      this.stack = e.stack;
+    }
+  }
+}
+
+/*!
+ * Inherit from Error.prototype
+ */
+
+AssertionError.prototype = Object.create(Error.prototype);
+
+/*!
+ * Statically set name
+ */
+
+AssertionError.prototype.name = 'AssertionError';
+
+/*!
+ * Ensure correct constructor
+ */
+
+AssertionError.prototype.constructor = AssertionError;
+
+/**
+ * Allow errors to be converted to JSON for static transfer.
+ *
+ * @param {Boolean} include stack (default: `true`)
+ * @return {Object} object that can be `JSON.stringify`
+ */
+
+AssertionError.prototype.toJSON = function (stack) {
+  var extend = exclude('constructor', 'toJSON', 'stack')
+    , props = extend({ name: this.name }, this);
+
+  // include stack if exists and not turned off
+  if (false !== stack && this.stack) {
+    props.stack = this.stack;
+  }
+
+  return props;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/index.js":
+/*!****************************************!*\
+  !*** ../p4/node_modules/chai/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./lib/chai */ "../p4/node_modules/chai/lib/chai.js");
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai.js":
+/*!*******************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * chai
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var used = [];
+
+/*!
+ * Chai version
+ */
+
+exports.version = '4.1.2';
+
+/*!
+ * Assertion Error
+ */
+
+exports.AssertionError = __webpack_require__(/*! assertion-error */ "../p4/node_modules/assertion-error/index.js");
+
+/*!
+ * Utils for plugins (not exported)
+ */
+
+var util = __webpack_require__(/*! ./chai/utils */ "../p4/node_modules/chai/lib/chai/utils/index.js");
+
+/**
+ * # .use(function)
+ *
+ * Provides a way to extend the internals of Chai.
+ *
+ * @param {Function}
+ * @returns {this} for chaining
+ * @api public
+ */
+
+exports.use = function (fn) {
+  if (!~used.indexOf(fn)) {
+    fn(exports, util);
+    used.push(fn);
+  }
+
+  return exports;
+};
+
+/*!
+ * Utility Functions
+ */
+
+exports.util = util;
+
+/*!
+ * Configuration
+ */
+
+var config = __webpack_require__(/*! ./chai/config */ "../p4/node_modules/chai/lib/chai/config.js");
+exports.config = config;
+
+/*!
+ * Primary `Assertion` prototype
+ */
+
+var assertion = __webpack_require__(/*! ./chai/assertion */ "../p4/node_modules/chai/lib/chai/assertion.js");
+exports.use(assertion);
+
+/*!
+ * Core Assertions
+ */
+
+var core = __webpack_require__(/*! ./chai/core/assertions */ "../p4/node_modules/chai/lib/chai/core/assertions.js");
+exports.use(core);
+
+/*!
+ * Expect interface
+ */
+
+var expect = __webpack_require__(/*! ./chai/interface/expect */ "../p4/node_modules/chai/lib/chai/interface/expect.js");
+exports.use(expect);
+
+/*!
+ * Should interface
+ */
+
+var should = __webpack_require__(/*! ./chai/interface/should */ "../p4/node_modules/chai/lib/chai/interface/should.js");
+exports.use(should);
+
+/*!
+ * Assert interface
+ */
+
+var assert = __webpack_require__(/*! ./chai/interface/assert */ "../p4/node_modules/chai/lib/chai/interface/assert.js");
+exports.use(assert);
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/assertion.js":
+/*!*****************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/assertion.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * chai
+ * http://chaijs.com
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var config = __webpack_require__(/*! ./config */ "../p4/node_modules/chai/lib/chai/config.js");
+
+module.exports = function (_chai, util) {
+  /*!
+   * Module dependencies.
+   */
+
+  var AssertionError = _chai.AssertionError
+    , flag = util.flag;
+
+  /*!
+   * Module export.
+   */
+
+  _chai.Assertion = Assertion;
+
+  /*!
+   * Assertion Constructor
+   *
+   * Creates object for chaining.
+   *
+   * `Assertion` objects contain metadata in the form of flags. Three flags can
+   * be assigned during instantiation by passing arguments to this constructor:
+   *
+   * - `object`: This flag contains the target of the assertion. For example, in
+   *   the assertion `expect(numKittens).to.equal(7);`, the `object` flag will
+   *   contain `numKittens` so that the `equal` assertion can reference it when
+   *   needed.
+   *
+   * - `message`: This flag contains an optional custom error message to be
+   *   prepended to the error message that's generated by the assertion when it
+   *   fails.
+   *
+   * - `ssfi`: This flag stands for "start stack function indicator". It
+   *   contains a function reference that serves as the starting point for
+   *   removing frames from the stack trace of the error that's created by the
+   *   assertion when it fails. The goal is to provide a cleaner stack trace to
+   *   end users by removing Chai's internal functions. Note that it only works
+   *   in environments that support `Error.captureStackTrace`, and only when
+   *   `Chai.config.includeStack` hasn't been set to `false`.
+   *
+   * - `lockSsfi`: This flag controls whether or not the given `ssfi` flag
+   *   should retain its current value, even as assertions are chained off of
+   *   this object. This is usually set to `true` when creating a new assertion
+   *   from within another assertion. It's also temporarily set to `true` before
+   *   an overwritten assertion gets called by the overwriting assertion.
+   *
+   * @param {Mixed} obj target of the assertion
+   * @param {String} msg (optional) custom error message
+   * @param {Function} ssfi (optional) starting point for removing stack frames
+   * @param {Boolean} lockSsfi (optional) whether or not the ssfi flag is locked
+   * @api private
+   */
+
+  function Assertion (obj, msg, ssfi, lockSsfi) {
+    flag(this, 'ssfi', ssfi || Assertion);
+    flag(this, 'lockSsfi', lockSsfi);
+    flag(this, 'object', obj);
+    flag(this, 'message', msg);
+
+    return util.proxify(this);
+  }
+
+  Object.defineProperty(Assertion, 'includeStack', {
+    get: function() {
+      console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
+      return config.includeStack;
+    },
+    set: function(value) {
+      console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
+      config.includeStack = value;
+    }
+  });
+
+  Object.defineProperty(Assertion, 'showDiff', {
+    get: function() {
+      console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
+      return config.showDiff;
+    },
+    set: function(value) {
+      console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
+      config.showDiff = value;
+    }
+  });
+
+  Assertion.addProperty = function (name, fn) {
+    util.addProperty(this.prototype, name, fn);
+  };
+
+  Assertion.addMethod = function (name, fn) {
+    util.addMethod(this.prototype, name, fn);
+  };
+
+  Assertion.addChainableMethod = function (name, fn, chainingBehavior) {
+    util.addChainableMethod(this.prototype, name, fn, chainingBehavior);
+  };
+
+  Assertion.overwriteProperty = function (name, fn) {
+    util.overwriteProperty(this.prototype, name, fn);
+  };
+
+  Assertion.overwriteMethod = function (name, fn) {
+    util.overwriteMethod(this.prototype, name, fn);
+  };
+
+  Assertion.overwriteChainableMethod = function (name, fn, chainingBehavior) {
+    util.overwriteChainableMethod(this.prototype, name, fn, chainingBehavior);
+  };
+
+  /**
+   * ### .assert(expression, message, negateMessage, expected, actual, showDiff)
+   *
+   * Executes an expression and check expectations. Throws AssertionError for reporting if test doesn't pass.
+   *
+   * @name assert
+   * @param {Philosophical} expression to be tested
+   * @param {String|Function} message or function that returns message to display if expression fails
+   * @param {String|Function} negatedMessage or function that returns negatedMessage to display if negated expression fails
+   * @param {Mixed} expected value (remember to check for negation)
+   * @param {Mixed} actual (optional) will default to `this.obj`
+   * @param {Boolean} showDiff (optional) when set to `true`, assert will display a diff in addition to the message if expression fails
+   * @api private
+   */
+
+  Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual, showDiff) {
+    var ok = util.test(this, arguments);
+    if (false !== showDiff) showDiff = true;
+    if (undefined === expected && undefined === _actual) showDiff = false;
+    if (true !== config.showDiff) showDiff = false;
+
+    if (!ok) {
+      msg = util.getMessage(this, arguments);
+      var actual = util.getActual(this, arguments);
+      throw new AssertionError(msg, {
+          actual: actual
+        , expected: expected
+        , showDiff: showDiff
+      }, (config.includeStack) ? this.assert : flag(this, 'ssfi'));
+    }
+  };
+
+  /*!
+   * ### ._obj
+   *
+   * Quick reference to stored `actual` value for plugin developers.
+   *
+   * @api private
+   */
+
+  Object.defineProperty(Assertion.prototype, '_obj',
+    { get: function () {
+        return flag(this, 'object');
+      }
+    , set: function (val) {
+        flag(this, 'object', val);
+      }
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/config.js":
+/*!**************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/config.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {
+
+  /**
+   * ### config.includeStack
+   *
+   * User configurable property, influences whether stack trace
+   * is included in Assertion error message. Default of false
+   * suppresses stack trace in the error message.
+   *
+   *     chai.config.includeStack = true;  // enable stack on error
+   *
+   * @param {Boolean}
+   * @api public
+   */
+
+  includeStack: false,
+
+  /**
+   * ### config.showDiff
+   *
+   * User configurable property, influences whether or not
+   * the `showDiff` flag should be included in the thrown
+   * AssertionErrors. `false` will always be `false`; `true`
+   * will be true when the assertion has requested a diff
+   * be shown.
+   *
+   * @param {Boolean}
+   * @api public
+   */
+
+  showDiff: true,
+
+  /**
+   * ### config.truncateThreshold
+   *
+   * User configurable property, sets length threshold for actual and
+   * expected values in assertion errors. If this threshold is exceeded, for
+   * example for large data structures, the value is replaced with something
+   * like `[ Array(3) ]` or `{ Object (prop1, prop2) }`.
+   *
+   * Set it to zero if you want to disable truncating altogether.
+   *
+   * This is especially userful when doing assertions on arrays: having this
+   * set to a reasonable large value makes the failure messages readily
+   * inspectable.
+   *
+   *     chai.config.truncateThreshold = 0;  // disable truncating
+   *
+   * @param {Number}
+   * @api public
+   */
+
+  truncateThreshold: 40,
+
+  /**
+   * ### config.useProxy
+   *
+   * User configurable property, defines if chai will use a Proxy to throw
+   * an error when a non-existent property is read, which protects users
+   * from typos when using property-based assertions.
+   *
+   * Set it to false if you want to disable this feature.
+   *
+   *     chai.config.useProxy = false;  // disable use of Proxy
+   *
+   * This feature is automatically disabled regardless of this config value
+   * in environments that don't support proxies.
+   *
+   * @param {Boolean}
+   * @api public
+   */
+
+  useProxy: true,
+
+  /**
+   * ### config.proxyExcludedKeys
+   *
+   * User configurable property, defines which properties should be ignored
+   * instead of throwing an error if they do not exist on the assertion.
+   * This is only applied if the environment Chai is running in supports proxies and
+   * if the `useProxy` configuration setting is enabled.
+   * By default, `then` and `inspect` will not throw an error if they do not exist on the
+   * assertion object because the `.inspect` property is read by `util.inspect` (for example, when
+   * using `console.log` on the assertion object) and `.then` is necessary for promise type-checking.
+   *
+   *     // By default these keys will not throw an error if they do not exist on the assertion object
+   *     chai.config.proxyExcludedKeys = ['then', 'inspect'];
+   *
+   * @param {Array}
+   * @api public
+   */
+
+  proxyExcludedKeys: ['then', 'inspect', 'toJSON']
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/core/assertions.js":
+/*!***********************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/core/assertions.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * chai
+ * http://chaijs.com
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+module.exports = function (chai, _) {
+  var Assertion = chai.Assertion
+    , AssertionError = chai.AssertionError
+    , flag = _.flag;
+
+  /**
+   * ### Language Chains
+   *
+   * The following are provided as chainable getters to improve the readability
+   * of your assertions.
+   *
+   * **Chains**
+   *
+   * - to
+   * - be
+   * - been
+   * - is
+   * - that
+   * - which
+   * - and
+   * - has
+   * - have
+   * - with
+   * - at
+   * - of
+   * - same
+   * - but
+   * - does
+   *
+   * @name language chains
+   * @namespace BDD
+   * @api public
+   */
+
+  [ 'to', 'be', 'been'
+  , 'is', 'and', 'has', 'have'
+  , 'with', 'that', 'which', 'at'
+  , 'of', 'same', 'but', 'does' ].forEach(function (chain) {
+    Assertion.addProperty(chain);
+  });
+
+  /**
+   * ### .not
+   *
+   * Negates all assertions that follow in the chain.
+   *
+   *     expect(function () {}).to.not.throw();
+   *     expect({a: 1}).to.not.have.property('b');
+   *     expect([1, 2]).to.be.an('array').that.does.not.include(3);
+   *
+   * Just because you can negate any assertion with `.not` doesn't mean you
+   * should. With great power comes great responsibility. It's often best to
+   * assert that the one expected output was produced, rather than asserting
+   * that one of countless unexpected outputs wasn't produced. See individual
+   * assertions for specific guidance.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.not.equal(1); // Not recommended
+   *
+   * @name not
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('not', function () {
+    flag(this, 'negate', true);
+  });
+
+  /**
+   * ### .deep
+   *
+   * Causes all `.equal`, `.include`, `.members`, `.keys`, and `.property`
+   * assertions that follow in the chain to use deep equality instead of strict
+   * (`===`) equality. See the `deep-eql` project page for info on the deep
+   * equality algorithm: https://github.com/chaijs/deep-eql.
+   *
+   *     // Target object deeply (but not strictly) equals `{a: 1}`
+   *     expect({a: 1}).to.deep.equal({a: 1});
+   *     expect({a: 1}).to.not.equal({a: 1});
+   *
+   *     // Target array deeply (but not strictly) includes `{a: 1}`
+   *     expect([{a: 1}]).to.deep.include({a: 1});
+   *     expect([{a: 1}]).to.not.include({a: 1});
+   *
+   *     // Target object deeply (but not strictly) includes `x: {a: 1}`
+   *     expect({x: {a: 1}}).to.deep.include({x: {a: 1}});
+   *     expect({x: {a: 1}}).to.not.include({x: {a: 1}});
+   *
+   *     // Target array deeply (but not strictly) has member `{a: 1}`
+   *     expect([{a: 1}]).to.have.deep.members([{a: 1}]);
+   *     expect([{a: 1}]).to.not.have.members([{a: 1}]);
+   *
+   *     // Target set deeply (but not strictly) has key `{a: 1}`
+   *     expect(new Set([{a: 1}])).to.have.deep.keys([{a: 1}]);
+   *     expect(new Set([{a: 1}])).to.not.have.keys([{a: 1}]);
+   *
+   *     // Target object deeply (but not strictly) has property `x: {a: 1}`
+   *     expect({x: {a: 1}}).to.have.deep.property('x', {a: 1});
+   *     expect({x: {a: 1}}).to.not.have.property('x', {a: 1});
+   *
+   * @name deep
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('deep', function () {
+    flag(this, 'deep', true);
+  });
+
+  /**
+   * ### .nested
+   *
+   * Enables dot- and bracket-notation in all `.property` and `.include`
+   * assertions that follow in the chain.
+   *
+   *     expect({a: {b: ['x', 'y']}}).to.have.nested.property('a.b[1]');
+   *     expect({a: {b: ['x', 'y']}}).to.nested.include({'a.b[1]': 'y'});
+   *
+   * If `.` or `[]` are part of an actual property name, they can be escaped by
+   * adding two backslashes before them.
+   *
+   *     expect({'.a': {'[b]': 'x'}}).to.have.nested.property('\\.a.\\[b\\]');
+   *     expect({'.a': {'[b]': 'x'}}).to.nested.include({'\\.a.\\[b\\]': 'x'});
+   *
+   * `.nested` cannot be combined with `.own`.
+   *
+   * @name nested
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('nested', function () {
+    flag(this, 'nested', true);
+  });
+
+  /**
+   * ### .own
+   *
+   * Causes all `.property` and `.include` assertions that follow in the chain
+   * to ignore inherited properties.
+   *
+   *     Object.prototype.b = 2;
+   *
+   *     expect({a: 1}).to.have.own.property('a');
+   *     expect({a: 1}).to.have.property('b').but.not.own.property('b'); 
+   *
+   *     expect({a: 1}).to.own.include({a: 1});
+   *     expect({a: 1}).to.include({b: 2}).but.not.own.include({b: 2});
+   *
+   * `.own` cannot be combined with `.nested`.
+   *
+   * @name own
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('own', function () {
+    flag(this, 'own', true);
+  });
+
+  /**
+   * ### .ordered
+   *
+   * Causes all `.members` assertions that follow in the chain to require that
+   * members be in the same order.
+   *
+   *     expect([1, 2]).to.have.ordered.members([1, 2])
+   *       .but.not.have.ordered.members([2, 1]);
+   *
+   * When `.include` and `.ordered` are combined, the ordering begins at the
+   * start of both arrays.
+   *
+   *     expect([1, 2, 3]).to.include.ordered.members([1, 2])
+   *       .but.not.include.ordered.members([2, 3]);
+   *
+   * @name ordered
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('ordered', function () {
+    flag(this, 'ordered', true);
+  });
+
+  /**
+   * ### .any
+   *
+   * Causes all `.keys` assertions that follow in the chain to only require that
+   * the target have at least one of the given keys. This is the opposite of
+   * `.all`, which requires that the target have all of the given keys.
+   *
+   *     expect({a: 1, b: 2}).to.not.have.any.keys('c', 'd');
+   *
+   * See the `.keys` doc for guidance on when to use `.any` or `.all`.
+   *
+   * @name any
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('any', function () {
+    flag(this, 'any', true);
+    flag(this, 'all', false);
+  });
+
+
+  /**
+   * ### .all
+   *
+   * Causes all `.keys` assertions that follow in the chain to require that the
+   * target have all of the given keys. This is the opposite of `.any`, which
+   * only requires that the target have at least one of the given keys.
+   *
+   *     expect({a: 1, b: 2}).to.have.all.keys('a', 'b');
+   *
+   * Note that `.all` is used by default when neither `.all` nor `.any` are
+   * added earlier in the chain. However, it's often best to add `.all` anyway
+   * because it improves readability.
+   *
+   * See the `.keys` doc for guidance on when to use `.any` or `.all`.
+   *
+   * @name all
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('all', function () {
+    flag(this, 'all', true);
+    flag(this, 'any', false);
+  });
+
+  /**
+   * ### .a(type[, msg])
+   *
+   * Asserts that the target's type is equal to the given string `type`. Types
+   * are case insensitive. See the `type-detect` project page for info on the
+   * type detection algorithm: https://github.com/chaijs/type-detect.
+   *
+   *     expect('foo').to.be.a('string');
+   *     expect({a: 1}).to.be.an('object');
+   *     expect(null).to.be.a('null');
+   *     expect(undefined).to.be.an('undefined');
+   *     expect(new Error).to.be.an('error');
+   *     expect(Promise.resolve()).to.be.a('promise');
+   *     expect(new Float32Array).to.be.a('float32array');
+   *     expect(Symbol()).to.be.a('symbol');
+   *
+   * `.a` supports objects that have a custom type set via `Symbol.toStringTag`.
+   *
+   *     var myObj = {
+   *       [Symbol.toStringTag]: 'myCustomType'
+   *     };
+   *
+   *     expect(myObj).to.be.a('myCustomType').but.not.an('object');
+   *
+   * It's often best to use `.a` to check a target's type before making more
+   * assertions on the same target. That way, you avoid unexpected behavior from
+   * any assertion that does different things based on the target's type.
+   *
+   *     expect([1, 2, 3]).to.be.an('array').that.includes(2);
+   *     expect([]).to.be.an('array').that.is.empty;
+   *
+   * Add `.not` earlier in the chain to negate `.a`. However, it's often best to
+   * assert that the target is the expected type, rather than asserting that it
+   * isn't one of many unexpected types.
+   *
+   *     expect('foo').to.be.a('string'); // Recommended
+   *     expect('foo').to.not.be.an('array'); // Not recommended
+   *
+   * `.a` accepts an optional `msg` argument which is a custom error message to
+   * show when the assertion fails. The message can also be given as the second
+   * argument to `expect`.
+   *
+   *     expect(1).to.be.a('string', 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.be.a('string');
+   *
+   * `.a` can also be used as a language chain to improve the readability of
+   * your assertions. 
+   *
+   *     expect({b: 2}).to.have.a.property('b');
+   *
+   * The alias `.an` can be used interchangeably with `.a`.
+   *
+   * @name a
+   * @alias an
+   * @param {String} type
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function an (type, msg) {
+    if (msg) flag(this, 'message', msg);
+    type = type.toLowerCase();
+    var obj = flag(this, 'object')
+      , article = ~[ 'a', 'e', 'i', 'o', 'u' ].indexOf(type.charAt(0)) ? 'an ' : 'a ';
+
+    this.assert(
+        type === _.type(obj).toLowerCase()
+      , 'expected #{this} to be ' + article + type
+      , 'expected #{this} not to be ' + article + type
+    );
+  }
+
+  Assertion.addChainableMethod('an', an);
+  Assertion.addChainableMethod('a', an);
+
+  /**
+   * ### .include(val[, msg])
+   *
+   * When the target is a string, `.include` asserts that the given string `val`
+   * is a substring of the target.
+   *
+   *     expect('foobar').to.include('foo');
+   *
+   * When the target is an array, `.include` asserts that the given `val` is a
+   * member of the target.
+   *
+   *     expect([1, 2, 3]).to.include(2);
+   *
+   * When the target is an object, `.include` asserts that the given object
+   * `val`'s properties are a subset of the target's properties.
+   *
+   *     expect({a: 1, b: 2, c: 3}).to.include({a: 1, b: 2});
+   *
+   * When the target is a Set or WeakSet, `.include` asserts that the given `val` is a
+   * member of the target. SameValueZero equality algorithm is used.
+   *
+   *     expect(new Set([1, 2])).to.include(2);
+   *
+   * When the target is a Map, `.include` asserts that the given `val` is one of
+   * the values of the target. SameValueZero equality algorithm is used.
+   *
+   *     expect(new Map([['a', 1], ['b', 2]])).to.include(2);
+   *
+   * Because `.include` does different things based on the target's type, it's
+   * important to check the target's type before using `.include`. See the `.a`
+   * doc for info on testing a target's type.
+   *
+   *     expect([1, 2, 3]).to.be.an('array').that.includes(2);
+   *
+   * By default, strict (`===`) equality is used to compare array members and
+   * object properties. Add `.deep` earlier in the chain to use deep equality
+   * instead (WeakSet targets are not supported). See the `deep-eql` project
+   * page for info on the deep equality algorithm: https://github.com/chaijs/deep-eql.
+   *
+   *     // Target array deeply (but not strictly) includes `{a: 1}`
+   *     expect([{a: 1}]).to.deep.include({a: 1});
+   *     expect([{a: 1}]).to.not.include({a: 1});
+   *
+   *     // Target object deeply (but not strictly) includes `x: {a: 1}`
+   *     expect({x: {a: 1}}).to.deep.include({x: {a: 1}});
+   *     expect({x: {a: 1}}).to.not.include({x: {a: 1}});
+   *
+   * By default, all of the target's properties are searched when working with
+   * objects. This includes properties that are inherited and/or non-enumerable.
+   * Add `.own` earlier in the chain to exclude the target's inherited
+   * properties from the search.
+   *
+   *     Object.prototype.b = 2;
+   *
+   *     expect({a: 1}).to.own.include({a: 1});
+   *     expect({a: 1}).to.include({b: 2}).but.not.own.include({b: 2});
+   *
+   * Note that a target object is always only searched for `val`'s own
+   * enumerable properties.
+   *
+   * `.deep` and `.own` can be combined.
+   *
+   *     expect({a: {b: 2}}).to.deep.own.include({a: {b: 2}});
+   *
+   * Add `.nested` earlier in the chain to enable dot- and bracket-notation when
+   * referencing nested properties.
+   *
+   *     expect({a: {b: ['x', 'y']}}).to.nested.include({'a.b[1]': 'y'});
+   *
+   * If `.` or `[]` are part of an actual property name, they can be escaped by
+   * adding two backslashes before them.
+   *
+   *     expect({'.a': {'[b]': 2}}).to.nested.include({'\\.a.\\[b\\]': 2});
+   *
+   * `.deep` and `.nested` can be combined.
+   *
+   *     expect({a: {b: [{c: 3}]}}).to.deep.nested.include({'a.b[0]': {c: 3}});
+   *
+   * `.own` and `.nested` cannot be combined.
+   *
+   * Add `.not` earlier in the chain to negate `.include`.
+   *
+   *     expect('foobar').to.not.include('taco');
+   *     expect([1, 2, 3]).to.not.include(4);
+   * 
+   * However, it's dangerous to negate `.include` when the target is an object.
+   * The problem is that it creates uncertain expectations by asserting that the
+   * target object doesn't have all of `val`'s key/value pairs but may or may
+   * not have some of them. It's often best to identify the exact output that's
+   * expected, and then write an assertion that only accepts that exact output.
+   *
+   * When the target object isn't even expected to have `val`'s keys, it's
+   * often best to assert exactly that.
+   *
+   *     expect({c: 3}).to.not.have.any.keys('a', 'b'); // Recommended
+   *     expect({c: 3}).to.not.include({a: 1, b: 2}); // Not recommended
+   *
+   * When the target object is expected to have `val`'s keys, it's often best to
+   * assert that each of the properties has its expected value, rather than
+   * asserting that each property doesn't have one of many unexpected values.
+   *
+   *     expect({a: 3, b: 4}).to.include({a: 3, b: 4}); // Recommended
+   *     expect({a: 3, b: 4}).to.not.include({a: 1, b: 2}); // Not recommended
+   *
+   * `.include` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect([1, 2, 3]).to.include(4, 'nooo why fail??');
+   *     expect([1, 2, 3], 'nooo why fail??').to.include(4);
+   *
+   * `.include` can also be used as a language chain, causing all `.members` and
+   * `.keys` assertions that follow in the chain to require the target to be a
+   * superset of the expected set, rather than an identical set. Note that
+   * `.members` ignores duplicates in the subset when `.include` is added.
+   *
+   *     // Target object's keys are a superset of ['a', 'b'] but not identical
+   *     expect({a: 1, b: 2, c: 3}).to.include.all.keys('a', 'b');
+   *     expect({a: 1, b: 2, c: 3}).to.not.have.all.keys('a', 'b');
+   *
+   *     // Target array is a superset of [1, 2] but not identical
+   *     expect([1, 2, 3]).to.include.members([1, 2]);
+   *     expect([1, 2, 3]).to.not.have.members([1, 2]);
+   *
+   *     // Duplicates in the subset are ignored
+   *     expect([1, 2, 3]).to.include.members([1, 2, 2, 2]);
+   *
+   * Note that adding `.any` earlier in the chain causes the `.keys` assertion
+   * to ignore `.include`.
+   *
+   *     // Both assertions are identical
+   *     expect({a: 1}).to.include.any.keys('a', 'b');
+   *     expect({a: 1}).to.have.any.keys('a', 'b');
+   *
+   * The aliases `.includes`, `.contain`, and `.contains` can be used
+   * interchangeably with `.include`.
+   *
+   * @name include
+   * @alias contain
+   * @alias includes
+   * @alias contains
+   * @param {Mixed} val
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function SameValueZero(a, b) {
+    return (_.isNaN(a) && _.isNaN(b)) || a === b;
+  }
+
+  function includeChainingBehavior () {
+    flag(this, 'contains', true);
+  }
+
+  function include (val, msg) {
+    if (msg) flag(this, 'message', msg);
+    
+    var obj = flag(this, 'object')
+      , objType = _.type(obj).toLowerCase()
+      , flagMsg = flag(this, 'message')
+      , negate = flag(this, 'negate')
+      , ssfi = flag(this, 'ssfi')
+      , isDeep = flag(this, 'deep')
+      , descriptor = isDeep ? 'deep ' : '';
+
+    flagMsg = flagMsg ? flagMsg + ': ' : '';
+
+    var included = false;
+
+    switch (objType) {
+      case 'string':
+        included = obj.indexOf(val) !== -1;
+        break;
+
+      case 'weakset':
+        if (isDeep) {
+          throw new AssertionError(
+            flagMsg + 'unable to use .deep.include with WeakSet',
+            undefined,
+            ssfi
+          );
+        }
+
+        included = obj.has(val);
+        break;
+
+      case 'map':
+        var isEql = isDeep ? _.eql : SameValueZero;
+        obj.forEach(function (item) {
+          included = included || isEql(item, val);
+        });
+        break;
+
+      case 'set':
+        if (isDeep) {
+          obj.forEach(function (item) {
+            included = included || _.eql(item, val);
+          });
+        } else {
+          included = obj.has(val);
+        }
+        break;
+
+      case 'array':
+        if (isDeep) {
+          included = obj.some(function (item) {
+            return _.eql(item, val);
+          })
+        } else {
+          included = obj.indexOf(val) !== -1;
+        }
+        break;
+
+      default:
+        // This block is for asserting a subset of properties in an object.
+        // `_.expectTypes` isn't used here because `.include` should work with
+        // objects with a custom `@@toStringTag`.
+        if (val !== Object(val)) {
+          throw new AssertionError(
+            flagMsg + 'object tested must be an array, a map, an object,'
+              + ' a set, a string, or a weakset, but ' + objType + ' given',
+            undefined,
+            ssfi
+          );
+        }
+
+        var props = Object.keys(val)
+          , firstErr = null
+          , numErrs = 0;
+  
+        props.forEach(function (prop) {
+          var propAssertion = new Assertion(obj);
+          _.transferFlags(this, propAssertion, true);
+          flag(propAssertion, 'lockSsfi', true);
+  
+          if (!negate || props.length === 1) {
+            propAssertion.property(prop, val[prop]);
+            return;
+          }
+  
+          try {
+            propAssertion.property(prop, val[prop]);
+          } catch (err) {
+            if (!_.checkError.compatibleConstructor(err, AssertionError)) {
+              throw err;
+            }
+            if (firstErr === null) firstErr = err;
+            numErrs++;
+          }
+        }, this);
+  
+        // When validating .not.include with multiple properties, we only want
+        // to throw an assertion error if all of the properties are included,
+        // in which case we throw the first property assertion error that we
+        // encountered.
+        if (negate && props.length > 1 && numErrs === props.length) {
+          throw firstErr;
+        }
+        return;
+    }
+
+    // Assert inclusion in collection or substring in a string.
+    this.assert(
+      included
+      , 'expected #{this} to ' + descriptor + 'include ' + _.inspect(val)
+      , 'expected #{this} to not ' + descriptor + 'include ' + _.inspect(val));
+  }
+
+  Assertion.addChainableMethod('include', include, includeChainingBehavior);
+  Assertion.addChainableMethod('contain', include, includeChainingBehavior);
+  Assertion.addChainableMethod('contains', include, includeChainingBehavior);
+  Assertion.addChainableMethod('includes', include, includeChainingBehavior);
+
+  /**
+   * ### .ok
+   *
+   * Asserts that the target is loosely (`==`) equal to `true`. However, it's
+   * often best to assert that the target is strictly (`===`) or deeply equal to
+   * its expected value.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.be.ok; // Not recommended
+   *
+   *     expect(true).to.be.true; // Recommended
+   *     expect(true).to.be.ok; // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.ok`.
+   *
+   *     expect(0).to.equal(0); // Recommended
+   *     expect(0).to.not.be.ok; // Not recommended
+   *
+   *     expect(false).to.be.false; // Recommended
+   *     expect(false).to.not.be.ok; // Not recommended
+   *
+   *     expect(null).to.be.null; // Recommended
+   *     expect(null).to.not.be.ok; // Not recommended
+   *
+   *     expect(undefined).to.be.undefined; // Recommended
+   *     expect(undefined).to.not.be.ok; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(false, 'nooo why fail??').to.be.ok;
+   *
+   * @name ok
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('ok', function () {
+    this.assert(
+        flag(this, 'object')
+      , 'expected #{this} to be truthy'
+      , 'expected #{this} to be falsy');
+  });
+
+  /**
+   * ### .true
+   *
+   * Asserts that the target is strictly (`===`) equal to `true`.
+   *
+   *     expect(true).to.be.true;
+   *
+   * Add `.not` earlier in the chain to negate `.true`. However, it's often best
+   * to assert that the target is equal to its expected value, rather than not
+   * equal to `true`.
+   *
+   *     expect(false).to.be.false; // Recommended
+   *     expect(false).to.not.be.true; // Not recommended
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.true; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(false, 'nooo why fail??').to.be.true;
+   *
+   * @name true
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('true', function () {
+    this.assert(
+        true === flag(this, 'object')
+      , 'expected #{this} to be true'
+      , 'expected #{this} to be false'
+      , flag(this, 'negate') ? false : true
+    );
+  });
+
+  /**
+   * ### .false
+   *
+   * Asserts that the target is strictly (`===`) equal to `false`.
+   *
+   *     expect(false).to.be.false;
+   *
+   * Add `.not` earlier in the chain to negate `.false`. However, it's often
+   * best to assert that the target is equal to its expected value, rather than
+   * not equal to `false`.
+   *
+   *     expect(true).to.be.true; // Recommended
+   *     expect(true).to.not.be.false; // Not recommended
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.false; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(true, 'nooo why fail??').to.be.false;
+   *
+   * @name false
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('false', function () {
+    this.assert(
+        false === flag(this, 'object')
+      , 'expected #{this} to be false'
+      , 'expected #{this} to be true'
+      , flag(this, 'negate') ? true : false
+    );
+  });
+
+  /**
+   * ### .null
+   *
+   * Asserts that the target is strictly (`===`) equal to `null`.
+   *
+   *     expect(null).to.be.null;
+   *
+   * Add `.not` earlier in the chain to negate `.null`. However, it's often best
+   * to assert that the target is equal to its expected value, rather than not
+   * equal to `null`.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.null; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(42, 'nooo why fail??').to.be.null;
+   *
+   * @name null
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('null', function () {
+    this.assert(
+        null === flag(this, 'object')
+      , 'expected #{this} to be null'
+      , 'expected #{this} not to be null'
+    );
+  });
+
+  /**
+   * ### .undefined
+   *
+   * Asserts that the target is strictly (`===`) equal to `undefined`.
+   *
+   *     expect(undefined).to.be.undefined;
+   *
+   * Add `.not` earlier in the chain to negate `.undefined`. However, it's often
+   * best to assert that the target is equal to its expected value, rather than
+   * not equal to `undefined`.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.undefined; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(42, 'nooo why fail??').to.be.undefined;
+   *
+   * @name undefined
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('undefined', function () {
+    this.assert(
+        undefined === flag(this, 'object')
+      , 'expected #{this} to be undefined'
+      , 'expected #{this} not to be undefined'
+    );
+  });
+
+  /**
+   * ### .NaN
+   *
+   * Asserts that the target is exactly `NaN`.
+   *
+   *     expect(NaN).to.be.NaN;
+   *
+   * Add `.not` earlier in the chain to negate `.NaN`. However, it's often best
+   * to assert that the target is equal to its expected value, rather than not
+   * equal to `NaN`.
+   *
+   *     expect('foo').to.equal('foo'); // Recommended
+   *     expect('foo').to.not.be.NaN; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(42, 'nooo why fail??').to.be.NaN;
+   *
+   * @name NaN
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('NaN', function () {
+    this.assert(
+        _.isNaN(flag(this, 'object'))
+        , 'expected #{this} to be NaN'
+        , 'expected #{this} not to be NaN'
+    );
+  });
+
+  /**
+   * ### .exist
+   *
+   * Asserts that the target is not strictly (`===`) equal to either `null` or
+   * `undefined`. However, it's often best to assert that the target is equal to
+   * its expected value.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.exist; // Not recommended
+   *
+   *     expect(0).to.equal(0); // Recommended
+   *     expect(0).to.exist; // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.exist`.
+   *
+   *     expect(null).to.be.null; // Recommended
+   *     expect(null).to.not.exist; // Not recommended
+   *
+   *     expect(undefined).to.be.undefined; // Recommended
+   *     expect(undefined).to.not.exist; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(null, 'nooo why fail??').to.exist;
+   *
+   * @name exist
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('exist', function () {
+    var val = flag(this, 'object');
+    this.assert(
+        val !== null && val !== undefined
+      , 'expected #{this} to exist'
+      , 'expected #{this} to not exist'
+    );
+  });
+
+  /**
+   * ### .empty
+   *
+   * When the target is a string or array, `.empty` asserts that the target's
+   * `length` property is strictly (`===`) equal to `0`.
+   *
+   *     expect([]).to.be.empty;
+   *     expect('').to.be.empty;
+   *
+   * When the target is a map or set, `.empty` asserts that the target's `size`
+   * property is strictly equal to `0`.
+   *
+   *     expect(new Set()).to.be.empty;
+   *     expect(new Map()).to.be.empty;
+   *
+   * When the target is a non-function object, `.empty` asserts that the target
+   * doesn't have any own enumerable properties. Properties with Symbol-based
+   * keys are excluded from the count.
+   *
+   *     expect({}).to.be.empty;
+   *
+   * Because `.empty` does different things based on the target's type, it's
+   * important to check the target's type before using `.empty`. See the `.a`
+   * doc for info on testing a target's type.
+   *
+   *     expect([]).to.be.an('array').that.is.empty;
+   *
+   * Add `.not` earlier in the chain to negate `.empty`. However, it's often
+   * best to assert that the target contains its expected number of values,
+   * rather than asserting that it's not empty.
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3); // Recommended
+   *     expect([1, 2, 3]).to.not.be.empty; // Not recommended
+   *
+   *     expect(new Set([1, 2, 3])).to.have.property('size', 3); // Recommended
+   *     expect(new Set([1, 2, 3])).to.not.be.empty; // Not recommended
+   *
+   *     expect(Object.keys({a: 1})).to.have.lengthOf(1); // Recommended
+   *     expect({a: 1}).to.not.be.empty; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect([1, 2, 3], 'nooo why fail??').to.be.empty;
+   *
+   * @name empty
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('empty', function () {
+    var val = flag(this, 'object')
+      , ssfi = flag(this, 'ssfi')
+      , flagMsg = flag(this, 'message')
+      , itemsCount;
+
+    flagMsg = flagMsg ? flagMsg + ': ' : '';
+
+    switch (_.type(val).toLowerCase()) {
+      case 'array':
+      case 'string':
+        itemsCount = val.length;
+        break;
+      case 'map':
+      case 'set':
+        itemsCount = val.size;
+        break;
+      case 'weakmap':
+      case 'weakset':
+        throw new AssertionError(
+          flagMsg + '.empty was passed a weak collection',
+          undefined,
+          ssfi
+        );
+      case 'function':
+        var msg = flagMsg + '.empty was passed a function ' + _.getName(val);
+        throw new AssertionError(msg.trim(), undefined, ssfi);
+      default:
+        if (val !== Object(val)) {
+          throw new AssertionError(
+            flagMsg + '.empty was passed non-string primitive ' + _.inspect(val),
+            undefined,
+            ssfi
+          );
+        }
+        itemsCount = Object.keys(val).length;
+    }
+
+    this.assert(
+        0 === itemsCount
+      , 'expected #{this} to be empty'
+      , 'expected #{this} not to be empty'
+    );
+  });
+
+  /**
+   * ### .arguments
+   *
+   * Asserts that the target is an `arguments` object.
+   *
+   *     function test () {
+   *       expect(arguments).to.be.arguments;
+   *     }
+   *
+   *     test();
+   *
+   * Add `.not` earlier in the chain to negate `.arguments`. However, it's often
+   * best to assert which type the target is expected to be, rather than
+   * asserting that its not an `arguments` object.
+   *
+   *     expect('foo').to.be.a('string'); // Recommended
+   *     expect('foo').to.not.be.arguments; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect({}, 'nooo why fail??').to.be.arguments;
+   *
+   * The alias `.Arguments` can be used interchangeably with `.arguments`.
+   *
+   * @name arguments
+   * @alias Arguments
+   * @namespace BDD
+   * @api public
+   */
+
+  function checkArguments () {
+    var obj = flag(this, 'object')
+      , type = _.type(obj);
+    this.assert(
+        'Arguments' === type
+      , 'expected #{this} to be arguments but got ' + type
+      , 'expected #{this} to not be arguments'
+    );
+  }
+
+  Assertion.addProperty('arguments', checkArguments);
+  Assertion.addProperty('Arguments', checkArguments);
+
+  /**
+   * ### .equal(val[, msg])
+   *
+   * Asserts that the target is strictly (`===`) equal to the given `val`.
+   *
+   *     expect(1).to.equal(1);
+   *     expect('foo').to.equal('foo');
+   * 
+   * Add `.deep` earlier in the chain to use deep equality instead. See the
+   * `deep-eql` project page for info on the deep equality algorithm:
+   * https://github.com/chaijs/deep-eql.
+   *
+   *     // Target object deeply (but not strictly) equals `{a: 1}`
+   *     expect({a: 1}).to.deep.equal({a: 1});
+   *     expect({a: 1}).to.not.equal({a: 1});
+   *
+   *     // Target array deeply (but not strictly) equals `[1, 2]`
+   *     expect([1, 2]).to.deep.equal([1, 2]);
+   *     expect([1, 2]).to.not.equal([1, 2]);
+   *
+   * Add `.not` earlier in the chain to negate `.equal`. However, it's often
+   * best to assert that the target is equal to its expected value, rather than
+   * not equal to one of countless unexpected values.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.equal(2); // Not recommended
+   *
+   * `.equal` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(1).to.equal(2, 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.equal(2);
+   *
+   * The aliases `.equals` and `eq` can be used interchangeably with `.equal`.
+   *
+   * @name equal
+   * @alias equals
+   * @alias eq
+   * @param {Mixed} val
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertEqual (val, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object');
+    if (flag(this, 'deep')) {
+      return this.eql(val);
+    } else {
+      this.assert(
+          val === obj
+        , 'expected #{this} to equal #{exp}'
+        , 'expected #{this} to not equal #{exp}'
+        , val
+        , this._obj
+        , true
+      );
+    }
+  }
+
+  Assertion.addMethod('equal', assertEqual);
+  Assertion.addMethod('equals', assertEqual);
+  Assertion.addMethod('eq', assertEqual);
+
+  /**
+   * ### .eql(obj[, msg])
+   *
+   * Asserts that the target is deeply equal to the given `obj`. See the
+   * `deep-eql` project page for info on the deep equality algorithm:
+   * https://github.com/chaijs/deep-eql.
+   *
+   *     // Target object is deeply (but not strictly) equal to {a: 1}
+   *     expect({a: 1}).to.eql({a: 1}).but.not.equal({a: 1});
+   *
+   *     // Target array is deeply (but not strictly) equal to [1, 2]
+   *     expect([1, 2]).to.eql([1, 2]).but.not.equal([1, 2]);
+   *
+   * Add `.not` earlier in the chain to negate `.eql`. However, it's often best
+   * to assert that the target is deeply equal to its expected value, rather
+   * than not deeply equal to one of countless unexpected values.
+   *
+   *     expect({a: 1}).to.eql({a: 1}); // Recommended
+   *     expect({a: 1}).to.not.eql({b: 2}); // Not recommended
+   *
+   * `.eql` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect({a: 1}).to.eql({b: 2}, 'nooo why fail??');
+   *     expect({a: 1}, 'nooo why fail??').to.eql({b: 2});
+   *
+   * The alias `.eqls` can be used interchangeably with `.eql`.
+   *
+   * The `.deep.equal` assertion is almost identical to `.eql` but with one
+   * difference: `.deep.equal` causes deep equality comparisons to also be used
+   * for any other assertions that follow in the chain.
+   *
+   * @name eql
+   * @alias eqls
+   * @param {Mixed} obj
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertEql(obj, msg) {
+    if (msg) flag(this, 'message', msg);
+    this.assert(
+        _.eql(obj, flag(this, 'object'))
+      , 'expected #{this} to deeply equal #{exp}'
+      , 'expected #{this} to not deeply equal #{exp}'
+      , obj
+      , this._obj
+      , true
+    );
+  }
+
+  Assertion.addMethod('eql', assertEql);
+  Assertion.addMethod('eqls', assertEql);
+
+  /**
+   * ### .above(n[, msg])
+   *
+   * Asserts that the target is a number or a date greater than the given number or date `n` respectively.
+   * However, it's often best to assert that the target is equal to its expected
+   * value.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.be.above(1); // Not recommended
+   *
+   * Add `.lengthOf` earlier in the chain to assert that the value of the
+   * target's `length` property is greater than the given number `n`.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.have.lengthOf.above(2); // Not recommended
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3); // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.above(2); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.above`.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(1).to.not.be.above(2); // Not recommended
+   *
+   * `.above` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(1).to.be.above(2, 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.be.above(2);
+   *
+   * The aliases `.gt` and `.greaterThan` can be used interchangeably with
+   * `.above`.
+   *
+   * @name above
+   * @alias gt
+   * @alias greaterThan
+   * @param {Number} n
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertAbove (n, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , doLength = flag(this, 'doLength')
+      , flagMsg = flag(this, 'message')
+      , msgPrefix = ((flagMsg) ? flagMsg + ': ' : '')
+      , ssfi = flag(this, 'ssfi')
+      , objType = _.type(obj).toLowerCase()
+      , nType = _.type(n).toLowerCase()
+      , shouldThrow = true;
+
+    if (doLength) {
+      new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    }
+    
+    if (!doLength && (objType === 'date' && nType !== 'date')) {
+      errorMessage = msgPrefix + 'the argument to above must be a date';
+    } else if (nType !== 'number' && (doLength || objType === 'number')) {
+      errorMessage = msgPrefix + 'the argument to above must be a number';
+    } else if (!doLength && (objType !== 'date' && objType !== 'number')) {
+      var printObj = (objType === 'string') ? "'" + obj + "'" : obj;
+      errorMessage = msgPrefix + 'expected ' + printObj + ' to be a number or a date';
+    } else {
+      shouldThrow = false;
+    }
+
+    if (shouldThrow) {
+      throw new AssertionError(errorMessage, undefined, ssfi);
+    }
+
+    if (doLength) {
+      var len = obj.length;
+      this.assert(
+          len > n
+        , 'expected #{this} to have a length above #{exp} but got #{act}'
+        , 'expected #{this} to not have a length above #{exp}'
+        , n
+        , len
+      );
+    } else {
+      this.assert(
+          obj > n
+        , 'expected #{this} to be above #{exp}'
+        , 'expected #{this} to be at most #{exp}'
+        , n
+      );
+    }
+  }
+
+  Assertion.addMethod('above', assertAbove);
+  Assertion.addMethod('gt', assertAbove);
+  Assertion.addMethod('greaterThan', assertAbove);
+
+  /**
+   * ### .least(n[, msg])
+   *
+   * Asserts that the target is a number or a date greater than or equal to the given
+   * number or date `n` respectively. However, it's often best to assert that the target is equal to
+   * its expected value.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.be.at.least(1); // Not recommended
+   *     expect(2).to.be.at.least(2); // Not recommended
+   *
+   * Add `.lengthOf` earlier in the chain to assert that the value of the
+   * target's `length` property is greater than or equal to the given number
+   * `n`.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.have.lengthOf.at.least(2); // Not recommended
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3); // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.at.least(2); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.least`.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.at.least(2); // Not recommended
+   *
+   * `.least` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(1).to.be.at.least(2, 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.be.at.least(2);
+   *
+   * The alias `.gte` can be used interchangeably with `.least`.
+   *
+   * @name least
+   * @alias gte
+   * @param {Number} n
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertLeast (n, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , doLength = flag(this, 'doLength')
+      , flagMsg = flag(this, 'message')
+      , msgPrefix = ((flagMsg) ? flagMsg + ': ' : '')
+      , ssfi = flag(this, 'ssfi')
+      , objType = _.type(obj).toLowerCase()
+      , nType = _.type(n).toLowerCase()
+      , shouldThrow = true;
+
+    if (doLength) {
+      new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    }
+
+    if (!doLength && (objType === 'date' && nType !== 'date')) {
+      errorMessage = msgPrefix + 'the argument to least must be a date';
+    } else if (nType !== 'number' && (doLength || objType === 'number')) {
+      errorMessage = msgPrefix + 'the argument to least must be a number';
+    } else if (!doLength && (objType !== 'date' && objType !== 'number')) {
+      var printObj = (objType === 'string') ? "'" + obj + "'" : obj;
+      errorMessage = msgPrefix + 'expected ' + printObj + ' to be a number or a date';
+    } else {
+      shouldThrow = false;
+    }
+
+    if (shouldThrow) {
+      throw new AssertionError(errorMessage, undefined, ssfi);
+    }
+
+    if (doLength) {
+      var len = obj.length;
+      this.assert(
+          len >= n
+        , 'expected #{this} to have a length at least #{exp} but got #{act}'
+        , 'expected #{this} to have a length below #{exp}'
+        , n
+        , len
+      );
+    } else {
+      this.assert(
+          obj >= n
+        , 'expected #{this} to be at least #{exp}'
+        , 'expected #{this} to be below #{exp}'
+        , n
+      );
+    }
+  }
+
+  Assertion.addMethod('least', assertLeast);
+  Assertion.addMethod('gte', assertLeast);
+
+  /**
+   * ### .below(n[, msg])
+   *
+   * Asserts that the target is a number or a date less than the given number or date `n` respectively.
+   * However, it's often best to assert that the target is equal to its expected
+   * value.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.be.below(2); // Not recommended
+   *
+   * Add `.lengthOf` earlier in the chain to assert that the value of the
+   * target's `length` property is less than the given number `n`.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.have.lengthOf.below(4); // Not recommended
+   *
+   *     expect([1, 2, 3]).to.have.length(3); // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.below(4); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.below`.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.not.be.below(1); // Not recommended
+   *
+   * `.below` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(2).to.be.below(1, 'nooo why fail??');
+   *     expect(2, 'nooo why fail??').to.be.below(1);
+   *
+   * The aliases `.lt` and `.lessThan` can be used interchangeably with
+   * `.below`.
+   *
+   * @name below
+   * @alias lt
+   * @alias lessThan
+   * @param {Number} n
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertBelow (n, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , doLength = flag(this, 'doLength')
+      , flagMsg = flag(this, 'message')
+      , msgPrefix = ((flagMsg) ? flagMsg + ': ' : '')
+      , ssfi = flag(this, 'ssfi')
+      , objType = _.type(obj).toLowerCase()
+      , nType = _.type(n).toLowerCase()
+      , shouldThrow = true;
+
+    if (doLength) {
+      new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    }
+
+    if (!doLength && (objType === 'date' && nType !== 'date')) {
+      errorMessage = msgPrefix + 'the argument to below must be a date';
+    } else if (nType !== 'number' && (doLength || objType === 'number')) {
+      errorMessage = msgPrefix + 'the argument to below must be a number';
+    } else if (!doLength && (objType !== 'date' && objType !== 'number')) {
+      var printObj = (objType === 'string') ? "'" + obj + "'" : obj;
+      errorMessage = msgPrefix + 'expected ' + printObj + ' to be a number or a date';
+    } else {
+      shouldThrow = false;
+    }
+
+    if (shouldThrow) {
+      throw new AssertionError(errorMessage, undefined, ssfi);
+    }
+
+    if (doLength) {
+      var len = obj.length;
+      this.assert(
+          len < n
+        , 'expected #{this} to have a length below #{exp} but got #{act}'
+        , 'expected #{this} to not have a length below #{exp}'
+        , n
+        , len
+      );
+    } else {
+      this.assert(
+          obj < n
+        , 'expected #{this} to be below #{exp}'
+        , 'expected #{this} to be at least #{exp}'
+        , n
+      );
+    }
+  }
+
+  Assertion.addMethod('below', assertBelow);
+  Assertion.addMethod('lt', assertBelow);
+  Assertion.addMethod('lessThan', assertBelow);
+
+  /**
+   * ### .most(n[, msg])
+   *
+   * Asserts that the target is a number or a date less than or equal to the given number
+   * or date `n` respectively. However, it's often best to assert that the target is equal to its
+   * expected value.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.be.at.most(2); // Not recommended
+   *     expect(1).to.be.at.most(1); // Not recommended
+   *
+   * Add `.lengthOf` earlier in the chain to assert that the value of the
+   * target's `length` property is less than or equal to the given number `n`.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.have.lengthOf.at.most(4); // Not recommended
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3); // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.at.most(4); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.most`.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.not.be.at.most(1); // Not recommended
+   *
+   * `.most` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(2).to.be.at.most(1, 'nooo why fail??');
+   *     expect(2, 'nooo why fail??').to.be.at.most(1);
+   *
+   * The alias `.lte` can be used interchangeably with `.most`.
+   *
+   * @name most
+   * @alias lte
+   * @param {Number} n
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertMost (n, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , doLength = flag(this, 'doLength')
+      , flagMsg = flag(this, 'message')
+      , msgPrefix = ((flagMsg) ? flagMsg + ': ' : '')
+      , ssfi = flag(this, 'ssfi')
+      , objType = _.type(obj).toLowerCase()
+      , nType = _.type(n).toLowerCase()
+      , shouldThrow = true;
+
+    if (doLength) {
+      new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    }
+    
+    if (!doLength && (objType === 'date' && nType !== 'date')) {
+      errorMessage = msgPrefix + 'the argument to most must be a date';
+    } else if (nType !== 'number' && (doLength || objType === 'number')) {
+      errorMessage = msgPrefix + 'the argument to most must be a number';
+    } else if (!doLength && (objType !== 'date' && objType !== 'number')) {
+      var printObj = (objType === 'string') ? "'" + obj + "'" : obj;
+      errorMessage = msgPrefix + 'expected ' + printObj + ' to be a number or a date';
+    } else {
+      shouldThrow = false;
+    }
+
+    if (shouldThrow) {
+      throw new AssertionError(errorMessage, undefined, ssfi);
+    }
+
+    if (doLength) {
+      var len = obj.length;
+      this.assert(
+          len <= n
+        , 'expected #{this} to have a length at most #{exp} but got #{act}'
+        , 'expected #{this} to have a length above #{exp}'
+        , n
+        , len
+      );
+    } else {
+      this.assert(
+          obj <= n
+        , 'expected #{this} to be at most #{exp}'
+        , 'expected #{this} to be above #{exp}'
+        , n
+      );
+    }
+  }
+
+  Assertion.addMethod('most', assertMost);
+  Assertion.addMethod('lte', assertMost);
+
+  /**
+   * ### .within(start, finish[, msg])
+   *
+   * Asserts that the target is a number or a date greater than or equal to the given
+   * number or date `start`, and less than or equal to the given number or date `finish` respectively.
+   * However, it's often best to assert that the target is equal to its expected
+   * value.
+   *
+   *     expect(2).to.equal(2); // Recommended
+   *     expect(2).to.be.within(1, 3); // Not recommended
+   *     expect(2).to.be.within(2, 3); // Not recommended
+   *     expect(2).to.be.within(1, 2); // Not recommended
+   *
+   * Add `.lengthOf` earlier in the chain to assert that the value of the
+   * target's `length` property is greater than or equal to the given number
+   * `start`, and less than or equal to the given number `finish`.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.have.lengthOf.within(2, 4); // Not recommended
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3); // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.within(2, 4); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.within`.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.within(2, 4); // Not recommended
+   *
+   * `.within` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect(4).to.be.within(1, 3, 'nooo why fail??');
+   *     expect(4, 'nooo why fail??').to.be.within(1, 3);
+   *
+   * @name within
+   * @param {Number} start lower bound inclusive
+   * @param {Number} finish upper bound inclusive
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addMethod('within', function (start, finish, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , doLength = flag(this, 'doLength')
+      , flagMsg = flag(this, 'message')
+      , msgPrefix = ((flagMsg) ? flagMsg + ': ' : '')
+      , ssfi = flag(this, 'ssfi')
+      , objType = _.type(obj).toLowerCase()
+      , startType = _.type(start).toLowerCase()
+      , finishType = _.type(finish).toLowerCase()
+      , shouldThrow = true
+      , range = (startType === 'date' && finishType === 'date')
+          ? start.toUTCString() + '..' + finish.toUTCString()
+          : start + '..' + finish;
+
+    if (doLength) {
+      new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    }
+
+    if (!doLength && (objType === 'date' && (startType !== 'date' || finishType !== 'date'))) {
+      errorMessage = msgPrefix + 'the arguments to within must be dates';
+    } else if ((startType !== 'number' || finishType !== 'number') && (doLength || objType === 'number')) {
+      errorMessage = msgPrefix + 'the arguments to within must be numbers';
+    } else if (!doLength && (objType !== 'date' && objType !== 'number')) {
+      var printObj = (objType === 'string') ? "'" + obj + "'" : obj;
+      errorMessage = msgPrefix + 'expected ' + printObj + ' to be a number or a date';
+    } else {
+      shouldThrow = false;
+    }
+
+    if (shouldThrow) {
+      throw new AssertionError(errorMessage, undefined, ssfi);
+    }
+
+    if (doLength) {
+      var len = obj.length;
+      this.assert(
+          len >= start && len <= finish
+        , 'expected #{this} to have a length within ' + range
+        , 'expected #{this} to not have a length within ' + range
+      );
+    } else {
+      this.assert(
+          obj >= start && obj <= finish
+        , 'expected #{this} to be within ' + range
+        , 'expected #{this} to not be within ' + range
+      );
+    }
+  });
+
+  /**
+   * ### .instanceof(constructor[, msg])
+   *
+   * Asserts that the target is an instance of the given `constructor`.
+   *
+   *     function Cat () { }
+   *
+   *     expect(new Cat()).to.be.an.instanceof(Cat);
+   *     expect([1, 2]).to.be.an.instanceof(Array);
+   *
+   * Add `.not` earlier in the chain to negate `.instanceof`.
+   *
+   *     expect({a: 1}).to.not.be.an.instanceof(Array);
+   *
+   * `.instanceof` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect(1).to.be.an.instanceof(Array, 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.be.an.instanceof(Array);
+   *
+   * Due to limitations in ES5, `.instanceof` may not always work as expected
+   * when using a transpiler such as Babel or TypeScript. In particular, it may
+   * produce unexpected results when subclassing built-in object such as
+   * `Array`, `Error`, and `Map`. See your transpiler's docs for details:
+   *
+   * - ([Babel](https://babeljs.io/docs/usage/caveats/#classes))
+   * - ([TypeScript](https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work))
+   *
+   * The alias `.instanceOf` can be used interchangeably with `.instanceof`.
+   *
+   * @name instanceof
+   * @param {Constructor} constructor
+   * @param {String} msg _optional_
+   * @alias instanceOf
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertInstanceOf (constructor, msg) {
+    if (msg) flag(this, 'message', msg);
+
+    var target = flag(this, 'object')
+    var ssfi = flag(this, 'ssfi');
+    var flagMsg = flag(this, 'message');
+
+    try {
+      var isInstanceOf = target instanceof constructor;
+    } catch (err) {
+      if (err instanceof TypeError) {
+        flagMsg = flagMsg ? flagMsg + ': ' : '';
+        throw new AssertionError(
+          flagMsg + 'The instanceof assertion needs a constructor but '
+            + _.type(constructor) + ' was given.',
+          undefined,
+          ssfi
+        );
+      }
+      throw err;
+    }
+
+    var name = _.getName(constructor);
+    if (name === null) {
+      name = 'an unnamed constructor';
+    }
+
+    this.assert(
+        isInstanceOf
+      , 'expected #{this} to be an instance of ' + name
+      , 'expected #{this} to not be an instance of ' + name
+    );
+  };
+
+  Assertion.addMethod('instanceof', assertInstanceOf);
+  Assertion.addMethod('instanceOf', assertInstanceOf);
+
+  /**
+   * ### .property(name[, val[, msg]])
+   *
+   * Asserts that the target has a property with the given key `name`.
+   *
+   *     expect({a: 1}).to.have.property('a');
+   *
+   * When `val` is provided, `.property` also asserts that the property's value
+   * is equal to the given `val`.
+   *
+   *     expect({a: 1}).to.have.property('a', 1);
+   *
+   * By default, strict (`===`) equality is used. Add `.deep` earlier in the
+   * chain to use deep equality instead. See the `deep-eql` project page for
+   * info on the deep equality algorithm: https://github.com/chaijs/deep-eql.
+   *
+   *     // Target object deeply (but not strictly) has property `x: {a: 1}`
+   *     expect({x: {a: 1}}).to.have.deep.property('x', {a: 1});
+   *     expect({x: {a: 1}}).to.not.have.property('x', {a: 1});
+   *
+   * The target's enumerable and non-enumerable properties are always included
+   * in the search. By default, both own and inherited properties are included.
+   * Add `.own` earlier in the chain to exclude inherited properties from the
+   * search.
+   *
+   *     Object.prototype.b = 2;
+   *
+   *     expect({a: 1}).to.have.own.property('a');
+   *     expect({a: 1}).to.have.own.property('a', 1);
+   *     expect({a: 1}).to.have.property('b').but.not.own.property('b'); 
+   *
+   * `.deep` and `.own` can be combined.
+   *
+   *     expect({x: {a: 1}}).to.have.deep.own.property('x', {a: 1});
+   *
+   * Add `.nested` earlier in the chain to enable dot- and bracket-notation when
+   * referencing nested properties.
+   *
+   *     expect({a: {b: ['x', 'y']}}).to.have.nested.property('a.b[1]');
+   *     expect({a: {b: ['x', 'y']}}).to.have.nested.property('a.b[1]', 'y');
+   *
+   * If `.` or `[]` are part of an actual property name, they can be escaped by
+   * adding two backslashes before them.
+   *
+   *     expect({'.a': {'[b]': 'x'}}).to.have.nested.property('\\.a.\\[b\\]');
+   *
+   * `.deep` and `.nested` can be combined.
+   *
+   *     expect({a: {b: [{c: 3}]}})
+   *       .to.have.deep.nested.property('a.b[0]', {c: 3});
+   *
+   * `.own` and `.nested` cannot be combined.
+   *
+   * Add `.not` earlier in the chain to negate `.property`.
+   *
+   *     expect({a: 1}).to.not.have.property('b');
+   * 
+   * However, it's dangerous to negate `.property` when providing `val`. The
+   * problem is that it creates uncertain expectations by asserting that the
+   * target either doesn't have a property with the given key `name`, or that it
+   * does have a property with the given key `name` but its value isn't equal to
+   * the given `val`. It's often best to identify the exact output that's
+   * expected, and then write an assertion that only accepts that exact output.
+   *
+   * When the target isn't expected to have a property with the given key
+   * `name`, it's often best to assert exactly that.
+   *
+   *     expect({b: 2}).to.not.have.property('a'); // Recommended
+   *     expect({b: 2}).to.not.have.property('a', 1); // Not recommended
+   *
+   * When the target is expected to have a property with the given key `name`,
+   * it's often best to assert that the property has its expected value, rather
+   * than asserting that it doesn't have one of many unexpected values.
+   *
+   *     expect({a: 3}).to.have.property('a', 3); // Recommended
+   *     expect({a: 3}).to.not.have.property('a', 1); // Not recommended
+   *
+   * `.property` changes the target of any assertions that follow in the chain
+   * to be the value of the property from the original target object.
+   *
+   *     expect({a: 1}).to.have.property('a').that.is.a('number');
+   *
+   * `.property` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`. When not providing `val`, only use the
+   * second form.
+   *
+   *     // Recommended
+   *     expect({a: 1}).to.have.property('a', 2, 'nooo why fail??');
+   *     expect({a: 1}, 'nooo why fail??').to.have.property('a', 2);
+   *     expect({a: 1}, 'nooo why fail??').to.have.property('b');
+   *
+   *     // Not recommended
+   *     expect({a: 1}).to.have.property('b', undefined, 'nooo why fail??');
+   * 
+   * The above assertion isn't the same thing as not providing `val`. Instead,
+   * it's asserting that the target object has a `b` property that's equal to
+   * `undefined`.
+   *
+   * The assertions `.ownProperty` and `.haveOwnProperty` can be used
+   * interchangeably with `.own.property`.
+   *
+   * @name property
+   * @param {String} name
+   * @param {Mixed} val (optional)
+   * @param {String} msg _optional_
+   * @returns value of property for chaining
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertProperty (name, val, msg) {
+    if (msg) flag(this, 'message', msg);
+
+    var isNested = flag(this, 'nested')
+      , isOwn = flag(this, 'own')
+      , flagMsg = flag(this, 'message')
+      , obj = flag(this, 'object')
+      , ssfi = flag(this, 'ssfi');
+
+    if (isNested && isOwn) {
+      flagMsg = flagMsg ? flagMsg + ': ' : '';
+      throw new AssertionError(
+        flagMsg + 'The "nested" and "own" flags cannot be combined.',
+        undefined,
+        ssfi
+      );
+    }
+
+    if (obj === null || obj === undefined) {
+      flagMsg = flagMsg ? flagMsg + ': ' : '';
+      throw new AssertionError(
+        flagMsg + 'Target cannot be null or undefined.',
+        undefined,
+        ssfi
+      );
+    }
+
+    var isDeep = flag(this, 'deep')
+      , negate = flag(this, 'negate')
+      , pathInfo = isNested ? _.getPathInfo(obj, name) : null
+      , value = isNested ? pathInfo.value : obj[name];
+
+    var descriptor = '';
+    if (isDeep) descriptor += 'deep ';
+    if (isOwn) descriptor += 'own ';
+    if (isNested) descriptor += 'nested ';
+    descriptor += 'property ';
+
+    var hasProperty;
+    if (isOwn) hasProperty = Object.prototype.hasOwnProperty.call(obj, name);
+    else if (isNested) hasProperty = pathInfo.exists;
+    else hasProperty = _.hasProperty(obj, name);
+
+    // When performing a negated assertion for both name and val, merely having
+    // a property with the given name isn't enough to cause the assertion to
+    // fail. It must both have a property with the given name, and the value of
+    // that property must equal the given val. Therefore, skip this assertion in
+    // favor of the next.
+    if (!negate || arguments.length === 1) {
+      this.assert(
+          hasProperty
+        , 'expected #{this} to have ' + descriptor + _.inspect(name)
+        , 'expected #{this} to not have ' + descriptor + _.inspect(name));
+    }
+
+    if (arguments.length > 1) {
+      this.assert(
+          hasProperty && (isDeep ? _.eql(val, value) : val === value)
+        , 'expected #{this} to have ' + descriptor + _.inspect(name) + ' of #{exp}, but got #{act}'
+        , 'expected #{this} to not have ' + descriptor + _.inspect(name) + ' of #{act}'
+        , val
+        , value
+      );
+    }
+
+    flag(this, 'object', value);
+  }
+
+  Assertion.addMethod('property', assertProperty);
+
+  function assertOwnProperty (name, value, msg) {
+    flag(this, 'own', true);
+    assertProperty.apply(this, arguments);
+  }
+
+  Assertion.addMethod('ownProperty', assertOwnProperty);
+  Assertion.addMethod('haveOwnProperty', assertOwnProperty);
+
+  /**
+   * ### .ownPropertyDescriptor(name[, descriptor[, msg]])
+   *
+   * Asserts that the target has its own property descriptor with the given key
+   * `name`. Enumerable and non-enumerable properties are included in the
+   * search.
+   *
+   *     expect({a: 1}).to.have.ownPropertyDescriptor('a');
+   *
+   * When `descriptor` is provided, `.ownPropertyDescriptor` also asserts that
+   * the property's descriptor is deeply equal to the given `descriptor`. See
+   * the `deep-eql` project page for info on the deep equality algorithm:
+   * https://github.com/chaijs/deep-eql.
+   *
+   *     expect({a: 1}).to.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 1,
+   *     });
+   *
+   * Add `.not` earlier in the chain to negate `.ownPropertyDescriptor`.
+   *
+   *     expect({a: 1}).to.not.have.ownPropertyDescriptor('b');
+   * 
+   * However, it's dangerous to negate `.ownPropertyDescriptor` when providing
+   * a `descriptor`. The problem is that it creates uncertain expectations by
+   * asserting that the target either doesn't have a property descriptor with
+   * the given key `name`, or that it does have a property descriptor with the
+   * given key `name` but its not deeply equal to the given `descriptor`. It's
+   * often best to identify the exact output that's expected, and then write an
+   * assertion that only accepts that exact output.
+   *
+   * When the target isn't expected to have a property descriptor with the given
+   * key `name`, it's often best to assert exactly that.
+   *
+   *     // Recommended
+   *     expect({b: 2}).to.not.have.ownPropertyDescriptor('a');
+   *
+   *     // Not recommended
+   *     expect({b: 2}).to.not.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 1,
+   *     });
+   *
+   * When the target is expected to have a property descriptor with the given
+   * key `name`, it's often best to assert that the property has its expected
+   * descriptor, rather than asserting that it doesn't have one of many
+   * unexpected descriptors.
+   *
+   *     // Recommended
+   *     expect({a: 3}).to.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 3,
+   *     });
+   *
+   *     // Not recommended
+   *     expect({a: 3}).to.not.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 1,
+   *     });
+   *
+   * `.ownPropertyDescriptor` changes the target of any assertions that follow
+   * in the chain to be the value of the property descriptor from the original
+   * target object.
+   *
+   *     expect({a: 1}).to.have.ownPropertyDescriptor('a')
+   *       .that.has.property('enumerable', true);
+   *
+   * `.ownPropertyDescriptor` accepts an optional `msg` argument which is a
+   * custom error message to show when the assertion fails. The message can also
+   * be given as the second argument to `expect`. When not providing
+   * `descriptor`, only use the second form.
+   *
+   *     // Recommended
+   *     expect({a: 1}).to.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 2,
+   *     }, 'nooo why fail??');
+   *
+   *     // Recommended
+   *     expect({a: 1}, 'nooo why fail??').to.have.ownPropertyDescriptor('a', {
+   *       configurable: true,
+   *       enumerable: true,
+   *       writable: true,
+   *       value: 2,
+   *     });
+   * 
+   *     // Recommended
+   *     expect({a: 1}, 'nooo why fail??').to.have.ownPropertyDescriptor('b');
+   *
+   *     // Not recommended
+   *     expect({a: 1})
+   *       .to.have.ownPropertyDescriptor('b', undefined, 'nooo why fail??');
+   *
+   * The above assertion isn't the same thing as not providing `descriptor`.
+   * Instead, it's asserting that the target object has a `b` property
+   * descriptor that's deeply equal to `undefined`.
+   *
+   * The alias `.haveOwnPropertyDescriptor` can be used interchangeably with
+   * `.ownPropertyDescriptor`.
+   *
+   * @name ownPropertyDescriptor
+   * @alias haveOwnPropertyDescriptor
+   * @param {String} name
+   * @param {Object} descriptor _optional_
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertOwnPropertyDescriptor (name, descriptor, msg) {
+    if (typeof descriptor === 'string') {
+      msg = descriptor;
+      descriptor = null;
+    }
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object');
+    var actualDescriptor = Object.getOwnPropertyDescriptor(Object(obj), name);
+    if (actualDescriptor && descriptor) {
+      this.assert(
+          _.eql(descriptor, actualDescriptor)
+        , 'expected the own property descriptor for ' + _.inspect(name) + ' on #{this} to match ' + _.inspect(descriptor) + ', got ' + _.inspect(actualDescriptor)
+        , 'expected the own property descriptor for ' + _.inspect(name) + ' on #{this} to not match ' + _.inspect(descriptor)
+        , descriptor
+        , actualDescriptor
+        , true
+      );
+    } else {
+      this.assert(
+          actualDescriptor
+        , 'expected #{this} to have an own property descriptor for ' + _.inspect(name)
+        , 'expected #{this} to not have an own property descriptor for ' + _.inspect(name)
+      );
+    }
+    flag(this, 'object', actualDescriptor);
+  }
+
+  Assertion.addMethod('ownPropertyDescriptor', assertOwnPropertyDescriptor);
+  Assertion.addMethod('haveOwnPropertyDescriptor', assertOwnPropertyDescriptor);
+
+  /**
+   * ### .lengthOf(n[, msg])
+   *
+   * Asserts that the target's `length` property is equal to the given number
+   * `n`.
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(3);
+   *     expect('foo').to.have.lengthOf(3);
+   *
+   * Add `.not` earlier in the chain to negate `.lengthOf`. However, it's often
+   * best to assert that the target's `length` property is equal to its expected
+   * value, rather than not equal to one of many unexpected values.
+   *
+   *     expect('foo').to.have.lengthOf(3); // Recommended
+   *     expect('foo').to.not.have.lengthOf(4); // Not recommended
+   *
+   * `.lengthOf` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect([1, 2, 3]).to.have.lengthOf(2, 'nooo why fail??');
+   *     expect([1, 2, 3], 'nooo why fail??').to.have.lengthOf(2);
+   *
+   * `.lengthOf` can also be used as a language chain, causing all `.above`,
+   * `.below`, `.least`, `.most`, and `.within` assertions that follow in the
+   * chain to use the target's `length` property as the target. However, it's
+   * often best to assert that the target's `length` property is equal to its
+   * expected length, rather than asserting that its `length` property falls
+   * within some range of values.
+   *
+   *     // Recommended
+   *     expect([1, 2, 3]).to.have.lengthOf(3);
+   *
+   *     // Not recommended
+   *     expect([1, 2, 3]).to.have.lengthOf.above(2);
+   *     expect([1, 2, 3]).to.have.lengthOf.below(4);
+   *     expect([1, 2, 3]).to.have.lengthOf.at.least(3);
+   *     expect([1, 2, 3]).to.have.lengthOf.at.most(3);
+   *     expect([1, 2, 3]).to.have.lengthOf.within(2,4);
+   *
+   * Due to a compatibility issue, the alias `.length` can't be chained directly
+   * off of an uninvoked method such as `.a`. Therefore, `.length` can't be used
+   * interchangeably with `.lengthOf` in every situation. It's recommended to
+   * always use `.lengthOf` instead of `.length`.
+   *
+   *     expect([1, 2, 3]).to.have.a.length(3); // incompatible; throws error
+   *     expect([1, 2, 3]).to.have.a.lengthOf(3);  // passes as expected
+   *
+   * @name lengthOf
+   * @alias length
+   * @param {Number} n
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertLengthChain () {
+    flag(this, 'doLength', true);
+  }
+
+  function assertLength (n, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
+    var len = obj.length;
+
+    this.assert(
+        len == n
+      , 'expected #{this} to have a length of #{exp} but got #{act}'
+      , 'expected #{this} to not have a length of #{act}'
+      , n
+      , len
+    );
+  }
+
+  Assertion.addChainableMethod('length', assertLength, assertLengthChain);
+  Assertion.addChainableMethod('lengthOf', assertLength, assertLengthChain);
+
+  /**
+   * ### .match(re[, msg])
+   *
+   * Asserts that the target matches the given regular expression `re`.
+   *
+   *     expect('foobar').to.match(/^foo/);
+   *
+   * Add `.not` earlier in the chain to negate `.match`.
+   *
+   *     expect('foobar').to.not.match(/taco/);
+   *
+   * `.match` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect('foobar').to.match(/taco/, 'nooo why fail??');
+   *     expect('foobar', 'nooo why fail??').to.match(/taco/);
+   *
+   * The alias `.matches` can be used interchangeably with `.match`.
+   *
+   * @name match
+   * @alias matches
+   * @param {RegExp} re
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+  function assertMatch(re, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object');
+    this.assert(
+        re.exec(obj)
+      , 'expected #{this} to match ' + re
+      , 'expected #{this} not to match ' + re
+    );
+  }
+
+  Assertion.addMethod('match', assertMatch);
+  Assertion.addMethod('matches', assertMatch);
+
+  /**
+   * ### .string(str[, msg])
+   *
+   * Asserts that the target string contains the given substring `str`.
+   *
+   *     expect('foobar').to.have.string('bar');
+   *
+   * Add `.not` earlier in the chain to negate `.string`.
+   *
+   *     expect('foobar').to.not.have.string('taco');
+   *
+   * `.string` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect('foobar').to.have.string(/taco/, 'nooo why fail??');
+   *     expect('foobar', 'nooo why fail??').to.have.string(/taco/);
+   *
+   * @name string
+   * @param {String} str
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addMethod('string', function (str, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(obj, flagMsg, ssfi, true).is.a('string');
+
+    this.assert(
+        ~obj.indexOf(str)
+      , 'expected #{this} to contain ' + _.inspect(str)
+      , 'expected #{this} to not contain ' + _.inspect(str)
+    );
+  });
+
+  /**
+   * ### .keys(key1[, key2[, ...]])
+   *
+   * Asserts that the target object, array, map, or set has the given keys. Only
+   * the target's own inherited properties are included in the search. 
+   *
+   * When the target is an object or array, keys can be provided as one or more
+   * string arguments, a single array argument, or a single object argument. In
+   * the latter case, only the keys in the given object matter; the values are
+   * ignored.
+   *
+   *     expect({a: 1, b: 2}).to.have.all.keys('a', 'b');
+   *     expect(['x', 'y']).to.have.all.keys(0, 1);
+   *
+   *     expect({a: 1, b: 2}).to.have.all.keys(['a', 'b']);
+   *     expect(['x', 'y']).to.have.all.keys([0, 1]);
+   *
+   *     expect({a: 1, b: 2}).to.have.all.keys({a: 4, b: 5}); // ignore 4 and 5
+   *     expect(['x', 'y']).to.have.all.keys({0: 4, 1: 5}); // ignore 4 and 5
+   *
+   * When the target is a map or set, each key must be provided as a separate
+   * argument.
+   *
+   *     expect(new Map([['a', 1], ['b', 2]])).to.have.all.keys('a', 'b');
+   *     expect(new Set(['a', 'b'])).to.have.all.keys('a', 'b');
+   *
+   * Because `.keys` does different things based on the target's type, it's
+   * important to check the target's type before using `.keys`. See the `.a` doc
+   * for info on testing a target's type.
+   *
+   *     expect({a: 1, b: 2}).to.be.an('object').that.has.all.keys('a', 'b');
+   *
+   * By default, strict (`===`) equality is used to compare keys of maps and
+   * sets. Add `.deep` earlier in the chain to use deep equality instead. See
+   * the `deep-eql` project page for info on the deep equality algorithm:
+   * https://github.com/chaijs/deep-eql.
+   *
+   *     // Target set deeply (but not strictly) has key `{a: 1}`
+   *     expect(new Set([{a: 1}])).to.have.all.deep.keys([{a: 1}]);
+   *     expect(new Set([{a: 1}])).to.not.have.all.keys([{a: 1}]);
+   *
+   * By default, the target must have all of the given keys and no more. Add
+   * `.any` earlier in the chain to only require that the target have at least
+   * one of the given keys. Also, add `.not` earlier in the chain to negate
+   * `.keys`. It's often best to add `.any` when negating `.keys`, and to use
+   * `.all` when asserting `.keys` without negation.
+   *
+   * When negating `.keys`, `.any` is preferred because `.not.any.keys` asserts
+   * exactly what's expected of the output, whereas `.not.all.keys` creates
+   * uncertain expectations.
+   *
+   *     // Recommended; asserts that target doesn't have any of the given keys
+   *     expect({a: 1, b: 2}).to.not.have.any.keys('c', 'd');
+   *
+   *     // Not recommended; asserts that target doesn't have all of the given
+   *     // keys but may or may not have some of them
+   *     expect({a: 1, b: 2}).to.not.have.all.keys('c', 'd');
+   *
+   * When asserting `.keys` without negation, `.all` is preferred because
+   * `.all.keys` asserts exactly what's expected of the output, whereas
+   * `.any.keys` creates uncertain expectations.
+   *
+   *     // Recommended; asserts that target has all the given keys
+   *     expect({a: 1, b: 2}).to.have.all.keys('a', 'b');
+   *
+   *     // Not recommended; asserts that target has at least one of the given
+   *     // keys but may or may not have more of them
+   *     expect({a: 1, b: 2}).to.have.any.keys('a', 'b');
+   *
+   * Note that `.all` is used by default when neither `.all` nor `.any` appear
+   * earlier in the chain. However, it's often best to add `.all` anyway because
+   * it improves readability.
+   *
+   *     // Both assertions are identical
+   *     expect({a: 1, b: 2}).to.have.all.keys('a', 'b'); // Recommended
+   *     expect({a: 1, b: 2}).to.have.keys('a', 'b'); // Not recommended
+   *
+   * Add `.include` earlier in the chain to require that the target's keys be a
+   * superset of the expected keys, rather than identical sets.
+   *
+   *     // Target object's keys are a superset of ['a', 'b'] but not identical
+   *     expect({a: 1, b: 2, c: 3}).to.include.all.keys('a', 'b');
+   *     expect({a: 1, b: 2, c: 3}).to.not.have.all.keys('a', 'b');
+   *
+   * However, if `.any` and `.include` are combined, only the `.any` takes
+   * effect. The `.include` is ignored in this case.
+   *
+   *     // Both assertions are identical
+   *     expect({a: 1}).to.have.any.keys('a', 'b');
+   *     expect({a: 1}).to.include.any.keys('a', 'b');
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect({a: 1}, 'nooo why fail??').to.have.key('b');
+   *
+   * The alias `.key` can be used interchangeably with `.keys`.
+   *
+   * @name keys
+   * @alias key
+   * @param {...String|Array|Object} keys
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertKeys (keys) {
+    var obj = flag(this, 'object')
+      , objType = _.type(obj)
+      , keysType = _.type(keys)
+      , ssfi = flag(this, 'ssfi')
+      , isDeep = flag(this, 'deep')
+      , str
+      , deepStr = ''
+      , ok = true
+      , flagMsg = flag(this, 'message');
+
+    flagMsg = flagMsg ? flagMsg + ': ' : '';
+    var mixedArgsMsg = flagMsg + 'when testing keys against an object or an array you must give a single Array|Object|String argument or multiple String arguments';
+
+    if (objType === 'Map' || objType === 'Set') {
+      deepStr = isDeep ? 'deeply ' : '';
+      actual = [];
+
+      // Map and Set '.keys' aren't supported in IE 11. Therefore, use .forEach.
+      obj.forEach(function (val, key) { actual.push(key) });
+
+      if (keysType !== 'Array') {
+        keys = Array.prototype.slice.call(arguments);
+      }
+
+    } else {
+      actual = _.getOwnEnumerableProperties(obj);
+
+      switch (keysType) {
+        case 'Array':
+          if (arguments.length > 1) {
+            throw new AssertionError(mixedArgsMsg, undefined, ssfi);
+          }
+          break;
+        case 'Object':
+          if (arguments.length > 1) {
+            throw new AssertionError(mixedArgsMsg, undefined, ssfi);
+          }
+          keys = Object.keys(keys);
+          break;
+        default:
+          keys = Array.prototype.slice.call(arguments);
+      }
+
+      // Only stringify non-Symbols because Symbols would become "Symbol()"
+      keys = keys.map(function (val) {
+        return typeof val === 'symbol' ? val : String(val);
+      });
+    }
+
+    if (!keys.length) {
+      throw new AssertionError(flagMsg + 'keys required', undefined, ssfi);
+    }
+
+    var len = keys.length
+      , any = flag(this, 'any')
+      , all = flag(this, 'all')
+      , expected = keys
+      , actual;
+
+    if (!any && !all) {
+      all = true;
+    }
+
+    // Has any
+    if (any) {
+      ok = expected.some(function(expectedKey) {
+        return actual.some(function(actualKey) {
+          if (isDeep) {
+            return _.eql(expectedKey, actualKey);
+          } else {
+            return expectedKey === actualKey;
+          }
+        });
+      });
+    }
+
+    // Has all
+    if (all) {
+      ok = expected.every(function(expectedKey) {
+        return actual.some(function(actualKey) {
+          if (isDeep) {
+            return _.eql(expectedKey, actualKey);
+          } else {
+            return expectedKey === actualKey;
+          }
+        });
+      });
+
+      if (!flag(this, 'contains')) {
+        ok = ok && keys.length == actual.length;
+      }
+    }
+
+    // Key string
+    if (len > 1) {
+      keys = keys.map(function(key) {
+        return _.inspect(key);
+      });
+      var last = keys.pop();
+      if (all) {
+        str = keys.join(', ') + ', and ' + last;
+      }
+      if (any) {
+        str = keys.join(', ') + ', or ' + last;
+      }
+    } else {
+      str = _.inspect(keys[0]);
+    }
+
+    // Form
+    str = (len > 1 ? 'keys ' : 'key ') + str;
+
+    // Have / include
+    str = (flag(this, 'contains') ? 'contain ' : 'have ') + str;
+
+    // Assertion
+    this.assert(
+        ok
+      , 'expected #{this} to ' + deepStr + str
+      , 'expected #{this} to not ' + deepStr + str
+      , expected.slice(0).sort(_.compareByInspect)
+      , actual.sort(_.compareByInspect)
+      , true
+    );
+  }
+
+  Assertion.addMethod('keys', assertKeys);
+  Assertion.addMethod('key', assertKeys);
+
+  /**
+   * ### .throw([errorLike], [errMsgMatcher], [msg])
+   *
+   * When no arguments are provided, `.throw` invokes the target function and
+   * asserts that an error is thrown.
+   * 
+   *     var badFn = function () { throw new TypeError('Illegal salmon!'); };
+   *
+   *     expect(badFn).to.throw();
+   *
+   * When one argument is provided, and it's an error constructor, `.throw`
+   * invokes the target function and asserts that an error is thrown that's an
+   * instance of that error constructor.
+   *
+   *     var badFn = function () { throw new TypeError('Illegal salmon!'); };
+   *
+   *     expect(badFn).to.throw(TypeError);
+   *
+   * When one argument is provided, and it's an error instance, `.throw` invokes
+   * the target function and asserts that an error is thrown that's strictly
+   * (`===`) equal to that error instance.
+   *
+   *     var err = new TypeError('Illegal salmon!');
+   *     var badFn = function () { throw err; };
+   *
+   *     expect(badFn).to.throw(err);
+   *
+   * When one argument is provided, and it's a string, `.throw` invokes the
+   * target function and asserts that an error is thrown with a message that
+   * contains that string.
+   *
+   *     var badFn = function () { throw new TypeError('Illegal salmon!'); };
+   *
+   *     expect(badFn).to.throw('salmon');
+   *
+   * When one argument is provided, and it's a regular expression, `.throw`
+   * invokes the target function and asserts that an error is thrown with a
+   * message that matches that regular expression.
+   *
+   *     var badFn = function () { throw new TypeError('Illegal salmon!'); };
+   *
+   *     expect(badFn).to.throw(/salmon/);
+   *
+   * When two arguments are provided, and the first is an error instance or
+   * constructor, and the second is a string or regular expression, `.throw`
+   * invokes the function and asserts that an error is thrown that fulfills both
+   * conditions as described above.
+   *
+   *     var err = new TypeError('Illegal salmon!');
+   *     var badFn = function () { throw err; };
+   *
+   *     expect(badFn).to.throw(TypeError, 'salmon');
+   *     expect(badFn).to.throw(TypeError, /salmon/);
+   *     expect(badFn).to.throw(err, 'salmon');
+   *     expect(badFn).to.throw(err, /salmon/);
+   *
+   * Add `.not` earlier in the chain to negate `.throw`.
+   *     
+   *     var goodFn = function () {};
+   *
+   *     expect(goodFn).to.not.throw();
+   * 
+   * However, it's dangerous to negate `.throw` when providing any arguments.
+   * The problem is that it creates uncertain expectations by asserting that the
+   * target either doesn't throw an error, or that it throws an error but of a
+   * different type than the given type, or that it throws an error of the given
+   * type but with a message that doesn't include the given string. It's often
+   * best to identify the exact output that's expected, and then write an
+   * assertion that only accepts that exact output.
+   *
+   * When the target isn't expected to throw an error, it's often best to assert
+   * exactly that.
+   *
+   *     var goodFn = function () {};
+   *
+   *     expect(goodFn).to.not.throw(); // Recommended
+   *     expect(goodFn).to.not.throw(ReferenceError, 'x'); // Not recommended
+   *
+   * When the target is expected to throw an error, it's often best to assert
+   * that the error is of its expected type, and has a message that includes an
+   * expected string, rather than asserting that it doesn't have one of many
+   * unexpected types, and doesn't have a message that includes some string.
+   *
+   *     var badFn = function () { throw new TypeError('Illegal salmon!'); };
+   *
+   *     expect(badFn).to.throw(TypeError, 'salmon'); // Recommended
+   *     expect(badFn).to.not.throw(ReferenceError, 'x'); // Not recommended
+   *
+   * `.throw` changes the target of any assertions that follow in the chain to
+   * be the error object that's thrown.
+   *
+   *     var err = new TypeError('Illegal salmon!');
+   *     err.code = 42;
+   *     var badFn = function () { throw err; };
+   *
+   *     expect(badFn).to.throw(TypeError).with.property('code', 42);
+   *
+   * `.throw` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`. When not providing two arguments, always use
+   * the second form.
+   *
+   *     var goodFn = function () {};
+   *
+   *     expect(goodFn).to.throw(TypeError, 'x', 'nooo why fail??');
+   *     expect(goodFn, 'nooo why fail??').to.throw();
+   *
+   * Due to limitations in ES5, `.throw` may not always work as expected when
+   * using a transpiler such as Babel or TypeScript. In particular, it may
+   * produce unexpected results when subclassing the built-in `Error` object and
+   * then passing the subclassed constructor to `.throw`. See your transpiler's
+   * docs for details:
+   *
+   * - ([Babel](https://babeljs.io/docs/usage/caveats/#classes))
+   * - ([TypeScript](https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work))
+   *
+   * Beware of some common mistakes when using the `throw` assertion. One common
+   * mistake is to accidentally invoke the function yourself instead of letting
+   * the `throw` assertion invoke the function for you. For example, when
+   * testing if a function named `fn` throws, provide `fn` instead of `fn()` as
+   * the target for the assertion.
+   *
+   *     expect(fn).to.throw();     // Good! Tests `fn` as desired
+   *     expect(fn()).to.throw();   // Bad! Tests result of `fn()`, not `fn`
+   *
+   * If you need to assert that your function `fn` throws when passed certain
+   * arguments, then wrap a call to `fn` inside of another function.
+   *
+   *     expect(function () { fn(42); }).to.throw();  // Function expression
+   *     expect(() => fn(42)).to.throw();             // ES6 arrow function
+   *
+   * Another common mistake is to provide an object method (or any stand-alone
+   * function that relies on `this`) as the target of the assertion. Doing so is
+   * problematic because the `this` context will be lost when the function is
+   * invoked by `.throw`; there's no way for it to know what `this` is supposed
+   * to be. There are two ways around this problem. One solution is to wrap the
+   * method or function call inside of another function. Another solution is to
+   * use `bind`.
+   *
+   *     expect(function () { cat.meow(); }).to.throw();  // Function expression
+   *     expect(() => cat.meow()).to.throw();             // ES6 arrow function
+   *     expect(cat.meow.bind(cat)).to.throw();           // Bind
+   *
+   * Finally, it's worth mentioning that it's a best practice in JavaScript to
+   * only throw `Error` and derivatives of `Error` such as `ReferenceError`,
+   * `TypeError`, and user-defined objects that extend `Error`. No other type of
+   * value will generate a stack trace when initialized. With that said, the
+   * `throw` assertion does technically support any type of value being thrown,
+   * not just `Error` and its derivatives.
+   *
+   * The aliases `.throws` and `.Throw` can be used interchangeably with
+   * `.throw`.
+   *
+   * @name throw
+   * @alias throws
+   * @alias Throw
+   * @param {Error|ErrorConstructor} errorLike
+   * @param {String|RegExp} errMsgMatcher error message
+   * @param {String} msg _optional_
+   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+   * @returns error for chaining (null if no error)
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertThrows (errorLike, errMsgMatcher, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , ssfi = flag(this, 'ssfi')
+      , flagMsg = flag(this, 'message')
+      , negate = flag(this, 'negate') || false;
+    new Assertion(obj, flagMsg, ssfi, true).is.a('function');
+
+    if (errorLike instanceof RegExp || typeof errorLike === 'string') {
+      errMsgMatcher = errorLike;
+      errorLike = null;
+    }
+
+    var caughtErr;
+    try {
+      obj();
+    } catch (err) {
+      caughtErr = err;
+    }
+
+    // If we have the negate flag enabled and at least one valid argument it means we do expect an error
+    // but we want it to match a given set of criteria
+    var everyArgIsUndefined = errorLike === undefined && errMsgMatcher === undefined;
+
+    // If we've got the negate flag enabled and both args, we should only fail if both aren't compatible
+    // See Issue #551 and PR #683@GitHub
+    var everyArgIsDefined = Boolean(errorLike && errMsgMatcher);
+    var errorLikeFail = false;
+    var errMsgMatcherFail = false;
+
+    // Checking if error was thrown
+    if (everyArgIsUndefined || !everyArgIsUndefined && !negate) {
+      // We need this to display results correctly according to their types
+      var errorLikeString = 'an error';
+      if (errorLike instanceof Error) {
+        errorLikeString = '#{exp}';
+      } else if (errorLike) {
+        errorLikeString = _.checkError.getConstructorName(errorLike);
+      }
+
+      this.assert(
+          caughtErr
+        , 'expected #{this} to throw ' + errorLikeString
+        , 'expected #{this} to not throw an error but #{act} was thrown'
+        , errorLike && errorLike.toString()
+        , (caughtErr instanceof Error ?
+            caughtErr.toString() : (typeof caughtErr === 'string' ? caughtErr : caughtErr &&
+                                    _.checkError.getConstructorName(caughtErr)))
+      );
+    }
+
+    if (errorLike && caughtErr) {
+      // We should compare instances only if `errorLike` is an instance of `Error`
+      if (errorLike instanceof Error) {
+        var isCompatibleInstance = _.checkError.compatibleInstance(caughtErr, errorLike);
+
+        if (isCompatibleInstance === negate) {
+          // These checks were created to ensure we won't fail too soon when we've got both args and a negate
+          // See Issue #551 and PR #683@GitHub
+          if (everyArgIsDefined && negate) {
+            errorLikeFail = true;
+          } else {
+            this.assert(
+                negate
+              , 'expected #{this} to throw #{exp} but #{act} was thrown'
+              , 'expected #{this} to not throw #{exp}' + (caughtErr && !negate ? ' but #{act} was thrown' : '')
+              , errorLike.toString()
+              , caughtErr.toString()
+            );
+          }
+        }
+      }
+
+      var isCompatibleConstructor = _.checkError.compatibleConstructor(caughtErr, errorLike);
+      if (isCompatibleConstructor === negate) {
+        if (everyArgIsDefined && negate) {
+            errorLikeFail = true;
+        } else {
+          this.assert(
+              negate
+            , 'expected #{this} to throw #{exp} but #{act} was thrown'
+            , 'expected #{this} to not throw #{exp}' + (caughtErr ? ' but #{act} was thrown' : '')
+            , (errorLike instanceof Error ? errorLike.toString() : errorLike && _.checkError.getConstructorName(errorLike))
+            , (caughtErr instanceof Error ? caughtErr.toString() : caughtErr && _.checkError.getConstructorName(caughtErr))
+          );
+        }
+      }
+    }
+
+    if (caughtErr && errMsgMatcher !== undefined && errMsgMatcher !== null) {
+      // Here we check compatible messages
+      var placeholder = 'including';
+      if (errMsgMatcher instanceof RegExp) {
+        placeholder = 'matching'
+      }
+
+      var isCompatibleMessage = _.checkError.compatibleMessage(caughtErr, errMsgMatcher);
+      if (isCompatibleMessage === negate) {
+        if (everyArgIsDefined && negate) {
+            errMsgMatcherFail = true;
+        } else {
+          this.assert(
+            negate
+            , 'expected #{this} to throw error ' + placeholder + ' #{exp} but got #{act}'
+            , 'expected #{this} to throw error not ' + placeholder + ' #{exp}'
+            ,  errMsgMatcher
+            ,  _.checkError.getMessage(caughtErr)
+          );
+        }
+      }
+    }
+
+    // If both assertions failed and both should've matched we throw an error
+    if (errorLikeFail && errMsgMatcherFail) {
+      this.assert(
+        negate
+        , 'expected #{this} to throw #{exp} but #{act} was thrown'
+        , 'expected #{this} to not throw #{exp}' + (caughtErr ? ' but #{act} was thrown' : '')
+        , (errorLike instanceof Error ? errorLike.toString() : errorLike && _.checkError.getConstructorName(errorLike))
+        , (caughtErr instanceof Error ? caughtErr.toString() : caughtErr && _.checkError.getConstructorName(caughtErr))
+      );
+    }
+
+    flag(this, 'object', caughtErr);
+  };
+
+  Assertion.addMethod('throw', assertThrows);
+  Assertion.addMethod('throws', assertThrows);
+  Assertion.addMethod('Throw', assertThrows);
+
+  /**
+   * ### .respondTo(method[, msg])
+   *
+   * When the target is a non-function object, `.respondTo` asserts that the
+   * target has a method with the given name `method`. The method can be own or
+   * inherited, and it can be enumerable or non-enumerable.
+   *
+   *     function Cat () {}
+   *     Cat.prototype.meow = function () {};
+   *
+   *     expect(new Cat()).to.respondTo('meow');
+   *
+   * When the target is a function, `.respondTo` asserts that the target's
+   * `prototype` property has a method with the given name `method`. Again, the
+   * method can be own or inherited, and it can be enumerable or non-enumerable.
+   *
+   *     function Cat () {}
+   *     Cat.prototype.meow = function () {};
+   *
+   *     expect(Cat).to.respondTo('meow');
+   *
+   * Add `.itself` earlier in the chain to force `.respondTo` to treat the
+   * target as a non-function object, even if it's a function. Thus, it asserts
+   * that the target has a method with the given name `method`, rather than
+   * asserting that the target's `prototype` property has a method with the
+   * given name `method`.
+   *
+   *     function Cat () {}
+   *     Cat.prototype.meow = function () {};
+   *     Cat.hiss = function () {};
+   *
+   *     expect(Cat).itself.to.respondTo('hiss').but.not.respondTo('meow');
+   *
+   * When not adding `.itself`, it's important to check the target's type before
+   * using `.respondTo`. See the `.a` doc for info on checking a target's type.
+   *
+   *     function Cat () {}
+   *     Cat.prototype.meow = function () {};
+   *
+   *     expect(new Cat()).to.be.an('object').that.respondsTo('meow');
+   *
+   * Add `.not` earlier in the chain to negate `.respondTo`.
+   *
+   *     function Dog () {}
+   *     Dog.prototype.bark = function () {};
+   *
+   *     expect(new Dog()).to.not.respondTo('meow');
+   *
+   * `.respondTo` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect({}).to.respondTo('meow', 'nooo why fail??');
+   *     expect({}, 'nooo why fail??').to.respondTo('meow');
+   *
+   * The alias `.respondsTo` can be used interchangeably with `.respondTo`.
+   *
+   * @name respondTo
+   * @alias respondsTo
+   * @param {String} method
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function respondTo (method, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , itself = flag(this, 'itself')
+      , context = ('function' === typeof obj && !itself)
+        ? obj.prototype[method]
+        : obj[method];
+
+    this.assert(
+        'function' === typeof context
+      , 'expected #{this} to respond to ' + _.inspect(method)
+      , 'expected #{this} to not respond to ' + _.inspect(method)
+    );
+  }
+
+  Assertion.addMethod('respondTo', respondTo);
+  Assertion.addMethod('respondsTo', respondTo);
+
+  /**
+   * ### .itself
+   *
+   * Forces all `.respondTo` assertions that follow in the chain to behave as if
+   * the target is a non-function object, even if it's a function. Thus, it
+   * causes `.respondTo` to assert that the target has a method with the given
+   * name, rather than asserting that the target's `prototype` property has a
+   * method with the given name.
+   *
+   *     function Cat () {}
+   *     Cat.prototype.meow = function () {};
+   *     Cat.hiss = function () {};
+   *
+   *     expect(Cat).itself.to.respondTo('hiss').but.not.respondTo('meow');
+   *
+   * @name itself
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('itself', function () {
+    flag(this, 'itself', true);
+  });
+
+  /**
+   * ### .satisfy(matcher[, msg])
+   *
+   * Invokes the given `matcher` function with the target being passed as the
+   * first argument, and asserts that the value returned is truthy.
+   *
+   *     expect(1).to.satisfy(function(num) {
+   *       return num > 0; 
+   *     });
+   *
+   * Add `.not` earlier in the chain to negate `.satisfy`.
+   *
+   *     expect(1).to.not.satisfy(function(num) {
+   *       return num > 2;
+   *     });
+   *
+   * `.satisfy` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect(1).to.satisfy(function(num) {
+   *       return num > 2;
+   *     }, 'nooo why fail??');
+   *
+   *     expect(1, 'nooo why fail??').to.satisfy(function(num) {
+   *       return num > 2;
+   *     });
+   *
+   * The alias `.satisfies` can be used interchangeably with `.satisfy`.
+   *
+   * @name satisfy
+   * @alias satisfies
+   * @param {Function} matcher
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function satisfy (matcher, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object');
+    var result = matcher(obj);
+    this.assert(
+        result
+      , 'expected #{this} to satisfy ' + _.objDisplay(matcher)
+      , 'expected #{this} to not satisfy' + _.objDisplay(matcher)
+      , flag(this, 'negate') ? false : true
+      , result
+    );
+  }
+
+  Assertion.addMethod('satisfy', satisfy);
+  Assertion.addMethod('satisfies', satisfy);
+
+  /**
+   * ### .closeTo(expected, delta[, msg])
+   *
+   * Asserts that the target is a number that's within a given +/- `delta` range
+   * of the given number `expected`. However, it's often best to assert that the
+   * target is equal to its expected value.
+   *
+   *     // Recommended
+   *     expect(1.5).to.equal(1.5);
+   *
+   *     // Not recommended
+   *     expect(1.5).to.be.closeTo(1, 0.5);
+   *     expect(1.5).to.be.closeTo(2, 0.5);
+   *     expect(1.5).to.be.closeTo(1, 1);
+   *
+   * Add `.not` earlier in the chain to negate `.closeTo`.
+   *
+   *     expect(1.5).to.equal(1.5); // Recommended
+   *     expect(1.5).to.not.be.closeTo(3, 1); // Not recommended
+   *
+   * `.closeTo` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect(1.5).to.be.closeTo(3, 1, 'nooo why fail??');
+   *     expect(1.5, 'nooo why fail??').to.be.closeTo(3, 1);
+   *
+   * The alias `.approximately` can be used interchangeably with `.closeTo`.
+   *
+   * @name closeTo
+   * @alias approximately
+   * @param {Number} expected
+   * @param {Number} delta
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function closeTo(expected, delta, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+
+    new Assertion(obj, flagMsg, ssfi, true).is.a('number');
+    if (typeof expected !== 'number' || typeof delta !== 'number') {
+      flagMsg = flagMsg ? flagMsg + ': ' : '';
+      throw new AssertionError(
+          flagMsg + 'the arguments to closeTo or approximately must be numbers',
+          undefined,
+          ssfi
+      );
+    }
+
+    this.assert(
+        Math.abs(obj - expected) <= delta
+      , 'expected #{this} to be close to ' + expected + ' +/- ' + delta
+      , 'expected #{this} not to be close to ' + expected + ' +/- ' + delta
+    );
+  }
+
+  Assertion.addMethod('closeTo', closeTo);
+  Assertion.addMethod('approximately', closeTo);
+
+  // Note: Duplicates are ignored if testing for inclusion instead of sameness.
+  function isSubsetOf(subset, superset, cmp, contains, ordered) {
+    if (!contains) {
+      if (subset.length !== superset.length) return false;
+      superset = superset.slice();
+    }
+
+    return subset.every(function(elem, idx) {
+      if (ordered) return cmp ? cmp(elem, superset[idx]) : elem === superset[idx];
+
+      if (!cmp) {
+        var matchIdx = superset.indexOf(elem);
+        if (matchIdx === -1) return false;
+
+        // Remove match from superset so not counted twice if duplicate in subset.
+        if (!contains) superset.splice(matchIdx, 1);
+        return true;
+      }
+
+      return superset.some(function(elem2, matchIdx) {
+        if (!cmp(elem, elem2)) return false;
+
+        // Remove match from superset so not counted twice if duplicate in subset.
+        if (!contains) superset.splice(matchIdx, 1);
+        return true;
+      });
+    });
+  }
+
+  /**
+   * ### .members(set[, msg])
+   *
+   * Asserts that the target array has the same members as the given array
+   * `set`.
+   *
+   *     expect([1, 2, 3]).to.have.members([2, 1, 3]);
+   *     expect([1, 2, 2]).to.have.members([2, 1, 2]);
+   *
+   * By default, members are compared using strict (`===`) equality. Add `.deep`
+   * earlier in the chain to use deep equality instead. See the `deep-eql`
+   * project page for info on the deep equality algorithm:
+   * https://github.com/chaijs/deep-eql.
+   *
+   *     // Target array deeply (but not strictly) has member `{a: 1}`
+   *     expect([{a: 1}]).to.have.deep.members([{a: 1}]);
+   *     expect([{a: 1}]).to.not.have.members([{a: 1}]);
+   *
+   * By default, order doesn't matter. Add `.ordered` earlier in the chain to
+   * require that members appear in the same order.
+   *
+   *     expect([1, 2, 3]).to.have.ordered.members([1, 2, 3]);
+   *     expect([1, 2, 3]).to.have.members([2, 1, 3])
+   *       .but.not.ordered.members([2, 1, 3]);
+   *
+   * By default, both arrays must be the same size. Add `.include` earlier in
+   * the chain to require that the target's members be a superset of the
+   * expected members. Note that duplicates are ignored in the subset when
+   * `.include` is added.
+   *
+   *     // Target array is a superset of [1, 2] but not identical
+   *     expect([1, 2, 3]).to.include.members([1, 2]);
+   *     expect([1, 2, 3]).to.not.have.members([1, 2]);
+   *
+   *     // Duplicates in the subset are ignored
+   *     expect([1, 2, 3]).to.include.members([1, 2, 2, 2]);
+   *
+   * `.deep`, `.ordered`, and `.include` can all be combined. However, if
+   * `.include` and `.ordered` are combined, the ordering begins at the start of
+   * both arrays.
+   *
+   *     expect([{a: 1}, {b: 2}, {c: 3}])
+   *       .to.include.deep.ordered.members([{a: 1}, {b: 2}])
+   *       .but.not.include.deep.ordered.members([{b: 2}, {c: 3}]);
+   *
+   * Add `.not` earlier in the chain to negate `.members`. However, it's
+   * dangerous to do so. The problem is that it creates uncertain expectations
+   * by asserting that the target array doesn't have all of the same members as
+   * the given array `set` but may or may not have some of them. It's often best
+   * to identify the exact output that's expected, and then write an assertion
+   * that only accepts that exact output.
+   *
+   *     expect([1, 2]).to.not.include(3).and.not.include(4); // Recommended
+   *     expect([1, 2]).to.not.have.members([3, 4]); // Not recommended
+   *
+   * `.members` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`.
+   *
+   *     expect([1, 2]).to.have.members([1, 2, 3], 'nooo why fail??');
+   *     expect([1, 2], 'nooo why fail??').to.have.members([1, 2, 3]);
+   *
+   * @name members
+   * @param {Array} set
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addMethod('members', function (subset, msg) {
+    if (msg) flag(this, 'message', msg);
+    var obj = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+
+    new Assertion(obj, flagMsg, ssfi, true).to.be.an('array');
+    new Assertion(subset, flagMsg, ssfi, true).to.be.an('array');
+
+    var contains = flag(this, 'contains');
+    var ordered = flag(this, 'ordered');
+
+    var subject, failMsg, failNegateMsg, lengthCheck;
+
+    if (contains) {
+      subject = ordered ? 'an ordered superset' : 'a superset';
+      failMsg = 'expected #{this} to be ' + subject + ' of #{exp}';
+      failNegateMsg = 'expected #{this} to not be ' + subject + ' of #{exp}';
+    } else {
+      subject = ordered ? 'ordered members' : 'members';
+      failMsg = 'expected #{this} to have the same ' + subject + ' as #{exp}';
+      failNegateMsg = 'expected #{this} to not have the same ' + subject + ' as #{exp}';
+    }
+
+    var cmp = flag(this, 'deep') ? _.eql : undefined;
+
+    this.assert(
+        isSubsetOf(subset, obj, cmp, contains, ordered)
+      , failMsg
+      , failNegateMsg
+      , subset
+      , obj
+      , true
+    );
+  });
+
+  /**
+   * ### .oneOf(list[, msg])
+   *
+   * Asserts that the target is a member of the given array `list`. However,
+   * it's often best to assert that the target is equal to its expected value.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.be.oneOf([1, 2, 3]); // Not recommended
+   *
+   * Comparisons are performed using strict (`===`) equality.
+   *
+   * Add `.not` earlier in the chain to negate `.oneOf`.
+   *
+   *     expect(1).to.equal(1); // Recommended
+   *     expect(1).to.not.be.oneOf([2, 3, 4]); // Not recommended
+   *
+   * `.oneOf` accepts an optional `msg` argument which is a custom error message
+   * to show when the assertion fails. The message can also be given as the
+   * second argument to `expect`.
+   *
+   *     expect(1).to.be.oneOf([2, 3, 4], 'nooo why fail??');
+   *     expect(1, 'nooo why fail??').to.be.oneOf([2, 3, 4]);
+   *
+   * @name oneOf
+   * @param {Array<*>} list
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function oneOf (list, msg) {
+    if (msg) flag(this, 'message', msg);
+    var expected = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(list, flagMsg, ssfi, true).to.be.an('array');
+
+    this.assert(
+        list.indexOf(expected) > -1
+      , 'expected #{this} to be one of #{exp}'
+      , 'expected #{this} to not be one of #{exp}'
+      , list
+      , expected
+    );
+  }
+
+  Assertion.addMethod('oneOf', oneOf);
+
+
+  /**
+   * ### .change(subject[, prop[, msg]])
+   *
+   * When one argument is provided, `.change` asserts that the given function
+   * `subject` returns a different value when it's invoked before the target
+   * function compared to when it's invoked afterward. However, it's often best
+   * to assert that `subject` is equal to its expected value.
+   *
+   *     var dots = ''
+   *       , addDot = function () { dots += '.'; }
+   *       , getDots = function () { return dots; };
+   *
+   *     // Recommended
+   *     expect(getDots()).to.equal('');
+   *     addDot();
+   *     expect(getDots()).to.equal('.');
+   *
+   *     // Not recommended
+   *     expect(addDot).to.change(getDots);
+   *
+   * When two arguments are provided, `.change` asserts that the value of the
+   * given object `subject`'s `prop` property is different before invoking the
+   * target function compared to afterward.
+   *
+   *     var myObj = {dots: ''}
+   *       , addDot = function () { myObj.dots += '.'; };
+   *
+   *     // Recommended
+   *     expect(myObj).to.have.property('dots', '');
+   *     addDot();
+   *     expect(myObj).to.have.property('dots', '.');
+   *
+   *     // Not recommended
+   *     expect(addDot).to.change(myObj, 'dots');
+   *
+   * Strict (`===`) equality is used to compare before and after values.
+   *
+   * Add `.not` earlier in the chain to negate `.change`.
+   *
+   *     var dots = ''
+   *       , noop = function () {}
+   *       , getDots = function () { return dots; };
+   *
+   *     expect(noop).to.not.change(getDots);
+   *
+   *     var myObj = {dots: ''}
+   *       , noop = function () {};
+   *
+   *     expect(noop).to.not.change(myObj, 'dots');
+   *
+   * `.change` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`. When not providing two arguments, always
+   * use the second form.
+   *
+   *     var myObj = {dots: ''}
+   *       , addDot = function () { myObj.dots += '.'; };
+   *
+   *     expect(addDot).to.not.change(myObj, 'dots', 'nooo why fail??');
+   *
+   *     var dots = ''
+   *       , addDot = function () { dots += '.'; }
+   *       , getDots = function () { return dots; };
+   *
+   *     expect(addDot, 'nooo why fail??').to.not.change(getDots);
+   *
+   * `.change` also causes all `.by` assertions that follow in the chain to
+   * assert how much a numeric subject was increased or decreased by. However,
+   * it's dangerous to use `.change.by`. The problem is that it creates
+   * uncertain expectations by asserting that the subject either increases by
+   * the given delta, or that it decreases by the given delta. It's often best
+   * to identify the exact output that's expected, and then write an assertion
+   * that only accepts that exact output.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; }
+   *       , subtractTwo = function () { myObj.val -= 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(2); // Recommended
+   *     expect(addTwo).to.change(myObj, 'val').by(2); // Not recommended
+   *
+   *     expect(subtractTwo).to.decrease(myObj, 'val').by(2); // Recommended
+   *     expect(subtractTwo).to.change(myObj, 'val').by(2); // Not recommended
+   *
+   * The alias `.changes` can be used interchangeably with `.change`.
+   *
+   * @name change
+   * @alias changes
+   * @param {String} subject
+   * @param {String} prop name _optional_
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertChanges (subject, prop, msg) {
+    if (msg) flag(this, 'message', msg);
+    var fn = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(fn, flagMsg, ssfi, true).is.a('function');
+
+    var initial;
+    if (!prop) {
+      new Assertion(subject, flagMsg, ssfi, true).is.a('function');
+      initial = subject();
+    } else {
+      new Assertion(subject, flagMsg, ssfi, true).to.have.property(prop);
+      initial = subject[prop];
+    }
+
+    fn();
+
+    var final = prop === undefined || prop === null ? subject() : subject[prop];
+    var msgObj = prop === undefined || prop === null ? initial : '.' + prop;
+
+    // This gets flagged because of the .by(delta) assertion
+    flag(this, 'deltaMsgObj', msgObj);
+    flag(this, 'initialDeltaValue', initial);
+    flag(this, 'finalDeltaValue', final);
+    flag(this, 'deltaBehavior', 'change');
+    flag(this, 'realDelta', final !== initial);
+
+    this.assert(
+      initial !== final
+      , 'expected ' + msgObj + ' to change'
+      , 'expected ' + msgObj + ' to not change'
+    );
+  }
+
+  Assertion.addMethod('change', assertChanges);
+  Assertion.addMethod('changes', assertChanges);
+
+  /**
+   * ### .increase(subject[, prop[, msg]])
+   *
+   * When one argument is provided, `.increase` asserts that the given function
+   * `subject` returns a greater number when it's invoked after invoking the
+   * target function compared to when it's invoked beforehand. `.increase` also
+   * causes all `.by` assertions that follow in the chain to assert how much
+   * greater of a number is returned. It's often best to assert that the return
+   * value increased by the expected amount, rather than asserting it increased
+   * by any amount.
+   *
+   *     var val = 1
+   *       , addTwo = function () { val += 2; }
+   *       , getVal = function () { return val; };
+   *
+   *     expect(addTwo).to.increase(getVal).by(2); // Recommended
+   *     expect(addTwo).to.increase(getVal); // Not recommended
+   *
+   * When two arguments are provided, `.increase` asserts that the value of the
+   * given object `subject`'s `prop` property is greater after invoking the
+   * target function compared to beforehand.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(2); // Recommended
+   *     expect(addTwo).to.increase(myObj, 'val'); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.increase`. However, it's
+   * dangerous to do so. The problem is that it creates uncertain expectations
+   * by asserting that the subject either decreases, or that it stays the same.
+   * It's often best to identify the exact output that's expected, and then
+   * write an assertion that only accepts that exact output.
+   *
+   * When the subject is expected to decrease, it's often best to assert that it
+   * decreased by the expected amount.
+   *
+   *     var myObj = {val: 1}
+   *       , subtractTwo = function () { myObj.val -= 2; };
+   *
+   *     expect(subtractTwo).to.decrease(myObj, 'val').by(2); // Recommended
+   *     expect(subtractTwo).to.not.increase(myObj, 'val'); // Not recommended
+   * 
+   * When the subject is expected to stay the same, it's often best to assert
+   * exactly that.
+   *
+   *     var myObj = {val: 1}
+   *       , noop = function () {};
+   *
+   *     expect(noop).to.not.change(myObj, 'val'); // Recommended
+   *     expect(noop).to.not.increase(myObj, 'val'); // Not recommended
+   *
+   * `.increase` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`. When not providing two arguments, always
+   * use the second form.
+   *
+   *     var myObj = {val: 1}
+   *       , noop = function () {};
+   *
+   *     expect(noop).to.increase(myObj, 'val', 'nooo why fail??');
+   *
+   *     var val = 1
+   *       , noop = function () {}
+   *       , getVal = function () { return val; };
+   *
+   *     expect(noop, 'nooo why fail??').to.increase(getVal);
+   *
+   * The alias `.increases` can be used interchangeably with `.increase`.
+   *
+   * @name increase
+   * @alias increases
+   * @param {String|Function} subject
+   * @param {String} prop name _optional_
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertIncreases (subject, prop, msg) {
+    if (msg) flag(this, 'message', msg);
+    var fn = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(fn, flagMsg, ssfi, true).is.a('function');
+
+    var initial;
+    if (!prop) {
+      new Assertion(subject, flagMsg, ssfi, true).is.a('function');
+      initial = subject();
+    } else {
+      new Assertion(subject, flagMsg, ssfi, true).to.have.property(prop);
+      initial = subject[prop];
+    }
+
+    // Make sure that the target is a number
+    new Assertion(initial, flagMsg, ssfi, true).is.a('number');
+
+    fn();
+
+    var final = prop === undefined || prop === null ? subject() : subject[prop];
+    var msgObj = prop === undefined || prop === null ? initial : '.' + prop;
+
+    flag(this, 'deltaMsgObj', msgObj);
+    flag(this, 'initialDeltaValue', initial);
+    flag(this, 'finalDeltaValue', final);
+    flag(this, 'deltaBehavior', 'increase');
+    flag(this, 'realDelta', final - initial);
+
+    this.assert(
+      final - initial > 0
+      , 'expected ' + msgObj + ' to increase'
+      , 'expected ' + msgObj + ' to not increase'
+    );
+  }
+
+  Assertion.addMethod('increase', assertIncreases);
+  Assertion.addMethod('increases', assertIncreases);
+
+  /**
+   * ### .decrease(subject[, prop[, msg]])
+   *
+   * When one argument is provided, `.decrease` asserts that the given function
+   * `subject` returns a lesser number when it's invoked after invoking the
+   * target function compared to when it's invoked beforehand. `.decrease` also
+   * causes all `.by` assertions that follow in the chain to assert how much
+   * lesser of a number is returned. It's often best to assert that the return
+   * value decreased by the expected amount, rather than asserting it decreased
+   * by any amount.
+   *
+   *     var val = 1
+   *       , subtractTwo = function () { val -= 2; }
+   *       , getVal = function () { return val; };
+   *
+   *     expect(subtractTwo).to.decrease(getVal).by(2); // Recommended
+   *     expect(subtractTwo).to.decrease(getVal); // Not recommended
+   *
+   * When two arguments are provided, `.decrease` asserts that the value of the
+   * given object `subject`'s `prop` property is lesser after invoking the
+   * target function compared to beforehand. 
+   *
+   *     var myObj = {val: 1}
+   *       , subtractTwo = function () { myObj.val -= 2; };
+   *
+   *     expect(subtractTwo).to.decrease(myObj, 'val').by(2); // Recommended
+   *     expect(subtractTwo).to.decrease(myObj, 'val'); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.decrease`. However, it's
+   * dangerous to do so. The problem is that it creates uncertain expectations
+   * by asserting that the subject either increases, or that it stays the same.
+   * It's often best to identify the exact output that's expected, and then
+   * write an assertion that only accepts that exact output.
+   *
+   * When the subject is expected to increase, it's often best to assert that it
+   * increased by the expected amount.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(2); // Recommended
+   *     expect(addTwo).to.not.decrease(myObj, 'val'); // Not recommended
+   * 
+   * When the subject is expected to stay the same, it's often best to assert
+   * exactly that.
+   *
+   *     var myObj = {val: 1}
+   *       , noop = function () {};
+   *
+   *     expect(noop).to.not.change(myObj, 'val'); // Recommended
+   *     expect(noop).to.not.decrease(myObj, 'val'); // Not recommended
+   *
+   * `.decrease` accepts an optional `msg` argument which is a custom error
+   * message to show when the assertion fails. The message can also be given as
+   * the second argument to `expect`. When not providing two arguments, always
+   * use the second form.
+   *
+   *     var myObj = {val: 1}
+   *       , noop = function () {};
+   *
+   *     expect(noop).to.decrease(myObj, 'val', 'nooo why fail??');
+   *
+   *     var val = 1
+   *       , noop = function () {}
+   *       , getVal = function () { return val; };
+   *
+   *     expect(noop, 'nooo why fail??').to.decrease(getVal);
+   *
+   * The alias `.decreases` can be used interchangeably with `.decrease`.
+   *
+   * @name decrease
+   * @alias decreases
+   * @param {String|Function} subject
+   * @param {String} prop name _optional_
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertDecreases (subject, prop, msg) {
+    if (msg) flag(this, 'message', msg);
+    var fn = flag(this, 'object')
+      , flagMsg = flag(this, 'message')
+      , ssfi = flag(this, 'ssfi');
+    new Assertion(fn, flagMsg, ssfi, true).is.a('function');
+
+    var initial;
+    if (!prop) {
+      new Assertion(subject, flagMsg, ssfi, true).is.a('function');
+      initial = subject();
+    } else {
+      new Assertion(subject, flagMsg, ssfi, true).to.have.property(prop);
+      initial = subject[prop];
+    }
+
+    // Make sure that the target is a number
+    new Assertion(initial, flagMsg, ssfi, true).is.a('number');
+
+    fn();
+
+    var final = prop === undefined || prop === null ? subject() : subject[prop];
+    var msgObj = prop === undefined || prop === null ? initial : '.' + prop;
+
+    flag(this, 'deltaMsgObj', msgObj);
+    flag(this, 'initialDeltaValue', initial);
+    flag(this, 'finalDeltaValue', final);
+    flag(this, 'deltaBehavior', 'decrease');
+    flag(this, 'realDelta', initial - final);
+
+    this.assert(
+      final - initial < 0
+      , 'expected ' + msgObj + ' to decrease'
+      , 'expected ' + msgObj + ' to not decrease'
+    );
+  }
+
+  Assertion.addMethod('decrease', assertDecreases);
+  Assertion.addMethod('decreases', assertDecreases);
+
+  /**
+   * ### .by(delta[, msg])
+   *
+   * When following an `.increase` assertion in the chain, `.by` asserts that
+   * the subject of the `.increase` assertion increased by the given `delta`.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(2);
+   *
+   * When following a `.decrease` assertion in the chain, `.by` asserts that the
+   * subject of the `.decrease` assertion decreased by the given `delta`.
+   *
+   *     var myObj = {val: 1}
+   *       , subtractTwo = function () { myObj.val -= 2; };
+   *
+   *     expect(subtractTwo).to.decrease(myObj, 'val').by(2);
+   *
+   * When following a `.change` assertion in the chain, `.by` asserts that the
+   * subject of the `.change` assertion either increased or decreased by the
+   * given `delta`. However, it's dangerous to use `.change.by`. The problem is
+   * that it creates uncertain expectations. It's often best to identify the
+   * exact output that's expected, and then write an assertion that only accepts
+   * that exact output.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; }
+   *       , subtractTwo = function () { myObj.val -= 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(2); // Recommended
+   *     expect(addTwo).to.change(myObj, 'val').by(2); // Not recommended
+   *
+   *     expect(subtractTwo).to.decrease(myObj, 'val').by(2); // Recommended
+   *     expect(subtractTwo).to.change(myObj, 'val').by(2); // Not recommended
+   *
+   * Add `.not` earlier in the chain to negate `.by`. However, it's often best
+   * to assert that the subject changed by its expected delta, rather than
+   * asserting that it didn't change by one of countless unexpected deltas.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; };
+   *
+   *     // Recommended
+   *     expect(addTwo).to.increase(myObj, 'val').by(2);
+   *
+   *     // Not recommended
+   *     expect(addTwo).to.increase(myObj, 'val').but.not.by(3);
+   *
+   * `.by` accepts an optional `msg` argument which is a custom error message to
+   * show when the assertion fails. The message can also be given as the second
+   * argument to `expect`.
+   *
+   *     var myObj = {val: 1}
+   *       , addTwo = function () { myObj.val += 2; };
+   *
+   *     expect(addTwo).to.increase(myObj, 'val').by(3, 'nooo why fail??');
+   *     expect(addTwo, 'nooo why fail??').to.increase(myObj, 'val').by(3);
+   *
+   * @name by
+   * @param {Number} delta
+   * @param {String} msg _optional_
+   * @namespace BDD
+   * @api public
+   */
+
+  function assertDelta(delta, msg) {
+    if (msg) flag(this, 'message', msg);
+
+    var msgObj = flag(this, 'deltaMsgObj');
+    var initial = flag(this, 'initialDeltaValue');
+    var final = flag(this, 'finalDeltaValue');
+    var behavior = flag(this, 'deltaBehavior');
+    var realDelta = flag(this, 'realDelta');
+
+    var expression;
+    if (behavior === 'change') {
+      expression = Math.abs(final - initial) === Math.abs(delta);
+    } else {
+      expression = realDelta === Math.abs(delta);
+    }
+
+    this.assert(
+      expression
+      , 'expected ' + msgObj + ' to ' + behavior + ' by ' + delta
+      , 'expected ' + msgObj + ' to not ' + behavior + ' by ' + delta
+    );
+  }
+
+  Assertion.addMethod('by', assertDelta);
+
+  /**
+   * ### .extensible
+   *
+   * Asserts that the target is extensible, which means that new properties can
+   * be added to it. Primitives are never extensible.
+   *
+   *     expect({a: 1}).to.be.extensible;
+   *
+   * Add `.not` earlier in the chain to negate `.extensible`.
+   *
+   *     var nonExtensibleObject = Object.preventExtensions({})
+   *       , sealedObject = Object.seal({})
+   *       , frozenObject = Object.freeze({});
+   *
+   *     expect(nonExtensibleObject).to.not.be.extensible;
+   *     expect(sealedObject).to.not.be.extensible;
+   *     expect(frozenObject).to.not.be.extensible;
+   *     expect(1).to.not.be.extensible;
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect(1, 'nooo why fail??').to.be.extensible;
+   *
+   * @name extensible
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('extensible', function() {
+    var obj = flag(this, 'object');
+
+    // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
+    // In ES6, a non-object argument will be treated as if it was a non-extensible ordinary object, simply return false.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isExtensible
+    // The following provides ES6 behavior for ES5 environments.
+
+    var isExtensible = obj === Object(obj) && Object.isExtensible(obj);
+
+    this.assert(
+      isExtensible
+      , 'expected #{this} to be extensible'
+      , 'expected #{this} to not be extensible'
+    );
+  });
+
+  /**
+   * ### .sealed
+   *
+   * Asserts that the target is sealed, which means that new properties can't be
+   * added to it, and its existing properties can't be reconfigured or deleted.
+   * However, it's possible that its existing properties can still be reassigned
+   * to different values. Primitives are always sealed.
+   *
+   *     var sealedObject = Object.seal({});
+   *     var frozenObject = Object.freeze({});
+   *
+   *     expect(sealedObject).to.be.sealed;
+   *     expect(frozenObject).to.be.sealed;
+   *     expect(1).to.be.sealed;
+   *
+   * Add `.not` earlier in the chain to negate `.sealed`.
+   *
+   *     expect({a: 1}).to.not.be.sealed;
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect({a: 1}, 'nooo why fail??').to.be.sealed;
+   *
+   * @name sealed
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('sealed', function() {
+    var obj = flag(this, 'object');
+
+    // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
+    // In ES6, a non-object argument will be treated as if it was a sealed ordinary object, simply return true.
+    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isSealed
+    // The following provides ES6 behavior for ES5 environments.
+
+    var isSealed = obj === Object(obj) ? Object.isSealed(obj) : true;
+
+    this.assert(
+      isSealed
+      , 'expected #{this} to be sealed'
+      , 'expected #{this} to not be sealed'
+    );
+  });
+
+  /**
+   * ### .frozen
+   *
+   * Asserts that the target is frozen, which means that new properties can't be
+   * added to it, and its existing properties can't be reassigned to different
+   * values, reconfigured, or deleted. Primitives are always frozen.
+   *
+   *     var frozenObject = Object.freeze({});
+   *
+   *     expect(frozenObject).to.be.frozen;
+   *     expect(1).to.be.frozen;
+   *
+   * Add `.not` earlier in the chain to negate `.frozen`.
+   *
+   *     expect({a: 1}).to.not.be.frozen;
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect({a: 1}, 'nooo why fail??').to.be.frozen;
+   *
+   * @name frozen
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('frozen', function() {
+    var obj = flag(this, 'object');
+
+    // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
+    // In ES6, a non-object argument will be treated as if it was a frozen ordinary object, simply return true.
+    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isFrozen
+    // The following provides ES6 behavior for ES5 environments.
+
+    var isFrozen = obj === Object(obj) ? Object.isFrozen(obj) : true;
+
+    this.assert(
+      isFrozen
+      , 'expected #{this} to be frozen'
+      , 'expected #{this} to not be frozen'
+    );
+  });
+
+  /**
+   * ### .finite
+   *
+   * Asserts that the target is a number, and isn't `NaN` or positive/negative
+   * `Infinity`.
+   *
+   *     expect(1).to.be.finite;
+   *
+   * Add `.not` earlier in the chain to negate `.finite`. However, it's
+   * dangerous to do so. The problem is that it creates uncertain expectations
+   * by asserting that the subject either isn't a number, or that it's `NaN`, or
+   * that it's positive `Infinity`, or that it's negative `Infinity`. It's often
+   * best to identify the exact output that's expected, and then write an
+   * assertion that only accepts that exact output.
+   *
+   * When the target isn't expected to be a number, it's often best to assert
+   * that it's the expected type, rather than asserting that it isn't one of
+   * many unexpected types.
+   *
+   *     expect('foo').to.be.a('string'); // Recommended
+   *     expect('foo').to.not.be.finite; // Not recommended
+   *
+   * When the target is expected to be `NaN`, it's often best to assert exactly
+   * that.
+   *
+   *     expect(NaN).to.be.NaN; // Recommended
+   *     expect(NaN).to.not.be.finite; // Not recommended
+   *
+   * When the target is expected to be positive infinity, it's often best to
+   * assert exactly that.
+   *
+   *     expect(Infinity).to.equal(Infinity); // Recommended
+   *     expect(Infinity).to.not.be.finite; // Not recommended
+   *
+   * When the target is expected to be negative infinity, it's often best to
+   * assert exactly that.
+   *
+   *     expect(-Infinity).to.equal(-Infinity); // Recommended
+   *     expect(-Infinity).to.not.be.finite; // Not recommended
+   *
+   * A custom error message can be given as the second argument to `expect`.
+   *
+   *     expect('foo', 'nooo why fail??').to.be.finite;
+   *
+   * @name finite
+   * @namespace BDD
+   * @api public
+   */
+
+  Assertion.addProperty('finite', function(msg) {
+    var obj = flag(this, 'object');
+
+    this.assert(
+        typeof obj === "number" && isFinite(obj)
+      , 'expected #{this} to be a finite number'
+      , 'expected #{this} to not be a finite number'
+    );
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/interface/assert.js":
+/*!************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/interface/assert.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * chai
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+
+module.exports = function (chai, util) {
+
+  /*!
+   * Chai dependencies.
+   */
+
+  var Assertion = chai.Assertion
+    , flag = util.flag;
+
+  /*!
+   * Module export.
+   */
+
+  /**
+   * ### assert(expression, message)
+   *
+   * Write your own test expressions.
+   *
+   *     assert('foo' !== 'bar', 'foo is not bar');
+   *     assert(Array.isArray([]), 'empty arrays are arrays');
+   *
+   * @param {Mixed} expression to test for truthiness
+   * @param {String} message to display on error
+   * @name assert
+   * @namespace Assert
+   * @api public
+   */
+
+  var assert = chai.assert = function (express, errmsg) {
+    var test = new Assertion(null, null, chai.assert, true);
+    test.assert(
+        express
+      , errmsg
+      , '[ negation message unavailable ]'
+    );
+  };
+
+  /**
+   * ### .fail(actual, expected, [message], [operator])
+   *
+   * Throw a failure. Node.js `assert` module-compatible.
+   *
+   * @name fail
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @param {String} operator
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.fail = function (actual, expected, message, operator) {
+    message = message || 'assert.fail()';
+    throw new chai.AssertionError(message, {
+        actual: actual
+      , expected: expected
+      , operator: operator
+    }, assert.fail);
+  };
+
+  /**
+   * ### .isOk(object, [message])
+   *
+   * Asserts that `object` is truthy.
+   *
+   *     assert.isOk('everything', 'everything is ok');
+   *     assert.isOk(false, 'this will fail');
+   *
+   * @name isOk
+   * @alias ok
+   * @param {Mixed} object to test
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isOk = function (val, msg) {
+    new Assertion(val, msg, assert.isOk, true).is.ok;
+  };
+
+  /**
+   * ### .isNotOk(object, [message])
+   *
+   * Asserts that `object` is falsy.
+   *
+   *     assert.isNotOk('everything', 'this will fail');
+   *     assert.isNotOk(false, 'this will pass');
+   *
+   * @name isNotOk
+   * @alias notOk
+   * @param {Mixed} object to test
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotOk = function (val, msg) {
+    new Assertion(val, msg, assert.isNotOk, true).is.not.ok;
+  };
+
+  /**
+   * ### .equal(actual, expected, [message])
+   *
+   * Asserts non-strict equality (`==`) of `actual` and `expected`.
+   *
+   *     assert.equal(3, '3', '== coerces values to strings');
+   *
+   * @name equal
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.equal = function (act, exp, msg) {
+    var test = new Assertion(act, msg, assert.equal, true);
+
+    test.assert(
+        exp == flag(test, 'object')
+      , 'expected #{this} to equal #{exp}'
+      , 'expected #{this} to not equal #{act}'
+      , exp
+      , act
+      , true
+    );
+  };
+
+  /**
+   * ### .notEqual(actual, expected, [message])
+   *
+   * Asserts non-strict inequality (`!=`) of `actual` and `expected`.
+   *
+   *     assert.notEqual(3, 4, 'these numbers are not equal');
+   *
+   * @name notEqual
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notEqual = function (act, exp, msg) {
+    var test = new Assertion(act, msg, assert.notEqual, true);
+
+    test.assert(
+        exp != flag(test, 'object')
+      , 'expected #{this} to not equal #{exp}'
+      , 'expected #{this} to equal #{act}'
+      , exp
+      , act
+      , true
+    );
+  };
+
+  /**
+   * ### .strictEqual(actual, expected, [message])
+   *
+   * Asserts strict equality (`===`) of `actual` and `expected`.
+   *
+   *     assert.strictEqual(true, true, 'these booleans are strictly equal');
+   *
+   * @name strictEqual
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.strictEqual = function (act, exp, msg) {
+    new Assertion(act, msg, assert.strictEqual, true).to.equal(exp);
+  };
+
+  /**
+   * ### .notStrictEqual(actual, expected, [message])
+   *
+   * Asserts strict inequality (`!==`) of `actual` and `expected`.
+   *
+   *     assert.notStrictEqual(3, '3', 'no coercion for strict equality');
+   *
+   * @name notStrictEqual
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notStrictEqual = function (act, exp, msg) {
+    new Assertion(act, msg, assert.notStrictEqual, true).to.not.equal(exp);
+  };
+
+  /**
+   * ### .deepEqual(actual, expected, [message])
+   *
+   * Asserts that `actual` is deeply equal to `expected`.
+   *
+   *     assert.deepEqual({ tea: 'green' }, { tea: 'green' });
+   *
+   * @name deepEqual
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @alias deepStrictEqual
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.deepEqual = assert.deepStrictEqual = function (act, exp, msg) {
+    new Assertion(act, msg, assert.deepEqual, true).to.eql(exp);
+  };
+
+  /**
+   * ### .notDeepEqual(actual, expected, [message])
+   *
+   * Assert that `actual` is not deeply equal to `expected`.
+   *
+   *     assert.notDeepEqual({ tea: 'green' }, { tea: 'jasmine' });
+   *
+   * @name notDeepEqual
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notDeepEqual = function (act, exp, msg) {
+    new Assertion(act, msg, assert.notDeepEqual, true).to.not.eql(exp);
+  };
+
+   /**
+   * ### .isAbove(valueToCheck, valueToBeAbove, [message])
+   *
+   * Asserts `valueToCheck` is strictly greater than (>) `valueToBeAbove`.
+   *
+   *     assert.isAbove(5, 2, '5 is strictly greater than 2');
+   *
+   * @name isAbove
+   * @param {Mixed} valueToCheck
+   * @param {Mixed} valueToBeAbove
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isAbove = function (val, abv, msg) {
+    new Assertion(val, msg, assert.isAbove, true).to.be.above(abv);
+  };
+
+   /**
+   * ### .isAtLeast(valueToCheck, valueToBeAtLeast, [message])
+   *
+   * Asserts `valueToCheck` is greater than or equal to (>=) `valueToBeAtLeast`.
+   *
+   *     assert.isAtLeast(5, 2, '5 is greater or equal to 2');
+   *     assert.isAtLeast(3, 3, '3 is greater or equal to 3');
+   *
+   * @name isAtLeast
+   * @param {Mixed} valueToCheck
+   * @param {Mixed} valueToBeAtLeast
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isAtLeast = function (val, atlst, msg) {
+    new Assertion(val, msg, assert.isAtLeast, true).to.be.least(atlst);
+  };
+
+   /**
+   * ### .isBelow(valueToCheck, valueToBeBelow, [message])
+   *
+   * Asserts `valueToCheck` is strictly less than (<) `valueToBeBelow`.
+   *
+   *     assert.isBelow(3, 6, '3 is strictly less than 6');
+   *
+   * @name isBelow
+   * @param {Mixed} valueToCheck
+   * @param {Mixed} valueToBeBelow
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isBelow = function (val, blw, msg) {
+    new Assertion(val, msg, assert.isBelow, true).to.be.below(blw);
+  };
+
+   /**
+   * ### .isAtMost(valueToCheck, valueToBeAtMost, [message])
+   *
+   * Asserts `valueToCheck` is less than or equal to (<=) `valueToBeAtMost`.
+   *
+   *     assert.isAtMost(3, 6, '3 is less than or equal to 6');
+   *     assert.isAtMost(4, 4, '4 is less than or equal to 4');
+   *
+   * @name isAtMost
+   * @param {Mixed} valueToCheck
+   * @param {Mixed} valueToBeAtMost
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isAtMost = function (val, atmst, msg) {
+    new Assertion(val, msg, assert.isAtMost, true).to.be.most(atmst);
+  };
+
+  /**
+   * ### .isTrue(value, [message])
+   *
+   * Asserts that `value` is true.
+   *
+   *     var teaServed = true;
+   *     assert.isTrue(teaServed, 'the tea has been served');
+   *
+   * @name isTrue
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isTrue = function (val, msg) {
+    new Assertion(val, msg, assert.isTrue, true).is['true'];
+  };
+
+  /**
+   * ### .isNotTrue(value, [message])
+   *
+   * Asserts that `value` is not true.
+   *
+   *     var tea = 'tasty chai';
+   *     assert.isNotTrue(tea, 'great, time for tea!');
+   *
+   * @name isNotTrue
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotTrue = function (val, msg) {
+    new Assertion(val, msg, assert.isNotTrue, true).to.not.equal(true);
+  };
+
+  /**
+   * ### .isFalse(value, [message])
+   *
+   * Asserts that `value` is false.
+   *
+   *     var teaServed = false;
+   *     assert.isFalse(teaServed, 'no tea yet? hmm...');
+   *
+   * @name isFalse
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isFalse = function (val, msg) {
+    new Assertion(val, msg, assert.isFalse, true).is['false'];
+  };
+
+  /**
+   * ### .isNotFalse(value, [message])
+   *
+   * Asserts that `value` is not false.
+   *
+   *     var tea = 'tasty chai';
+   *     assert.isNotFalse(tea, 'great, time for tea!');
+   *
+   * @name isNotFalse
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotFalse = function (val, msg) {
+    new Assertion(val, msg, assert.isNotFalse, true).to.not.equal(false);
+  };
+
+  /**
+   * ### .isNull(value, [message])
+   *
+   * Asserts that `value` is null.
+   *
+   *     assert.isNull(err, 'there was no error');
+   *
+   * @name isNull
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNull = function (val, msg) {
+    new Assertion(val, msg, assert.isNull, true).to.equal(null);
+  };
+
+  /**
+   * ### .isNotNull(value, [message])
+   *
+   * Asserts that `value` is not null.
+   *
+   *     var tea = 'tasty chai';
+   *     assert.isNotNull(tea, 'great, time for tea!');
+   *
+   * @name isNotNull
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotNull = function (val, msg) {
+    new Assertion(val, msg, assert.isNotNull, true).to.not.equal(null);
+  };
+
+  /**
+   * ### .isNaN
+   *
+   * Asserts that value is NaN.
+   *
+   *     assert.isNaN(NaN, 'NaN is NaN');
+   *
+   * @name isNaN
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNaN = function (val, msg) {
+    new Assertion(val, msg, assert.isNaN, true).to.be.NaN;
+  };
+
+  /**
+   * ### .isNotNaN
+   *
+   * Asserts that value is not NaN.
+   *
+   *     assert.isNotNaN(4, '4 is not NaN');
+   *
+   * @name isNotNaN
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+  assert.isNotNaN = function (val, msg) {
+    new Assertion(val, msg, assert.isNotNaN, true).not.to.be.NaN;
+  };
+
+  /**
+   * ### .exists
+   *
+   * Asserts that the target is neither `null` nor `undefined`.
+   *
+   *     var foo = 'hi';
+   *
+   *     assert.exists(foo, 'foo is neither `null` nor `undefined`');
+   *
+   * @name exists
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.exists = function (val, msg) {
+    new Assertion(val, msg, assert.exists, true).to.exist;
+  };
+
+  /**
+   * ### .notExists
+   *
+   * Asserts that the target is either `null` or `undefined`.
+   *
+   *     var bar = null
+   *       , baz;
+   *
+   *     assert.notExists(bar);
+   *     assert.notExists(baz, 'baz is either null or undefined');
+   *
+   * @name notExists
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notExists = function (val, msg) {
+    new Assertion(val, msg, assert.notExists, true).to.not.exist;
+  };
+
+  /**
+   * ### .isUndefined(value, [message])
+   *
+   * Asserts that `value` is `undefined`.
+   *
+   *     var tea;
+   *     assert.isUndefined(tea, 'no tea defined');
+   *
+   * @name isUndefined
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isUndefined = function (val, msg) {
+    new Assertion(val, msg, assert.isUndefined, true).to.equal(undefined);
+  };
+
+  /**
+   * ### .isDefined(value, [message])
+   *
+   * Asserts that `value` is not `undefined`.
+   *
+   *     var tea = 'cup of chai';
+   *     assert.isDefined(tea, 'tea has been defined');
+   *
+   * @name isDefined
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isDefined = function (val, msg) {
+    new Assertion(val, msg, assert.isDefined, true).to.not.equal(undefined);
+  };
+
+  /**
+   * ### .isFunction(value, [message])
+   *
+   * Asserts that `value` is a function.
+   *
+   *     function serveTea() { return 'cup of tea'; };
+   *     assert.isFunction(serveTea, 'great, we can have tea now');
+   *
+   * @name isFunction
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isFunction = function (val, msg) {
+    new Assertion(val, msg, assert.isFunction, true).to.be.a('function');
+  };
+
+  /**
+   * ### .isNotFunction(value, [message])
+   *
+   * Asserts that `value` is _not_ a function.
+   *
+   *     var serveTea = [ 'heat', 'pour', 'sip' ];
+   *     assert.isNotFunction(serveTea, 'great, we have listed the steps');
+   *
+   * @name isNotFunction
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotFunction = function (val, msg) {
+    new Assertion(val, msg, assert.isNotFunction, true).to.not.be.a('function');
+  };
+
+  /**
+   * ### .isObject(value, [message])
+   *
+   * Asserts that `value` is an object of type 'Object' (as revealed by `Object.prototype.toString`).
+   * _The assertion does not match subclassed objects._
+   *
+   *     var selection = { name: 'Chai', serve: 'with spices' };
+   *     assert.isObject(selection, 'tea selection is an object');
+   *
+   * @name isObject
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isObject = function (val, msg) {
+    new Assertion(val, msg, assert.isObject, true).to.be.a('object');
+  };
+
+  /**
+   * ### .isNotObject(value, [message])
+   *
+   * Asserts that `value` is _not_ an object of type 'Object' (as revealed by `Object.prototype.toString`).
+   *
+   *     var selection = 'chai'
+   *     assert.isNotObject(selection, 'tea selection is not an object');
+   *     assert.isNotObject(null, 'null is not an object');
+   *
+   * @name isNotObject
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotObject = function (val, msg) {
+    new Assertion(val, msg, assert.isNotObject, true).to.not.be.a('object');
+  };
+
+  /**
+   * ### .isArray(value, [message])
+   *
+   * Asserts that `value` is an array.
+   *
+   *     var menu = [ 'green', 'chai', 'oolong' ];
+   *     assert.isArray(menu, 'what kind of tea do we want?');
+   *
+   * @name isArray
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isArray = function (val, msg) {
+    new Assertion(val, msg, assert.isArray, true).to.be.an('array');
+  };
+
+  /**
+   * ### .isNotArray(value, [message])
+   *
+   * Asserts that `value` is _not_ an array.
+   *
+   *     var menu = 'green|chai|oolong';
+   *     assert.isNotArray(menu, 'what kind of tea do we want?');
+   *
+   * @name isNotArray
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotArray = function (val, msg) {
+    new Assertion(val, msg, assert.isNotArray, true).to.not.be.an('array');
+  };
+
+  /**
+   * ### .isString(value, [message])
+   *
+   * Asserts that `value` is a string.
+   *
+   *     var teaOrder = 'chai';
+   *     assert.isString(teaOrder, 'order placed');
+   *
+   * @name isString
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isString = function (val, msg) {
+    new Assertion(val, msg, assert.isString, true).to.be.a('string');
+  };
+
+  /**
+   * ### .isNotString(value, [message])
+   *
+   * Asserts that `value` is _not_ a string.
+   *
+   *     var teaOrder = 4;
+   *     assert.isNotString(teaOrder, 'order placed');
+   *
+   * @name isNotString
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotString = function (val, msg) {
+    new Assertion(val, msg, assert.isNotString, true).to.not.be.a('string');
+  };
+
+  /**
+   * ### .isNumber(value, [message])
+   *
+   * Asserts that `value` is a number.
+   *
+   *     var cups = 2;
+   *     assert.isNumber(cups, 'how many cups');
+   *
+   * @name isNumber
+   * @param {Number} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNumber = function (val, msg) {
+    new Assertion(val, msg, assert.isNumber, true).to.be.a('number');
+  };
+
+  /**
+   * ### .isNotNumber(value, [message])
+   *
+   * Asserts that `value` is _not_ a number.
+   *
+   *     var cups = '2 cups please';
+   *     assert.isNotNumber(cups, 'how many cups');
+   *
+   * @name isNotNumber
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotNumber = function (val, msg) {
+    new Assertion(val, msg, assert.isNotNumber, true).to.not.be.a('number');
+  };
+
+   /**
+   * ### .isFinite(value, [message])
+   *
+   * Asserts that `value` is a finite number. Unlike `.isNumber`, this will fail for `NaN` and `Infinity`.
+   *
+   *     var cups = 2;
+   *     assert.isFinite(cups, 'how many cups');
+   *
+   *     assert.isFinite(NaN); // throws
+   *
+   * @name isFinite
+   * @param {Number} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isFinite = function (val, msg) {
+    new Assertion(val, msg, assert.isFinite, true).to.be.finite;
+  };
+
+  /**
+   * ### .isBoolean(value, [message])
+   *
+   * Asserts that `value` is a boolean.
+   *
+   *     var teaReady = true
+   *       , teaServed = false;
+   *
+   *     assert.isBoolean(teaReady, 'is the tea ready');
+   *     assert.isBoolean(teaServed, 'has tea been served');
+   *
+   * @name isBoolean
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isBoolean = function (val, msg) {
+    new Assertion(val, msg, assert.isBoolean, true).to.be.a('boolean');
+  };
+
+  /**
+   * ### .isNotBoolean(value, [message])
+   *
+   * Asserts that `value` is _not_ a boolean.
+   *
+   *     var teaReady = 'yep'
+   *       , teaServed = 'nope';
+   *
+   *     assert.isNotBoolean(teaReady, 'is the tea ready');
+   *     assert.isNotBoolean(teaServed, 'has tea been served');
+   *
+   * @name isNotBoolean
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotBoolean = function (val, msg) {
+    new Assertion(val, msg, assert.isNotBoolean, true).to.not.be.a('boolean');
+  };
+
+  /**
+   * ### .typeOf(value, name, [message])
+   *
+   * Asserts that `value`'s type is `name`, as determined by
+   * `Object.prototype.toString`.
+   *
+   *     assert.typeOf({ tea: 'chai' }, 'object', 'we have an object');
+   *     assert.typeOf(['chai', 'jasmine'], 'array', 'we have an array');
+   *     assert.typeOf('tea', 'string', 'we have a string');
+   *     assert.typeOf(/tea/, 'regexp', 'we have a regular expression');
+   *     assert.typeOf(null, 'null', 'we have a null');
+   *     assert.typeOf(undefined, 'undefined', 'we have an undefined');
+   *
+   * @name typeOf
+   * @param {Mixed} value
+   * @param {String} name
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.typeOf = function (val, type, msg) {
+    new Assertion(val, msg, assert.typeOf, true).to.be.a(type);
+  };
+
+  /**
+   * ### .notTypeOf(value, name, [message])
+   *
+   * Asserts that `value`'s type is _not_ `name`, as determined by
+   * `Object.prototype.toString`.
+   *
+   *     assert.notTypeOf('tea', 'number', 'strings are not numbers');
+   *
+   * @name notTypeOf
+   * @param {Mixed} value
+   * @param {String} typeof name
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notTypeOf = function (val, type, msg) {
+    new Assertion(val, msg, assert.notTypeOf, true).to.not.be.a(type);
+  };
+
+  /**
+   * ### .instanceOf(object, constructor, [message])
+   *
+   * Asserts that `value` is an instance of `constructor`.
+   *
+   *     var Tea = function (name) { this.name = name; }
+   *       , chai = new Tea('chai');
+   *
+   *     assert.instanceOf(chai, Tea, 'chai is an instance of tea');
+   *
+   * @name instanceOf
+   * @param {Object} object
+   * @param {Constructor} constructor
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.instanceOf = function (val, type, msg) {
+    new Assertion(val, msg, assert.instanceOf, true).to.be.instanceOf(type);
+  };
+
+  /**
+   * ### .notInstanceOf(object, constructor, [message])
+   *
+   * Asserts `value` is not an instance of `constructor`.
+   *
+   *     var Tea = function (name) { this.name = name; }
+   *       , chai = new String('chai');
+   *
+   *     assert.notInstanceOf(chai, Tea, 'chai is not an instance of tea');
+   *
+   * @name notInstanceOf
+   * @param {Object} object
+   * @param {Constructor} constructor
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notInstanceOf = function (val, type, msg) {
+    new Assertion(val, msg, assert.notInstanceOf, true)
+      .to.not.be.instanceOf(type);
+  };
+
+  /**
+   * ### .include(haystack, needle, [message])
+   *
+   * Asserts that `haystack` includes `needle`. Can be used to assert the
+   * inclusion of a value in an array, a substring in a string, or a subset of
+   * properties in an object.
+   *
+   *     assert.include([1,2,3], 2, 'array contains value');
+   *     assert.include('foobar', 'foo', 'string contains substring');
+   *     assert.include({ foo: 'bar', hello: 'universe' }, { foo: 'bar' }, 'object contains property');
+   *
+   * Strict equality (===) is used. When asserting the inclusion of a value in
+   * an array, the array is searched for an element that's strictly equal to the
+   * given value. When asserting a subset of properties in an object, the object
+   * is searched for the given property keys, checking that each one is present
+   * and stricty equal to the given property value. For instance:
+   *
+   *     var obj1 = {a: 1}
+   *       , obj2 = {b: 2};
+   *     assert.include([obj1, obj2], obj1);
+   *     assert.include({foo: obj1, bar: obj2}, {foo: obj1});
+   *     assert.include({foo: obj1, bar: obj2}, {foo: obj1, bar: obj2});
+   *
+   * @name include
+   * @param {Array|String} haystack
+   * @param {Mixed} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.include = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.include, true).include(inc);
+  };
+
+  /**
+   * ### .notInclude(haystack, needle, [message])
+   *
+   * Asserts that `haystack` does not include `needle`. Can be used to assert
+   * the absence of a value in an array, a substring in a string, or a subset of
+   * properties in an object.
+   *
+   *     assert.notInclude([1,2,3], 4, 'array doesn't contain value');
+   *     assert.notInclude('foobar', 'baz', 'string doesn't contain substring');
+   *     assert.notInclude({ foo: 'bar', hello: 'universe' }, { foo: 'baz' }, 'object doesn't contain property');
+   *
+   * Strict equality (===) is used. When asserting the absence of a value in an
+   * array, the array is searched to confirm the absence of an element that's
+   * strictly equal to the given value. When asserting a subset of properties in
+   * an object, the object is searched to confirm that at least one of the given
+   * property keys is either not present or not strictly equal to the given
+   * property value. For instance:
+   *
+   *     var obj1 = {a: 1}
+   *       , obj2 = {b: 2};
+   *     assert.notInclude([obj1, obj2], {a: 1});
+   *     assert.notInclude({foo: obj1, bar: obj2}, {foo: {a: 1}});
+   *     assert.notInclude({foo: obj1, bar: obj2}, {foo: obj1, bar: {b: 2}});
+   *
+   * @name notInclude
+   * @param {Array|String} haystack
+   * @param {Mixed} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notInclude = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.notInclude, true).not.include(inc);
+  };
+
+  /**
+   * ### .deepInclude(haystack, needle, [message])
+   *
+   * Asserts that `haystack` includes `needle`. Can be used to assert the
+   * inclusion of a value in an array or a subset of properties in an object.
+   * Deep equality is used.
+   *
+   *     var obj1 = {a: 1}
+   *       , obj2 = {b: 2};
+   *     assert.deepInclude([obj1, obj2], {a: 1});
+   *     assert.deepInclude({foo: obj1, bar: obj2}, {foo: {a: 1}});
+   *     assert.deepInclude({foo: obj1, bar: obj2}, {foo: {a: 1}, bar: {b: 2}});
+   *
+   * @name deepInclude
+   * @param {Array|String} haystack
+   * @param {Mixed} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.deepInclude = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.deepInclude, true).deep.include(inc);
+  };
+
+  /**
+   * ### .notDeepInclude(haystack, needle, [message])
+   *
+   * Asserts that `haystack` does not include `needle`. Can be used to assert
+   * the absence of a value in an array or a subset of properties in an object.
+   * Deep equality is used.
+   *
+   *     var obj1 = {a: 1}
+   *       , obj2 = {b: 2};
+   *     assert.notDeepInclude([obj1, obj2], {a: 9});
+   *     assert.notDeepInclude({foo: obj1, bar: obj2}, {foo: {a: 9}});
+   *     assert.notDeepInclude({foo: obj1, bar: obj2}, {foo: {a: 1}, bar: {b: 9}});
+   *
+   * @name notDeepInclude
+   * @param {Array|String} haystack
+   * @param {Mixed} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notDeepInclude = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.notDeepInclude, true).not.deep.include(inc);
+  };
+
+  /**
+   * ### .nestedInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'. 
+   * Can be used to assert the inclusion of a subset of properties in an 
+   * object.
+   * Enables the use of dot- and bracket-notation for referencing nested 
+   * properties.
+   * '[]' and '.' in property names can be escaped using double backslashes.
+   * 
+   *     assert.nestedInclude({'.a': {'b': 'x'}}, {'\\.a.[b]': 'x'});
+   *     assert.nestedInclude({'a': {'[b]': 'x'}}, {'a.\\[b\\]': 'x'});
+   * 
+   * @name nestedInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public 
+   */ 
+
+  assert.nestedInclude = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.nestedInclude, true).nested.include(inc);
+  };
+
+  /**
+   * ### .notNestedInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' does not include 'needle'. 
+   * Can be used to assert the absence of a subset of properties in an 
+   * object.
+   * Enables the use of dot- and bracket-notation for referencing nested 
+   * properties. 
+   * '[]' and '.' in property names can be escaped using double backslashes.
+   * 
+   *     assert.notNestedInclude({'.a': {'b': 'x'}}, {'\\.a.b': 'y'});
+   *     assert.notNestedInclude({'a': {'[b]': 'x'}}, {'a.\\[b\\]': 'y'});
+   * 
+   * @name notNestedInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public 
+   */ 
+
+  assert.notNestedInclude = function (exp, inc, msg) {
+    new Assertion(exp, msg, assert.notNestedInclude, true)
+      .not.nested.include(inc);
+  };
+
+  /**
+   * ### .deepNestedInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'.
+   * Can be used to assert the inclusion of a subset of properties in an 
+   * object while checking for deep equality.
+   * Enables the use of dot- and bracket-notation for referencing nested 
+   * properties.
+   * '[]' and '.' in property names can be escaped using double backslashes.
+   * 
+   *     assert.deepNestedInclude({a: {b: [{x: 1}]}}, {'a.b[0]': {x: 1}});
+   *     assert.deepNestedInclude({'.a': {'[b]': {x: 1}}}, {'\\.a.\\[b\\]': {x: 1}});
+   *    
+   * @name deepNestedInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public 
+   */
+
+  assert.deepNestedInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.deepNestedInclude, true)
+      .deep.nested.include(inc);
+  };
+
+  /**
+   * ### .notDeepNestedInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' does not include 'needle'.
+   * Can be used to assert the absence of a subset of properties in an 
+   * object while checking for deep equality.
+   * Enables the use of dot- and bracket-notation for referencing nested 
+   * properties.
+   * '[]' and '.' in property names can be escaped using double backslashes.
+   * 
+   *     assert.notDeepNestedInclude({a: {b: [{x: 1}]}}, {'a.b[0]': {y: 1}})
+   *     assert.notDeepNestedInclude({'.a': {'[b]': {x: 1}}}, {'\\.a.\\[b\\]': {y: 2}});
+   *    
+   * @name notDeepNestedInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public 
+   */
+
+  assert.notDeepNestedInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.notDeepNestedInclude, true)
+      .not.deep.nested.include(inc);
+  };
+
+  /**
+   * ### .ownInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'.
+   * Can be used to assert the inclusion of a subset of properties in an 
+   * object while ignoring inherited properties.
+   * 
+   *     assert.ownInclude({ a: 1 }, { a: 1 });
+   * 
+   * @name ownInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.ownInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.ownInclude, true).own.include(inc);
+  };
+
+  /**
+   * ### .notOwnInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'.
+   * Can be used to assert the absence of a subset of properties in an 
+   * object while ignoring inherited properties.
+   * 
+   *     Object.prototype.b = 2;
+   * 
+   *     assert.notOwnInclude({ a: 1 }, { b: 2 });
+   * 
+   * @name notOwnInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notOwnInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.notOwnInclude, true).not.own.include(inc);
+  };
+
+  /**
+   * ### .deepOwnInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'.
+   * Can be used to assert the inclusion of a subset of properties in an 
+   * object while ignoring inherited properties and checking for deep equality.
+   * 
+   *      assert.deepOwnInclude({a: {b: 2}}, {a: {b: 2}});
+   *      
+   * @name deepOwnInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.deepOwnInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.deepOwnInclude, true)
+      .deep.own.include(inc);
+  };
+
+   /**
+   * ### .notDeepOwnInclude(haystack, needle, [message])
+   * 
+   * Asserts that 'haystack' includes 'needle'.
+   * Can be used to assert the absence of a subset of properties in an 
+   * object while ignoring inherited properties and checking for deep equality.
+   * 
+   *      assert.notDeepOwnInclude({a: {b: 2}}, {a: {c: 3}});
+   *      
+   * @name notDeepOwnInclude
+   * @param {Object} haystack
+   * @param {Object} needle
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notDeepOwnInclude = function(exp, inc, msg) {
+    new Assertion(exp, msg, assert.notDeepOwnInclude, true)
+      .not.deep.own.include(inc);
+  };
+
+  /**
+   * ### .match(value, regexp, [message])
+   *
+   * Asserts that `value` matches the regular expression `regexp`.
+   *
+   *     assert.match('foobar', /^foo/, 'regexp matches');
+   *
+   * @name match
+   * @param {Mixed} value
+   * @param {RegExp} regexp
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.match = function (exp, re, msg) {
+    new Assertion(exp, msg, assert.match, true).to.match(re);
+  };
+
+  /**
+   * ### .notMatch(value, regexp, [message])
+   *
+   * Asserts that `value` does not match the regular expression `regexp`.
+   *
+   *     assert.notMatch('foobar', /^foo/, 'regexp does not match');
+   *
+   * @name notMatch
+   * @param {Mixed} value
+   * @param {RegExp} regexp
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notMatch = function (exp, re, msg) {
+    new Assertion(exp, msg, assert.notMatch, true).to.not.match(re);
+  };
+
+  /**
+   * ### .property(object, property, [message])
+   *
+   * Asserts that `object` has a direct or inherited property named by
+   * `property`.
+   *
+   *     assert.property({ tea: { green: 'matcha' }}, 'tea');
+   *     assert.property({ tea: { green: 'matcha' }}, 'toString');
+   *
+   * @name property
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.property = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.property, true).to.have.property(prop);
+  };
+
+  /**
+   * ### .notProperty(object, property, [message])
+   *
+   * Asserts that `object` does _not_ have a direct or inherited property named
+   * by `property`.
+   *
+   *     assert.notProperty({ tea: { green: 'matcha' }}, 'coffee');
+   *
+   * @name notProperty
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notProperty = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.notProperty, true)
+      .to.not.have.property(prop);
+  };
+
+  /**
+   * ### .propertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a direct or inherited property named by
+   * `property` with a value given by `value`. Uses a strict equality check
+   * (===).
+   *
+   *     assert.propertyVal({ tea: 'is good' }, 'tea', 'is good');
+   *
+   * @name propertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.propertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.propertyVal, true)
+      .to.have.property(prop, val);
+  };
+
+  /**
+   * ### .notPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a direct or inherited property named
+   * by `property` with value given by `value`. Uses a strict equality check
+   * (===).
+   *
+   *     assert.notPropertyVal({ tea: 'is good' }, 'tea', 'is bad');
+   *     assert.notPropertyVal({ tea: 'is good' }, 'coffee', 'is good');
+   *
+   * @name notPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.notPropertyVal, true)
+      .to.not.have.property(prop, val);
+  };
+
+  /**
+   * ### .deepPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a direct or inherited property named by
+   * `property` with a value given by `value`. Uses a deep equality check.
+   *
+   *     assert.deepPropertyVal({ tea: { green: 'matcha' } }, 'tea', { green: 'matcha' });
+   *
+   * @name deepPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.deepPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.deepPropertyVal, true)
+      .to.have.deep.property(prop, val);
+  };
+
+  /**
+   * ### .notDeepPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a direct or inherited property named
+   * by `property` with value given by `value`. Uses a deep equality check.
+   *
+   *     assert.notDeepPropertyVal({ tea: { green: 'matcha' } }, 'tea', { black: 'matcha' });
+   *     assert.notDeepPropertyVal({ tea: { green: 'matcha' } }, 'tea', { green: 'oolong' });
+   *     assert.notDeepPropertyVal({ tea: { green: 'matcha' } }, 'coffee', { green: 'matcha' });
+   *
+   * @name notDeepPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notDeepPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.notDeepPropertyVal, true)
+      .to.not.have.deep.property(prop, val);
+  };
+
+  /**
+   * ### .ownProperty(object, property, [message])
+   *
+   * Asserts that `object` has a direct property named by `property`. Inherited
+   * properties aren't checked.
+   *
+   *     assert.ownProperty({ tea: { green: 'matcha' }}, 'tea');
+   *
+   * @name ownProperty
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @api public
+   */
+
+  assert.ownProperty = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.ownProperty, true)
+      .to.have.own.property(prop);
+  };
+
+  /**
+   * ### .notOwnProperty(object, property, [message])
+   *
+   * Asserts that `object` does _not_ have a direct property named by
+   * `property`. Inherited properties aren't checked.
+   *
+   *     assert.notOwnProperty({ tea: { green: 'matcha' }}, 'coffee');
+   *     assert.notOwnProperty({}, 'toString');
+   *
+   * @name notOwnProperty
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @api public
+   */
+
+  assert.notOwnProperty = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.notOwnProperty, true)
+      .to.not.have.own.property(prop);
+  };
+
+  /**
+   * ### .ownPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a direct property named by `property` and a value
+   * equal to the provided `value`. Uses a strict equality check (===).
+   * Inherited properties aren't checked.
+   *
+   *     assert.ownPropertyVal({ coffee: 'is good'}, 'coffee', 'is good');
+   *
+   * @name ownPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @api public
+   */
+
+  assert.ownPropertyVal = function (obj, prop, value, msg) {
+    new Assertion(obj, msg, assert.ownPropertyVal, true)
+      .to.have.own.property(prop, value);
+  };
+
+  /**
+   * ### .notOwnPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a direct property named by `property`
+   * with a value equal to the provided `value`. Uses a strict equality check
+   * (===). Inherited properties aren't checked.
+   *
+   *     assert.notOwnPropertyVal({ tea: 'is better'}, 'tea', 'is worse');
+   *     assert.notOwnPropertyVal({}, 'toString', Object.prototype.toString);
+   *
+   * @name notOwnPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @api public
+   */
+
+  assert.notOwnPropertyVal = function (obj, prop, value, msg) {
+    new Assertion(obj, msg, assert.notOwnPropertyVal, true)
+      .to.not.have.own.property(prop, value);
+  };
+
+  /**
+   * ### .deepOwnPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a direct property named by `property` and a value
+   * equal to the provided `value`. Uses a deep equality check. Inherited
+   * properties aren't checked.
+   *
+   *     assert.deepOwnPropertyVal({ tea: { green: 'matcha' } }, 'tea', { green: 'matcha' });
+   *
+   * @name deepOwnPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @api public
+   */
+
+  assert.deepOwnPropertyVal = function (obj, prop, value, msg) {
+    new Assertion(obj, msg, assert.deepOwnPropertyVal, true)
+      .to.have.deep.own.property(prop, value);
+  };
+
+  /**
+   * ### .notDeepOwnPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a direct property named by `property`
+   * with a value equal to the provided `value`. Uses a deep equality check.
+   * Inherited properties aren't checked.
+   *
+   *     assert.notDeepOwnPropertyVal({ tea: { green: 'matcha' } }, 'tea', { black: 'matcha' });
+   *     assert.notDeepOwnPropertyVal({ tea: { green: 'matcha' } }, 'tea', { green: 'oolong' });
+   *     assert.notDeepOwnPropertyVal({ tea: { green: 'matcha' } }, 'coffee', { green: 'matcha' });
+   *     assert.notDeepOwnPropertyVal({}, 'toString', Object.prototype.toString);
+   *
+   * @name notDeepOwnPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @api public
+   */
+
+  assert.notDeepOwnPropertyVal = function (obj, prop, value, msg) {
+    new Assertion(obj, msg, assert.notDeepOwnPropertyVal, true)
+      .to.not.have.deep.own.property(prop, value);
+  };
+
+  /**
+   * ### .nestedProperty(object, property, [message])
+   *
+   * Asserts that `object` has a direct or inherited property named by
+   * `property`, which can be a string using dot- and bracket-notation for
+   * nested reference.
+   *
+   *     assert.nestedProperty({ tea: { green: 'matcha' }}, 'tea.green');
+   *
+   * @name nestedProperty
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.nestedProperty = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.nestedProperty, true)
+      .to.have.nested.property(prop);
+  };
+
+  /**
+   * ### .notNestedProperty(object, property, [message])
+   *
+   * Asserts that `object` does _not_ have a property named by `property`, which
+   * can be a string using dot- and bracket-notation for nested reference. The
+   * property cannot exist on the object nor anywhere in its prototype chain.
+   *
+   *     assert.notNestedProperty({ tea: { green: 'matcha' }}, 'tea.oolong');
+   *
+   * @name notNestedProperty
+   * @param {Object} object
+   * @param {String} property
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notNestedProperty = function (obj, prop, msg) {
+    new Assertion(obj, msg, assert.notNestedProperty, true)
+      .to.not.have.nested.property(prop);
+  };
+
+  /**
+   * ### .nestedPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a property named by `property` with value given
+   * by `value`. `property` can use dot- and bracket-notation for nested
+   * reference. Uses a strict equality check (===).
+   *
+   *     assert.nestedPropertyVal({ tea: { green: 'matcha' }}, 'tea.green', 'matcha');
+   *
+   * @name nestedPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.nestedPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.nestedPropertyVal, true)
+      .to.have.nested.property(prop, val);
+  };
+
+  /**
+   * ### .notNestedPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a property named by `property` with
+   * value given by `value`. `property` can use dot- and bracket-notation for
+   * nested reference. Uses a strict equality check (===).
+   *
+   *     assert.notNestedPropertyVal({ tea: { green: 'matcha' }}, 'tea.green', 'konacha');
+   *     assert.notNestedPropertyVal({ tea: { green: 'matcha' }}, 'coffee.green', 'matcha');
+   *
+   * @name notNestedPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notNestedPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.notNestedPropertyVal, true)
+      .to.not.have.nested.property(prop, val);
+  };
+
+  /**
+   * ### .deepNestedPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` has a property named by `property` with a value given
+   * by `value`. `property` can use dot- and bracket-notation for nested
+   * reference. Uses a deep equality check.
+   *
+   *     assert.deepNestedPropertyVal({ tea: { green: { matcha: 'yum' } } }, 'tea.green', { matcha: 'yum' });
+   *
+   * @name deepNestedPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.deepNestedPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.deepNestedPropertyVal, true)
+      .to.have.deep.nested.property(prop, val);
+  };
+
+  /**
+   * ### .notDeepNestedPropertyVal(object, property, value, [message])
+   *
+   * Asserts that `object` does _not_ have a property named by `property` with
+   * value given by `value`. `property` can use dot- and bracket-notation for
+   * nested reference. Uses a deep equality check.
+   *
+   *     assert.notDeepNestedPropertyVal({ tea: { green: { matcha: 'yum' } } }, 'tea.green', { oolong: 'yum' });
+   *     assert.notDeepNestedPropertyVal({ tea: { green: { matcha: 'yum' } } }, 'tea.green', { matcha: 'yuck' });
+   *     assert.notDeepNestedPropertyVal({ tea: { green: { matcha: 'yum' } } }, 'tea.black', { matcha: 'yum' });
+   *
+   * @name notDeepNestedPropertyVal
+   * @param {Object} object
+   * @param {String} property
+   * @param {Mixed} value
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notDeepNestedPropertyVal = function (obj, prop, val, msg) {
+    new Assertion(obj, msg, assert.notDeepNestedPropertyVal, true)
+      .to.not.have.deep.nested.property(prop, val);
+  }
+
+  /**
+   * ### .lengthOf(object, length, [message])
+   *
+   * Asserts that `object` has a `length` property with the expected value.
+   *
+   *     assert.lengthOf([1,2,3], 3, 'array has length of 3');
+   *     assert.lengthOf('foobar', 6, 'string has length of 6');
+   *
+   * @name lengthOf
+   * @param {Mixed} object
+   * @param {Number} length
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.lengthOf = function (exp, len, msg) {
+    new Assertion(exp, msg, assert.lengthOf, true).to.have.lengthOf(len);
+  };
+
+  /**
+   * ### .hasAnyKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has at least one of the `keys` provided.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.hasAnyKeys({foo: 1, bar: 2, baz: 3}, ['foo', 'iDontExist', 'baz']);
+   *     assert.hasAnyKeys({foo: 1, bar: 2, baz: 3}, {foo: 30, iDontExist: 99, baz: 1337});
+   *     assert.hasAnyKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{foo: 1}, 'key']);
+   *     assert.hasAnyKeys(new Set([{foo: 'bar'}, 'anotherKey']), [{foo: 'bar'}, 'anotherKey']);
+   *
+   * @name hasAnyKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.hasAnyKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.hasAnyKeys, true).to.have.any.keys(keys);
+  }
+
+  /**
+   * ### .hasAllKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has all and only all of the `keys` provided.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.hasAllKeys({foo: 1, bar: 2, baz: 3}, ['foo', 'bar', 'baz']);
+   *     assert.hasAllKeys({foo: 1, bar: 2, baz: 3}, {foo: 30, bar: 99, baz: 1337]);
+   *     assert.hasAllKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{foo: 1}, 'key']);
+   *     assert.hasAllKeys(new Set([{foo: 'bar'}, 'anotherKey'], [{foo: 'bar'}, 'anotherKey']);
+   *
+   * @name hasAllKeys
+   * @param {Mixed} object
+   * @param {String[]} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.hasAllKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.hasAllKeys, true).to.have.all.keys(keys);
+  }
+
+  /**
+   * ### .containsAllKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has all of the `keys` provided but may have more keys not listed.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.containsAllKeys({foo: 1, bar: 2, baz: 3}, ['foo', 'baz']);
+   *     assert.containsAllKeys({foo: 1, bar: 2, baz: 3}, ['foo', 'bar', 'baz']);
+   *     assert.containsAllKeys({foo: 1, bar: 2, baz: 3}, {foo: 30, baz: 1337});
+   *     assert.containsAllKeys({foo: 1, bar: 2, baz: 3}, {foo: 30, bar: 99, baz: 1337});
+   *     assert.containsAllKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{foo: 1}]);
+   *     assert.containsAllKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{foo: 1}, 'key']);
+   *     assert.containsAllKeys(new Set([{foo: 'bar'}, 'anotherKey'], [{foo: 'bar'}]);
+   *     assert.containsAllKeys(new Set([{foo: 'bar'}, 'anotherKey'], [{foo: 'bar'}, 'anotherKey']);
+   *
+   * @name containsAllKeys
+   * @param {Mixed} object
+   * @param {String[]} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.containsAllKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.containsAllKeys, true)
+      .to.contain.all.keys(keys);
+  }
+
+  /**
+   * ### .doesNotHaveAnyKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has none of the `keys` provided.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.doesNotHaveAnyKeys({foo: 1, bar: 2, baz: 3}, ['one', 'two', 'example']);
+   *     assert.doesNotHaveAnyKeys({foo: 1, bar: 2, baz: 3}, {one: 1, two: 2, example: 'foo'});
+   *     assert.doesNotHaveAnyKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{one: 'two'}, 'example']);
+   *     assert.doesNotHaveAnyKeys(new Set([{foo: 'bar'}, 'anotherKey'], [{one: 'two'}, 'example']);
+   *
+   * @name doesNotHaveAnyKeys
+   * @param {Mixed} object
+   * @param {String[]} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotHaveAnyKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.doesNotHaveAnyKeys, true)
+      .to.not.have.any.keys(keys);
+  }
+
+  /**
+   * ### .doesNotHaveAllKeys(object, [keys], [message])
+   *
+   * Asserts that `object` does not have at least one of the `keys` provided.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.doesNotHaveAllKeys({foo: 1, bar: 2, baz: 3}, ['one', 'two', 'example']);
+   *     assert.doesNotHaveAllKeys({foo: 1, bar: 2, baz: 3}, {one: 1, two: 2, example: 'foo'});
+   *     assert.doesNotHaveAllKeys(new Map([[{foo: 1}, 'bar'], ['key', 'value']]), [{one: 'two'}, 'example']);
+   *     assert.doesNotHaveAllKeys(new Set([{foo: 'bar'}, 'anotherKey'], [{one: 'two'}, 'example']);
+   *
+   * @name doesNotHaveAllKeys
+   * @param {Mixed} object
+   * @param {String[]} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotHaveAllKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.doesNotHaveAllKeys, true)
+      .to.not.have.all.keys(keys);
+  }
+
+  /**
+   * ### .hasAnyDeepKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has at least one of the `keys` provided.
+   * Since Sets and Maps can have objects as keys you can use this assertion to perform
+   * a deep comparison.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.hasAnyDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [1, 2]]), {one: 'one'});
+   *     assert.hasAnyDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [1, 2]]), [{one: 'one'}, {two: 'two'}]);
+   *     assert.hasAnyDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [{two: 'two'}, 'valueTwo']]), [{one: 'one'}, {two: 'two'}]);
+   *     assert.hasAnyDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), {one: 'one'});
+   *     assert.hasAnyDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{one: 'one'}, {three: 'three'}]);
+   *     assert.hasAnyDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{one: 'one'}, {two: 'two'}]);
+   *
+   * @name doesNotHaveAllKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.hasAnyDeepKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.hasAnyDeepKeys, true)
+      .to.have.any.deep.keys(keys);
+  }
+
+ /**
+   * ### .hasAllDeepKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has all and only all of the `keys` provided.
+   * Since Sets and Maps can have objects as keys you can use this assertion to perform
+   * a deep comparison.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.hasAllDeepKeys(new Map([[{one: 'one'}, 'valueOne']]), {one: 'one'});
+   *     assert.hasAllDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [{two: 'two'}, 'valueTwo']]), [{one: 'one'}, {two: 'two'}]);
+   *     assert.hasAllDeepKeys(new Set([{one: 'one'}]), {one: 'one'});
+   *     assert.hasAllDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{one: 'one'}, {two: 'two'}]);
+   *
+   * @name hasAllDeepKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.hasAllDeepKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.hasAllDeepKeys, true)
+      .to.have.all.deep.keys(keys);
+  }
+
+ /**
+   * ### .containsAllDeepKeys(object, [keys], [message])
+   *
+   * Asserts that `object` contains all of the `keys` provided.
+   * Since Sets and Maps can have objects as keys you can use this assertion to perform
+   * a deep comparison.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.containsAllDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [1, 2]]), {one: 'one'});
+   *     assert.containsAllDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [{two: 'two'}, 'valueTwo']]), [{one: 'one'}, {two: 'two'}]);
+   *     assert.containsAllDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), {one: 'one'});
+   *     assert.containsAllDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{one: 'one'}, {two: 'two'}]);
+   *
+   * @name containsAllDeepKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.containsAllDeepKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.containsAllDeepKeys, true)
+      .to.contain.all.deep.keys(keys);
+  }
+
+ /**
+   * ### .doesNotHaveAnyDeepKeys(object, [keys], [message])
+   *
+   * Asserts that `object` has none of the `keys` provided.
+   * Since Sets and Maps can have objects as keys you can use this assertion to perform
+   * a deep comparison.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.doesNotHaveAnyDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [1, 2]]), {thisDoesNot: 'exist'});
+   *     assert.doesNotHaveAnyDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [{two: 'two'}, 'valueTwo']]), [{twenty: 'twenty'}, {fifty: 'fifty'}]);
+   *     assert.doesNotHaveAnyDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), {twenty: 'twenty'});
+   *     assert.doesNotHaveAnyDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{twenty: 'twenty'}, {fifty: 'fifty'}]);
+   *
+   * @name doesNotHaveAnyDeepKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotHaveAnyDeepKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.doesNotHaveAnyDeepKeys, true)
+      .to.not.have.any.deep.keys(keys);
+  }
+
+ /**
+   * ### .doesNotHaveAllDeepKeys(object, [keys], [message])
+   *
+   * Asserts that `object` does not have at least one of the `keys` provided.
+   * Since Sets and Maps can have objects as keys you can use this assertion to perform
+   * a deep comparison.
+   * You can also provide a single object instead of a `keys` array and its keys
+   * will be used as the expected set of keys.
+   *
+   *     assert.doesNotHaveAllDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [1, 2]]), {thisDoesNot: 'exist'});
+   *     assert.doesNotHaveAllDeepKeys(new Map([[{one: 'one'}, 'valueOne'], [{two: 'two'}, 'valueTwo']]), [{twenty: 'twenty'}, {one: 'one'}]);
+   *     assert.doesNotHaveAllDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), {twenty: 'twenty'});
+   *     assert.doesNotHaveAllDeepKeys(new Set([{one: 'one'}, {two: 'two'}]), [{one: 'one'}, {fifty: 'fifty'}]);
+   *
+   * @name doesNotHaveAllDeepKeys
+   * @param {Mixed} object
+   * @param {Array|Object} keys
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotHaveAllDeepKeys = function (obj, keys, msg) {
+    new Assertion(obj, msg, assert.doesNotHaveAllDeepKeys, true)
+      .to.not.have.all.deep.keys(keys);
+  }
+
+ /**
+   * ### .throws(fn, [errorLike/string/regexp], [string/regexp], [message])
+   *
+   * If `errorLike` is an `Error` constructor, asserts that `fn` will throw an error that is an
+   * instance of `errorLike`.
+   * If `errorLike` is an `Error` instance, asserts that the error thrown is the same
+   * instance as `errorLike`.
+   * If `errMsgMatcher` is provided, it also asserts that the error thrown will have a
+   * message matching `errMsgMatcher`.
+   *
+   *     assert.throws(fn, 'function throws a reference error');
+   *     assert.throws(fn, /function throws a reference error/);
+   *     assert.throws(fn, ReferenceError);
+   *     assert.throws(fn, errorInstance);
+   *     assert.throws(fn, ReferenceError, 'Error thrown must be a ReferenceError and have this msg');
+   *     assert.throws(fn, errorInstance, 'Error thrown must be the same errorInstance and have this msg');
+   *     assert.throws(fn, ReferenceError, /Error thrown must be a ReferenceError and match this/);
+   *     assert.throws(fn, errorInstance, /Error thrown must be the same errorInstance and match this/);
+   *
+   * @name throws
+   * @alias throw
+   * @alias Throw
+   * @param {Function} fn
+   * @param {ErrorConstructor|Error} errorLike
+   * @param {RegExp|String} errMsgMatcher
+   * @param {String} message
+   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.throws = function (fn, errorLike, errMsgMatcher, msg) {
+    if ('string' === typeof errorLike || errorLike instanceof RegExp) {
+      errMsgMatcher = errorLike;
+      errorLike = null;
+    }
+
+    var assertErr = new Assertion(fn, msg, assert.throws, true)
+      .to.throw(errorLike, errMsgMatcher);
+    return flag(assertErr, 'object');
+  };
+
+  /**
+   * ### .doesNotThrow(fn, [errorLike/string/regexp], [string/regexp], [message])
+   *
+   * If `errorLike` is an `Error` constructor, asserts that `fn` will _not_ throw an error that is an
+   * instance of `errorLike`.
+   * If `errorLike` is an `Error` instance, asserts that the error thrown is _not_ the same
+   * instance as `errorLike`.
+   * If `errMsgMatcher` is provided, it also asserts that the error thrown will _not_ have a
+   * message matching `errMsgMatcher`.
+   *
+   *     assert.doesNotThrow(fn, 'Any Error thrown must not have this message');
+   *     assert.doesNotThrow(fn, /Any Error thrown must not match this/);
+   *     assert.doesNotThrow(fn, Error);
+   *     assert.doesNotThrow(fn, errorInstance);
+   *     assert.doesNotThrow(fn, Error, 'Error must not have this message');
+   *     assert.doesNotThrow(fn, errorInstance, 'Error must not have this message');
+   *     assert.doesNotThrow(fn, Error, /Error must not match this/);
+   *     assert.doesNotThrow(fn, errorInstance, /Error must not match this/);
+   *
+   * @name doesNotThrow
+   * @param {Function} fn
+   * @param {ErrorConstructor} errorLike
+   * @param {RegExp|String} errMsgMatcher
+   * @param {String} message
+   * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotThrow = function (fn, errorLike, errMsgMatcher, msg) {
+    if ('string' === typeof errorLike || errorLike instanceof RegExp) {
+      errMsgMatcher = errorLike;
+      errorLike = null;
+    }
+
+    new Assertion(fn, msg, assert.doesNotThrow, true)
+      .to.not.throw(errorLike, errMsgMatcher);
+  };
+
+  /**
+   * ### .operator(val1, operator, val2, [message])
+   *
+   * Compares two values using `operator`.
+   *
+   *     assert.operator(1, '<', 2, 'everything is ok');
+   *     assert.operator(1, '>', 2, 'this will fail');
+   *
+   * @name operator
+   * @param {Mixed} val1
+   * @param {String} operator
+   * @param {Mixed} val2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.operator = function (val, operator, val2, msg) {
+    var ok;
+    switch(operator) {
+      case '==':
+        ok = val == val2;
+        break;
+      case '===':
+        ok = val === val2;
+        break;
+      case '>':
+        ok = val > val2;
+        break;
+      case '>=':
+        ok = val >= val2;
+        break;
+      case '<':
+        ok = val < val2;
+        break;
+      case '<=':
+        ok = val <= val2;
+        break;
+      case '!=':
+        ok = val != val2;
+        break;
+      case '!==':
+        ok = val !== val2;
+        break;
+      default:
+        msg = msg ? msg + ': ' : msg;
+        throw new chai.AssertionError(
+          msg + 'Invalid operator "' + operator + '"',
+          undefined,
+          assert.operator
+        );
+    }
+    var test = new Assertion(ok, msg, assert.operator, true);
+    test.assert(
+        true === flag(test, 'object')
+      , 'expected ' + util.inspect(val) + ' to be ' + operator + ' ' + util.inspect(val2)
+      , 'expected ' + util.inspect(val) + ' to not be ' + operator + ' ' + util.inspect(val2) );
+  };
+
+  /**
+   * ### .closeTo(actual, expected, delta, [message])
+   *
+   * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+   *
+   *     assert.closeTo(1.5, 1, 0.5, 'numbers are close');
+   *
+   * @name closeTo
+   * @param {Number} actual
+   * @param {Number} expected
+   * @param {Number} delta
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.closeTo = function (act, exp, delta, msg) {
+    new Assertion(act, msg, assert.closeTo, true).to.be.closeTo(exp, delta);
+  };
+
+  /**
+   * ### .approximately(actual, expected, delta, [message])
+   *
+   * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+   *
+   *     assert.approximately(1.5, 1, 0.5, 'numbers are close');
+   *
+   * @name approximately
+   * @param {Number} actual
+   * @param {Number} expected
+   * @param {Number} delta
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.approximately = function (act, exp, delta, msg) {
+    new Assertion(act, msg, assert.approximately, true)
+      .to.be.approximately(exp, delta);
+  };
+
+  /**
+   * ### .sameMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` have the same members in any order. Uses a
+   * strict equality check (===).
+   *
+   *     assert.sameMembers([ 1, 2, 3 ], [ 2, 1, 3 ], 'same members');
+   *
+   * @name sameMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.sameMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.sameMembers, true)
+      .to.have.same.members(set2);
+  }
+
+  /**
+   * ### .notSameMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` don't have the same members in any order.
+   * Uses a strict equality check (===).
+   *
+   *     assert.notSameMembers([ 1, 2, 3 ], [ 5, 1, 3 ], 'not same members');
+   *
+   * @name notSameMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notSameMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.notSameMembers, true)
+      .to.not.have.same.members(set2);
+  }
+
+  /**
+   * ### .sameDeepMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` have the same members in any order. Uses a
+   * deep equality check.
+   *
+   *     assert.sameDeepMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [{ b: 2 }, { a: 1 }, { c: 3 }], 'same deep members');
+   *
+   * @name sameDeepMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.sameDeepMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.sameDeepMembers, true)
+      .to.have.same.deep.members(set2);
+  }
+
+  /**
+   * ### .notSameDeepMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` don't have the same members in any order.
+   * Uses a deep equality check.
+   *
+   *     assert.notSameDeepMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [{ b: 2 }, { a: 1 }, { f: 5 }], 'not same deep members');
+   *
+   * @name notSameDeepMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notSameDeepMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.notSameDeepMembers, true)
+      .to.not.have.same.deep.members(set2);
+  }
+
+  /**
+   * ### .sameOrderedMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` have the same members in the same order.
+   * Uses a strict equality check (===).
+   *
+   *     assert.sameOrderedMembers([ 1, 2, 3 ], [ 1, 2, 3 ], 'same ordered members');
+   *
+   * @name sameOrderedMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.sameOrderedMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.sameOrderedMembers, true)
+      .to.have.same.ordered.members(set2);
+  }
+
+  /**
+   * ### .notSameOrderedMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` don't have the same members in the same
+   * order. Uses a strict equality check (===).
+   *
+   *     assert.notSameOrderedMembers([ 1, 2, 3 ], [ 2, 1, 3 ], 'not same ordered members');
+   *
+   * @name notSameOrderedMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notSameOrderedMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.notSameOrderedMembers, true)
+      .to.not.have.same.ordered.members(set2);
+  }
+
+  /**
+   * ### .sameDeepOrderedMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` have the same members in the same order.
+   * Uses a deep equality check.
+   *
+   * assert.sameDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { a: 1 }, { b: 2 }, { c: 3 } ], 'same deep ordered members');
+   *
+   * @name sameDeepOrderedMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.sameDeepOrderedMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.sameDeepOrderedMembers, true)
+      .to.have.same.deep.ordered.members(set2);
+  }
+
+  /**
+   * ### .notSameDeepOrderedMembers(set1, set2, [message])
+   *
+   * Asserts that `set1` and `set2` don't have the same members in the same
+   * order. Uses a deep equality check.
+   *
+   * assert.notSameDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { a: 1 }, { b: 2 }, { z: 5 } ], 'not same deep ordered members');
+   * assert.notSameDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { b: 2 }, { a: 1 }, { c: 3 } ], 'not same deep ordered members');
+   *
+   * @name notSameDeepOrderedMembers
+   * @param {Array} set1
+   * @param {Array} set2
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notSameDeepOrderedMembers = function (set1, set2, msg) {
+    new Assertion(set1, msg, assert.notSameDeepOrderedMembers, true)
+      .to.not.have.same.deep.ordered.members(set2);
+  }
+
+  /**
+   * ### .includeMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` is included in `superset` in any order. Uses a
+   * strict equality check (===). Duplicates are ignored.
+   *
+   *     assert.includeMembers([ 1, 2, 3 ], [ 2, 1, 2 ], 'include members');
+   *
+   * @name includeMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.includeMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.includeMembers, true)
+      .to.include.members(subset);
+  }
+
+  /**
+   * ### .notIncludeMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` isn't included in `superset` in any order. Uses a
+   * strict equality check (===). Duplicates are ignored.
+   *
+   *     assert.notIncludeMembers([ 1, 2, 3 ], [ 5, 1 ], 'not include members');
+   *
+   * @name notIncludeMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notIncludeMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.notIncludeMembers, true)
+      .to.not.include.members(subset);
+  }
+
+  /**
+   * ### .includeDeepMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` is included in `superset` in any order. Uses a deep
+   * equality check. Duplicates are ignored.
+   *
+   *     assert.includeDeepMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { b: 2 }, { a: 1 }, { b: 2 } ], 'include deep members');
+   *
+   * @name includeDeepMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.includeDeepMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.includeDeepMembers, true)
+      .to.include.deep.members(subset);
+  }
+
+  /**
+   * ### .notIncludeDeepMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` isn't included in `superset` in any order. Uses a
+   * deep equality check. Duplicates are ignored.
+   *
+   *     assert.notIncludeDeepMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { b: 2 }, { f: 5 } ], 'not include deep members');
+   *
+   * @name notIncludeDeepMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notIncludeDeepMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.notIncludeDeepMembers, true)
+      .to.not.include.deep.members(subset);
+  }
+
+  /**
+   * ### .includeOrderedMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` is included in `superset` in the same order
+   * beginning with the first element in `superset`. Uses a strict equality
+   * check (===).
+   *
+   *     assert.includeOrderedMembers([ 1, 2, 3 ], [ 1, 2 ], 'include ordered members');
+   *
+   * @name includeOrderedMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.includeOrderedMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.includeOrderedMembers, true)
+      .to.include.ordered.members(subset);
+  }
+
+  /**
+   * ### .notIncludeOrderedMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` isn't included in `superset` in the same order
+   * beginning with the first element in `superset`. Uses a strict equality
+   * check (===).
+   *
+   *     assert.notIncludeOrderedMembers([ 1, 2, 3 ], [ 2, 1 ], 'not include ordered members');
+   *     assert.notIncludeOrderedMembers([ 1, 2, 3 ], [ 2, 3 ], 'not include ordered members');
+   *
+   * @name notIncludeOrderedMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notIncludeOrderedMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.notIncludeOrderedMembers, true)
+      .to.not.include.ordered.members(subset);
+  }
+
+  /**
+   * ### .includeDeepOrderedMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` is included in `superset` in the same order
+   * beginning with the first element in `superset`. Uses a deep equality
+   * check.
+   *
+   *     assert.includeDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { a: 1 }, { b: 2 } ], 'include deep ordered members');
+   *
+   * @name includeDeepOrderedMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.includeDeepOrderedMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.includeDeepOrderedMembers, true)
+      .to.include.deep.ordered.members(subset);
+  }
+
+  /**
+   * ### .notIncludeDeepOrderedMembers(superset, subset, [message])
+   *
+   * Asserts that `subset` isn't included in `superset` in the same order
+   * beginning with the first element in `superset`. Uses a deep equality
+   * check.
+   *
+   *     assert.notIncludeDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { a: 1 }, { f: 5 } ], 'not include deep ordered members');
+   *     assert.notIncludeDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { b: 2 }, { a: 1 } ], 'not include deep ordered members');
+   *     assert.notIncludeDeepOrderedMembers([ { a: 1 }, { b: 2 }, { c: 3 } ], [ { b: 2 }, { c: 3 } ], 'not include deep ordered members');
+   *
+   * @name notIncludeDeepOrderedMembers
+   * @param {Array} superset
+   * @param {Array} subset
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.notIncludeDeepOrderedMembers = function (superset, subset, msg) {
+    new Assertion(superset, msg, assert.notIncludeDeepOrderedMembers, true)
+      .to.not.include.deep.ordered.members(subset);
+  }
+
+  /**
+   * ### .oneOf(inList, list, [message])
+   *
+   * Asserts that non-object, non-array value `inList` appears in the flat array `list`.
+   *
+   *     assert.oneOf(1, [ 2, 1 ], 'Not found in list');
+   *
+   * @name oneOf
+   * @param {*} inList
+   * @param {Array<*>} list
+   * @param {String} message
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.oneOf = function (inList, list, msg) {
+    new Assertion(inList, msg, assert.oneOf, true).to.be.oneOf(list);
+  }
+
+  /**
+   * ### .changes(function, object, property, [message])
+   *
+   * Asserts that a function changes the value of a property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 22 };
+   *     assert.changes(fn, obj, 'val');
+   *
+   * @name changes
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.changes = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.changes, true).to.change(obj, prop);
+  }
+
+   /**
+   * ### .changesBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function changes the value of a property by an amount (delta).
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val += 2 };
+   *     assert.changesBy(fn, obj, 'val', 2);
+   *
+   * @name changesBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.changesBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.changesBy, true)
+      .to.change(obj, prop).by(delta);
+  }
+
+   /**
+   * ### .doesNotChange(function, object, property, [message])
+   *
+   * Asserts that a function does not change the value of a property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { console.log('foo'); };
+   *     assert.doesNotChange(fn, obj, 'val');
+   *
+   * @name doesNotChange
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotChange = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.doesNotChange, true)
+      .to.not.change(obj, prop);
+  }
+
+  /**
+   * ### .changesButNotBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function does not change the value of a property or of a function's return value by an amount (delta)
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val += 10 };
+   *     assert.changesButNotBy(fn, obj, 'val', 5);
+   *
+   * @name changesButNotBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.changesButNotBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.changesButNotBy, true)
+      .to.change(obj, prop).but.not.by(delta);
+  }
+
+  /**
+   * ### .increases(function, object, property, [message])
+   *
+   * Asserts that a function increases a numeric object property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 13 };
+   *     assert.increases(fn, obj, 'val');
+   *
+   * @name increases
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.increases = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.increases, true)
+      .to.increase(obj, prop);
+  }
+
+  /**
+   * ### .increasesBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function increases a numeric object property or a function's return value by an amount (delta).
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val += 10 };
+   *     assert.increasesBy(fn, obj, 'val', 10);
+   *
+   * @name increasesBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.increasesBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.increasesBy, true)
+      .to.increase(obj, prop).by(delta);
+  }
+
+  /**
+   * ### .doesNotIncrease(function, object, property, [message])
+   *
+   * Asserts that a function does not increase a numeric object property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 8 };
+   *     assert.doesNotIncrease(fn, obj, 'val');
+   *
+   * @name doesNotIncrease
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotIncrease = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.doesNotIncrease, true)
+      .to.not.increase(obj, prop);
+  }
+
+  /**
+   * ### .increasesButNotBy(function, object, property, [message])
+   *
+   * Asserts that a function does not increase a numeric object property or function's return value by an amount (delta).
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 15 };
+   *     assert.increasesButNotBy(fn, obj, 'val', 10);
+   *
+   * @name increasesButNotBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.increasesButNotBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.increasesButNotBy, true)
+      .to.increase(obj, prop).but.not.by(delta);
+  }
+
+  /**
+   * ### .decreases(function, object, property, [message])
+   *
+   * Asserts that a function decreases a numeric object property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 5 };
+   *     assert.decreases(fn, obj, 'val');
+   *
+   * @name decreases
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.decreases = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.decreases, true)
+      .to.decrease(obj, prop);
+  }
+
+  /**
+   * ### .decreasesBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function decreases a numeric object property or a function's return value by an amount (delta)
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val -= 5 };
+   *     assert.decreasesBy(fn, obj, 'val', 5);
+   *
+   * @name decreasesBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.decreasesBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.decreasesBy, true)
+      .to.decrease(obj, prop).by(delta);
+  }
+
+  /**
+   * ### .doesNotDecrease(function, object, property, [message])
+   *
+   * Asserts that a function does not decreases a numeric object property.
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 15 };
+   *     assert.doesNotDecrease(fn, obj, 'val');
+   *
+   * @name doesNotDecrease
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotDecrease = function (fn, obj, prop, msg) {
+    if (arguments.length === 3 && typeof obj === 'function') {
+      msg = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.doesNotDecrease, true)
+      .to.not.decrease(obj, prop);
+  }
+
+  /**
+   * ### .doesNotDecreaseBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function does not decreases a numeric object property or a function's return value by an amount (delta)
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 5 };
+   *     assert.doesNotDecreaseBy(fn, obj, 'val', 1);
+   *
+   * @name doesNotDecrease
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.doesNotDecreaseBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    return new Assertion(fn, msg, assert.doesNotDecreaseBy, true)
+      .to.not.decrease(obj, prop).by(delta);
+  }
+
+  /**
+   * ### .decreasesButNotBy(function, object, property, delta, [message])
+   *
+   * Asserts that a function does not decreases a numeric object property or a function's return value by an amount (delta)
+   *
+   *     var obj = { val: 10 };
+   *     var fn = function() { obj.val = 5 };
+   *     assert.decreasesButNotBy(fn, obj, 'val', 1);
+   *
+   * @name decreasesButNotBy
+   * @param {Function} modifier function
+   * @param {Object} object or getter function
+   * @param {String} property name _optional_
+   * @param {Number} change amount (delta)
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.decreasesButNotBy = function (fn, obj, prop, delta, msg) {
+    if (arguments.length === 4 && typeof obj === 'function') {
+      var tmpMsg = delta;
+      delta = prop;
+      msg = tmpMsg;
+    } else if (arguments.length === 3) {
+      delta = prop;
+      prop = null;
+    }
+
+    new Assertion(fn, msg, assert.decreasesButNotBy, true)
+      .to.decrease(obj, prop).but.not.by(delta);
+  }
+
+  /*!
+   * ### .ifError(object)
+   *
+   * Asserts if value is not a false value, and throws if it is a true value.
+   * This is added to allow for chai to be a drop-in replacement for Node's
+   * assert class.
+   *
+   *     var err = new Error('I am a custom error');
+   *     assert.ifError(err); // Rethrows err!
+   *
+   * @name ifError
+   * @param {Object} object
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.ifError = function (val) {
+    if (val) {
+      throw(val);
+    }
+  };
+
+  /**
+   * ### .isExtensible(object)
+   *
+   * Asserts that `object` is extensible (can have new properties added to it).
+   *
+   *     assert.isExtensible({});
+   *
+   * @name isExtensible
+   * @alias extensible
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isExtensible = function (obj, msg) {
+    new Assertion(obj, msg, assert.isExtensible, true).to.be.extensible;
+  };
+
+  /**
+   * ### .isNotExtensible(object)
+   *
+   * Asserts that `object` is _not_ extensible.
+   *
+   *     var nonExtensibleObject = Object.preventExtensions({});
+   *     var sealedObject = Object.seal({});
+   *     var frozenObject = Object.freeze({});
+   *
+   *     assert.isNotExtensible(nonExtensibleObject);
+   *     assert.isNotExtensible(sealedObject);
+   *     assert.isNotExtensible(frozenObject);
+   *
+   * @name isNotExtensible
+   * @alias notExtensible
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotExtensible = function (obj, msg) {
+    new Assertion(obj, msg, assert.isNotExtensible, true).to.not.be.extensible;
+  };
+
+  /**
+   * ### .isSealed(object)
+   *
+   * Asserts that `object` is sealed (cannot have new properties added to it
+   * and its existing properties cannot be removed).
+   *
+   *     var sealedObject = Object.seal({});
+   *     var frozenObject = Object.seal({});
+   *
+   *     assert.isSealed(sealedObject);
+   *     assert.isSealed(frozenObject);
+   *
+   * @name isSealed
+   * @alias sealed
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isSealed = function (obj, msg) {
+    new Assertion(obj, msg, assert.isSealed, true).to.be.sealed;
+  };
+
+  /**
+   * ### .isNotSealed(object)
+   *
+   * Asserts that `object` is _not_ sealed.
+   *
+   *     assert.isNotSealed({});
+   *
+   * @name isNotSealed
+   * @alias notSealed
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotSealed = function (obj, msg) {
+    new Assertion(obj, msg, assert.isNotSealed, true).to.not.be.sealed;
+  };
+
+  /**
+   * ### .isFrozen(object)
+   *
+   * Asserts that `object` is frozen (cannot have new properties added to it
+   * and its existing properties cannot be modified).
+   *
+   *     var frozenObject = Object.freeze({});
+   *     assert.frozen(frozenObject);
+   *
+   * @name isFrozen
+   * @alias frozen
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isFrozen = function (obj, msg) {
+    new Assertion(obj, msg, assert.isFrozen, true).to.be.frozen;
+  };
+
+  /**
+   * ### .isNotFrozen(object)
+   *
+   * Asserts that `object` is _not_ frozen.
+   *
+   *     assert.isNotFrozen({});
+   *
+   * @name isNotFrozen
+   * @alias notFrozen
+   * @param {Object} object
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotFrozen = function (obj, msg) {
+    new Assertion(obj, msg, assert.isNotFrozen, true).to.not.be.frozen;
+  };
+
+  /**
+   * ### .isEmpty(target)
+   *
+   * Asserts that the target does not contain any values.
+   * For arrays and strings, it checks the `length` property.
+   * For `Map` and `Set` instances, it checks the `size` property.
+   * For non-function objects, it gets the count of own
+   * enumerable string keys.
+   *
+   *     assert.isEmpty([]);
+   *     assert.isEmpty('');
+   *     assert.isEmpty(new Map);
+   *     assert.isEmpty({});
+   *
+   * @name isEmpty
+   * @alias empty
+   * @param {Object|Array|String|Map|Set} target
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isEmpty = function(val, msg) {
+    new Assertion(val, msg, assert.isEmpty, true).to.be.empty;
+  };
+
+  /**
+   * ### .isNotEmpty(target)
+   *
+   * Asserts that the target contains values.
+   * For arrays and strings, it checks the `length` property.
+   * For `Map` and `Set` instances, it checks the `size` property.
+   * For non-function objects, it gets the count of own
+   * enumerable string keys.
+   *
+   *     assert.isNotEmpty([1, 2]);
+   *     assert.isNotEmpty('34');
+   *     assert.isNotEmpty(new Set([5, 6]));
+   *     assert.isNotEmpty({ key: 7 });
+   *
+   * @name isNotEmpty
+   * @alias notEmpty
+   * @param {Object|Array|String|Map|Set} target
+   * @param {String} message _optional_
+   * @namespace Assert
+   * @api public
+   */
+
+  assert.isNotEmpty = function(val, msg) {
+    new Assertion(val, msg, assert.isNotEmpty, true).to.not.be.empty;
+  };
+
+  /*!
+   * Aliases.
+   */
+
+  (function alias(name, as){
+    assert[as] = assert[name];
+    return alias;
+  })
+  ('isOk', 'ok')
+  ('isNotOk', 'notOk')
+  ('throws', 'throw')
+  ('throws', 'Throw')
+  ('isExtensible', 'extensible')
+  ('isNotExtensible', 'notExtensible')
+  ('isSealed', 'sealed')
+  ('isNotSealed', 'notSealed')
+  ('isFrozen', 'frozen')
+  ('isNotFrozen', 'notFrozen')
+  ('isEmpty', 'empty')
+  ('isNotEmpty', 'notEmpty');
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/interface/expect.js":
+/*!************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/interface/expect.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * chai
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+module.exports = function (chai, util) {
+  chai.expect = function (val, message) {
+    return new chai.Assertion(val, message);
+  };
+
+  /**
+   * ### .fail(actual, expected, [message], [operator])
+   *
+   * Throw a failure.
+   *
+   * @name fail
+   * @param {Mixed} actual
+   * @param {Mixed} expected
+   * @param {String} message
+   * @param {String} operator
+   * @namespace BDD
+   * @api public
+   */
+
+  chai.expect.fail = function (actual, expected, message, operator) {
+    message = message || 'expect.fail()';
+    throw new chai.AssertionError(message, {
+        actual: actual
+      , expected: expected
+      , operator: operator
+    }, chai.expect.fail);
+  };
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/interface/should.js":
+/*!************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/interface/should.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * chai
+ * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+module.exports = function (chai, util) {
+  var Assertion = chai.Assertion;
+
+  function loadShould () {
+    // explicitly define this method as function as to have it's name to include as `ssfi`
+    function shouldGetter() {
+      if (this instanceof String
+          || this instanceof Number
+          || this instanceof Boolean
+          || typeof Symbol === 'function' && this instanceof Symbol) {
+        return new Assertion(this.valueOf(), null, shouldGetter);
+      }
+      return new Assertion(this, null, shouldGetter);
+    }
+    function shouldSetter(value) {
+      // See https://github.com/chaijs/chai/issues/86: this makes
+      // `whatever.should = someValue` actually set `someValue`, which is
+      // especially useful for `global.should = require('chai').should()`.
+      //
+      // Note that we have to use [[DefineProperty]] instead of [[Put]]
+      // since otherwise we would trigger this very setter!
+      Object.defineProperty(this, 'should', {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    }
+    // modify Object.prototype to have `should`
+    Object.defineProperty(Object.prototype, 'should', {
+      set: shouldSetter
+      , get: shouldGetter
+      , configurable: true
+    });
+
+    var should = {};
+
+    /**
+     * ### .fail(actual, expected, [message], [operator])
+     *
+     * Throw a failure.
+     *
+     * @name fail
+     * @param {Mixed} actual
+     * @param {Mixed} expected
+     * @param {String} message
+     * @param {String} operator
+     * @namespace BDD
+     * @api public
+     */
+
+    should.fail = function (actual, expected, message, operator) {
+      message = message || 'should.fail()';
+      throw new chai.AssertionError(message, {
+          actual: actual
+        , expected: expected
+        , operator: operator
+      }, should.fail);
+    };
+
+    /**
+     * ### .equal(actual, expected, [message])
+     *
+     * Asserts non-strict equality (`==`) of `actual` and `expected`.
+     *
+     *     should.equal(3, '3', '== coerces values to strings');
+     *
+     * @name equal
+     * @param {Mixed} actual
+     * @param {Mixed} expected
+     * @param {String} message
+     * @namespace Should
+     * @api public
+     */
+
+    should.equal = function (val1, val2, msg) {
+      new Assertion(val1, msg).to.equal(val2);
+    };
+
+    /**
+     * ### .throw(function, [constructor/string/regexp], [string/regexp], [message])
+     *
+     * Asserts that `function` will throw an error that is an instance of
+     * `constructor`, or alternately that it will throw an error with message
+     * matching `regexp`.
+     *
+     *     should.throw(fn, 'function throws a reference error');
+     *     should.throw(fn, /function throws a reference error/);
+     *     should.throw(fn, ReferenceError);
+     *     should.throw(fn, ReferenceError, 'function throws a reference error');
+     *     should.throw(fn, ReferenceError, /function throws a reference error/);
+     *
+     * @name throw
+     * @alias Throw
+     * @param {Function} function
+     * @param {ErrorConstructor} constructor
+     * @param {RegExp} regexp
+     * @param {String} message
+     * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+     * @namespace Should
+     * @api public
+     */
+
+    should.Throw = function (fn, errt, errs, msg) {
+      new Assertion(fn, msg).to.Throw(errt, errs);
+    };
+
+    /**
+     * ### .exist
+     *
+     * Asserts that the target is neither `null` nor `undefined`.
+     *
+     *     var foo = 'hi';
+     *
+     *     should.exist(foo, 'foo exists');
+     *
+     * @name exist
+     * @namespace Should
+     * @api public
+     */
+
+    should.exist = function (val, msg) {
+      new Assertion(val, msg).to.exist;
+    }
+
+    // negation
+    should.not = {}
+
+    /**
+     * ### .not.equal(actual, expected, [message])
+     *
+     * Asserts non-strict inequality (`!=`) of `actual` and `expected`.
+     *
+     *     should.not.equal(3, 4, 'these numbers are not equal');
+     *
+     * @name not.equal
+     * @param {Mixed} actual
+     * @param {Mixed} expected
+     * @param {String} message
+     * @namespace Should
+     * @api public
+     */
+
+    should.not.equal = function (val1, val2, msg) {
+      new Assertion(val1, msg).to.not.equal(val2);
+    };
+
+    /**
+     * ### .throw(function, [constructor/regexp], [message])
+     *
+     * Asserts that `function` will _not_ throw an error that is an instance of
+     * `constructor`, or alternately that it will not throw an error with message
+     * matching `regexp`.
+     *
+     *     should.not.throw(fn, Error, 'function does not throw');
+     *
+     * @name not.throw
+     * @alias not.Throw
+     * @param {Function} function
+     * @param {ErrorConstructor} constructor
+     * @param {RegExp} regexp
+     * @param {String} message
+     * @see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Error_types
+     * @namespace Should
+     * @api public
+     */
+
+    should.not.Throw = function (fn, errt, errs, msg) {
+      new Assertion(fn, msg).to.not.Throw(errt, errs);
+    };
+
+    /**
+     * ### .not.exist
+     *
+     * Asserts that the target is neither `null` nor `undefined`.
+     *
+     *     var bar = null;
+     *
+     *     should.not.exist(bar, 'bar does not exist');
+     *
+     * @name not.exist
+     * @namespace Should
+     * @api public
+     */
+
+    should.not.exist = function (val, msg) {
+      new Assertion(val, msg).to.not.exist;
+    }
+
+    should['throw'] = should['Throw'];
+    should.not['throw'] = should.not['Throw'];
+
+    return should;
+  };
+
+  chai.should = loadShould;
+  chai.Should = loadShould;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/addChainableMethod.js":
+/*!********************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/addChainableMethod.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - addChainingMethod utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependencies
+ */
+
+var addLengthGuard = __webpack_require__(/*! ./addLengthGuard */ "../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js");
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var proxify = __webpack_require__(/*! ./proxify */ "../p4/node_modules/chai/lib/chai/utils/proxify.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/*!
+ * Module variables
+ */
+
+// Check whether `Object.setPrototypeOf` is supported
+var canSetPrototype = typeof Object.setPrototypeOf === 'function';
+
+// Without `Object.setPrototypeOf` support, this module will need to add properties to a function.
+// However, some of functions' own props are not configurable and should be skipped.
+var testFn = function() {};
+var excludeNames = Object.getOwnPropertyNames(testFn).filter(function(name) {
+  var propDesc = Object.getOwnPropertyDescriptor(testFn, name);
+
+  // Note: PhantomJS 1.x includes `callee` as one of `testFn`'s own properties,
+  // but then returns `undefined` as the property descriptor for `callee`. As a
+  // workaround, we perform an otherwise unnecessary type-check for `propDesc`,
+  // and then filter it out if it's not an object as it should be.
+  if (typeof propDesc !== 'object')
+    return true;
+
+  return !propDesc.configurable;
+});
+
+// Cache `Function` properties
+var call  = Function.prototype.call,
+    apply = Function.prototype.apply;
+
+/**
+ * ### .addChainableMethod(ctx, name, method, chainingBehavior)
+ *
+ * Adds a method to an object, such that the method can also be chained.
+ *
+ *     utils.addChainableMethod(chai.Assertion.prototype, 'foo', function (str) {
+ *       var obj = utils.flag(this, 'object');
+ *       new chai.Assertion(obj).to.be.equal(str);
+ *     });
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.addChainableMethod('foo', fn, chainingBehavior);
+ *
+ * The result can then be used as both a method assertion, executing both `method` and
+ * `chainingBehavior`, or as a language chain, which only executes `chainingBehavior`.
+ *
+ *     expect(fooStr).to.be.foo('bar');
+ *     expect(fooStr).to.be.foo.equal('foo');
+ *
+ * @param {Object} ctx object to which the method is added
+ * @param {String} name of method to add
+ * @param {Function} method function to be used for `name`, when called
+ * @param {Function} chainingBehavior function to be called every time the property is accessed
+ * @namespace Utils
+ * @name addChainableMethod
+ * @api public
+ */
+
+module.exports = function addChainableMethod(ctx, name, method, chainingBehavior) {
+  if (typeof chainingBehavior !== 'function') {
+    chainingBehavior = function () { };
+  }
+
+  var chainableBehavior = {
+      method: method
+    , chainingBehavior: chainingBehavior
+  };
+
+  // save the methods so we can overwrite them later, if we need to.
+  if (!ctx.__methods) {
+    ctx.__methods = {};
+  }
+  ctx.__methods[name] = chainableBehavior;
+
+  Object.defineProperty(ctx, name,
+    { get: function chainableMethodGetter() {
+        chainableBehavior.chainingBehavior.call(this);
+
+        var chainableMethodWrapper = function () {
+          // Setting the `ssfi` flag to `chainableMethodWrapper` causes this
+          // function to be the starting point for removing implementation
+          // frames from the stack trace of a failed assertion.
+          //
+          // However, we only want to use this function as the starting point if
+          // the `lockSsfi` flag isn't set.
+          //
+          // If the `lockSsfi` flag is set, then this assertion is being
+          // invoked from inside of another assertion. In this case, the `ssfi`
+          // flag has already been set by the outer assertion.
+          //
+          // Note that overwriting a chainable method merely replaces the saved
+          // methods in `ctx.__methods` instead of completely replacing the
+          // overwritten assertion. Therefore, an overwriting assertion won't
+          // set the `ssfi` or `lockSsfi` flags.
+          if (!flag(this, 'lockSsfi')) {
+            flag(this, 'ssfi', chainableMethodWrapper);
+          }
+
+          var result = chainableBehavior.method.apply(this, arguments);
+          if (result !== undefined) {
+            return result;
+          }
+
+          var newAssertion = new chai.Assertion();
+          transferFlags(this, newAssertion);
+          return newAssertion;
+        };
+
+        addLengthGuard(chainableMethodWrapper, name, true);
+
+        // Use `Object.setPrototypeOf` if available
+        if (canSetPrototype) {
+          // Inherit all properties from the object by replacing the `Function` prototype
+          var prototype = Object.create(this);
+          // Restore the `call` and `apply` methods from `Function`
+          prototype.call = call;
+          prototype.apply = apply;
+          Object.setPrototypeOf(chainableMethodWrapper, prototype);
+        }
+        // Otherwise, redefine all properties (slow!)
+        else {
+          var asserterNames = Object.getOwnPropertyNames(ctx);
+          asserterNames.forEach(function (asserterName) {
+            if (excludeNames.indexOf(asserterName) !== -1) {
+              return;
+            }
+
+            var pd = Object.getOwnPropertyDescriptor(ctx, asserterName);
+            Object.defineProperty(chainableMethodWrapper, asserterName, pd);
+          });
+        }
+
+        transferFlags(this, chainableMethodWrapper);
+        return proxify(chainableMethodWrapper);
+      }
+    , configurable: true
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js":
+/*!****************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var config = __webpack_require__(/*! ../config */ "../p4/node_modules/chai/lib/chai/config.js");
+
+var fnLengthDesc = Object.getOwnPropertyDescriptor(function () {}, 'length');
+
+/*!
+ * Chai - addLengthGuard utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .addLengthGuard(fn, assertionName, isChainable)
+ *
+ * Define `length` as a getter on the given uninvoked method assertion. The
+ * getter acts as a guard against chaining `length` directly off of an uninvoked
+ * method assertion, which is a problem because it references `function`'s
+ * built-in `length` property instead of Chai's `length` assertion. When the
+ * getter catches the user making this mistake, it throws an error with a
+ * helpful message.
+ *
+ * There are two ways in which this mistake can be made. The first way is by
+ * chaining the `length` assertion directly off of an uninvoked chainable
+ * method. In this case, Chai suggests that the user use `lengthOf` instead. The
+ * second way is by chaining the `length` assertion directly off of an uninvoked
+ * non-chainable method. Non-chainable methods must be invoked prior to
+ * chaining. In this case, Chai suggests that the user consult the docs for the
+ * given assertion.
+ *
+ * If the `length` property of functions is unconfigurable, then return `fn`
+ * without modification.
+ *
+ * Note that in ES6, the function's `length` property is configurable, so once
+ * support for legacy environments is dropped, Chai's `length` property can
+ * replace the built-in function's `length` property, and this length guard will
+ * no longer be necessary. In the mean time, maintaining consistency across all
+ * environments is the priority.
+ *
+ * @param {Function} fn
+ * @param {String} assertionName
+ * @param {Boolean} isChainable
+ * @namespace Utils
+ * @name addLengthGuard
+ */
+
+module.exports = function addLengthGuard (fn, assertionName, isChainable) {
+  if (!fnLengthDesc.configurable) return fn;
+
+  Object.defineProperty(fn, 'length', {
+    get: function () {
+      if (isChainable) {
+        throw Error('Invalid Chai property: ' + assertionName + '.length. Due' +
+          ' to a compatibility issue, "length" cannot directly follow "' +
+          assertionName + '". Use "' + assertionName + '.lengthOf" instead.');
+      }
+
+      throw Error('Invalid Chai property: ' + assertionName + '.length. See' +
+        ' docs for proper usage of "' + assertionName + '".');
+    }
+  });
+
+  return fn;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/addMethod.js":
+/*!***********************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/addMethod.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - addMethod utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var addLengthGuard = __webpack_require__(/*! ./addLengthGuard */ "../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js");
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var proxify = __webpack_require__(/*! ./proxify */ "../p4/node_modules/chai/lib/chai/utils/proxify.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/**
+ * ### .addMethod(ctx, name, method)
+ *
+ * Adds a method to the prototype of an object.
+ *
+ *     utils.addMethod(chai.Assertion.prototype, 'foo', function (str) {
+ *       var obj = utils.flag(this, 'object');
+ *       new chai.Assertion(obj).to.be.equal(str);
+ *     });
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.addMethod('foo', fn);
+ *
+ * Then can be used as any other assertion.
+ *
+ *     expect(fooStr).to.be.foo('bar');
+ *
+ * @param {Object} ctx object to which the method is added
+ * @param {String} name of method to add
+ * @param {Function} method function to be used for name
+ * @namespace Utils
+ * @name addMethod
+ * @api public
+ */
+
+module.exports = function addMethod(ctx, name, method) {
+  var methodWrapper = function () {
+    // Setting the `ssfi` flag to `methodWrapper` causes this function to be the
+    // starting point for removing implementation frames from the stack trace of
+    // a failed assertion.
+    //
+    // However, we only want to use this function as the starting point if the
+    // `lockSsfi` flag isn't set.
+    //
+    // If the `lockSsfi` flag is set, then either this assertion has been
+    // overwritten by another assertion, or this assertion is being invoked from
+    // inside of another assertion. In the first case, the `ssfi` flag has
+    // already been set by the overwriting assertion. In the second case, the
+    // `ssfi` flag has already been set by the outer assertion.
+    if (!flag(this, 'lockSsfi')) {
+      flag(this, 'ssfi', methodWrapper);
+    }
+
+    var result = method.apply(this, arguments);
+    if (result !== undefined)
+      return result;
+
+    var newAssertion = new chai.Assertion();
+    transferFlags(this, newAssertion);
+    return newAssertion;
+  };
+
+  addLengthGuard(methodWrapper, name, false);
+  ctx[name] = proxify(methodWrapper, name);
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/addProperty.js":
+/*!*************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/addProperty.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - addProperty utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var isProxyEnabled = __webpack_require__(/*! ./isProxyEnabled */ "../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/**
+ * ### .addProperty(ctx, name, getter)
+ *
+ * Adds a property to the prototype of an object.
+ *
+ *     utils.addProperty(chai.Assertion.prototype, 'foo', function () {
+ *       var obj = utils.flag(this, 'object');
+ *       new chai.Assertion(obj).to.be.instanceof(Foo);
+ *     });
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.addProperty('foo', fn);
+ *
+ * Then can be used as any other assertion.
+ *
+ *     expect(myFoo).to.be.foo;
+ *
+ * @param {Object} ctx object to which the property is added
+ * @param {String} name of property to add
+ * @param {Function} getter function to be used for name
+ * @namespace Utils
+ * @name addProperty
+ * @api public
+ */
+
+module.exports = function addProperty(ctx, name, getter) {
+  getter = getter === undefined ? function () {} : getter;
+
+  Object.defineProperty(ctx, name,
+    { get: function propertyGetter() {
+        // Setting the `ssfi` flag to `propertyGetter` causes this function to
+        // be the starting point for removing implementation frames from the
+        // stack trace of a failed assertion.
+        //
+        // However, we only want to use this function as the starting point if
+        // the `lockSsfi` flag isn't set and proxy protection is disabled.
+        //
+        // If the `lockSsfi` flag is set, then either this assertion has been
+        // overwritten by another assertion, or this assertion is being invoked
+        // from inside of another assertion. In the first case, the `ssfi` flag
+        // has already been set by the overwriting assertion. In the second
+        // case, the `ssfi` flag has already been set by the outer assertion.
+        //
+        // If proxy protection is enabled, then the `ssfi` flag has already been
+        // set by the proxy getter.
+        if (!isProxyEnabled() && !flag(this, 'lockSsfi')) {
+          flag(this, 'ssfi', propertyGetter);
+        }
+
+        var result = getter.call(this);
+        if (result !== undefined)
+          return result;
+
+        var newAssertion = new chai.Assertion();
+        transferFlags(this, newAssertion);
+        return newAssertion;
+      }
+    , configurable: true
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/compareByInspect.js":
+/*!******************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/compareByInspect.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - compareByInspect utility
+ * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependancies
+ */
+
+var inspect = __webpack_require__(/*! ./inspect */ "../p4/node_modules/chai/lib/chai/utils/inspect.js");
+
+/**
+ * ### .compareByInspect(mixed, mixed)
+ *
+ * To be used as a compareFunction with Array.prototype.sort. Compares elements
+ * using inspect instead of default behavior of using toString so that Symbols
+ * and objects with irregular/missing toString can still be sorted without a
+ * TypeError.
+ *
+ * @param {Mixed} first element to compare
+ * @param {Mixed} second element to compare
+ * @returns {Number} -1 if 'a' should come before 'b'; otherwise 1 
+ * @name compareByInspect
+ * @namespace Utils
+ * @api public
+ */
+
+module.exports = function compareByInspect(a, b) {
+  return inspect(a) < inspect(b) ? -1 : 1;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/expectTypes.js":
+/*!*************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/expectTypes.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - expectTypes utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .expectTypes(obj, types)
+ *
+ * Ensures that the object being tested against is of a valid type.
+ *
+ *     utils.expectTypes(this, ['array', 'object', 'string']);
+ *
+ * @param {Mixed} obj constructed Assertion
+ * @param {Array} type A list of allowed types for this assertion
+ * @namespace Utils
+ * @name expectTypes
+ * @api public
+ */
+
+var AssertionError = __webpack_require__(/*! assertion-error */ "../p4/node_modules/assertion-error/index.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var type = __webpack_require__(/*! type-detect */ "../p4/node_modules/type-detect/type-detect.js");
+
+module.exports = function expectTypes(obj, types) {
+  var flagMsg = flag(obj, 'message');
+  var ssfi = flag(obj, 'ssfi');
+
+  flagMsg = flagMsg ? flagMsg + ': ' : '';
+
+  obj = flag(obj, 'object');
+  types = types.map(function (t) { return t.toLowerCase(); });
+  types.sort();
+
+  // Transforms ['lorem', 'ipsum'] into 'a lorem, or an ipsum'
+  var str = types.map(function (t, index) {
+    var art = ~[ 'a', 'e', 'i', 'o', 'u' ].indexOf(t.charAt(0)) ? 'an' : 'a';
+    var or = types.length > 1 && index === types.length - 1 ? 'or ' : '';
+    return or + art + ' ' + t;
+  }).join(', ');
+
+  var objType = type(obj).toLowerCase();
+
+  if (!types.some(function (expected) { return objType === expected; })) {
+    throw new AssertionError(
+      flagMsg + 'object tested must be ' + str + ', but ' + objType + ' given',
+      undefined,
+      ssfi
+    );
+  }
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/flag.js":
+/*!******************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/flag.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - flag utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .flag(object, key, [value])
+ *
+ * Get or set a flag value on an object. If a
+ * value is provided it will be set, else it will
+ * return the currently set value or `undefined` if
+ * the value is not set.
+ *
+ *     utils.flag(this, 'foo', 'bar'); // setter
+ *     utils.flag(this, 'foo'); // getter, returns `bar`
+ *
+ * @param {Object} object constructed Assertion
+ * @param {String} key
+ * @param {Mixed} value (optional)
+ * @namespace Utils
+ * @name flag
+ * @api private
+ */
+
+module.exports = function flag(obj, key, value) {
+  var flags = obj.__flags || (obj.__flags = Object.create(null));
+  if (arguments.length === 3) {
+    flags[key] = value;
+  } else {
+    return flags[key];
+  }
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getActual.js":
+/*!***********************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getActual.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - getActual utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getActual(object, [actual])
+ *
+ * Returns the `actual` value for an Assertion.
+ *
+ * @param {Object} object (constructed Assertion)
+ * @param {Arguments} chai.Assertion.prototype.assert arguments
+ * @namespace Utils
+ * @name getActual
+ */
+
+module.exports = function getActual(obj, args) {
+  return args.length > 4 ? args[4] : obj._obj;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getEnumerableProperties.js":
+/*!*************************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getEnumerableProperties.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - getEnumerableProperties utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getEnumerableProperties(object)
+ *
+ * This allows the retrieval of enumerable property names of an object,
+ * inherited or not.
+ *
+ * @param {Object} object
+ * @returns {Array}
+ * @namespace Utils
+ * @name getEnumerableProperties
+ * @api public
+ */
+
+module.exports = function getEnumerableProperties(object) {
+  var result = [];
+  for (var name in object) {
+    result.push(name);
+  }
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getMessage.js":
+/*!************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getMessage.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - message composition utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependancies
+ */
+
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js")
+  , getActual = __webpack_require__(/*! ./getActual */ "../p4/node_modules/chai/lib/chai/utils/getActual.js")
+  , inspect = __webpack_require__(/*! ./inspect */ "../p4/node_modules/chai/lib/chai/utils/inspect.js")
+  , objDisplay = __webpack_require__(/*! ./objDisplay */ "../p4/node_modules/chai/lib/chai/utils/objDisplay.js");
+
+/**
+ * ### .getMessage(object, message, negateMessage)
+ *
+ * Construct the error message based on flags
+ * and template tags. Template tags will return
+ * a stringified inspection of the object referenced.
+ *
+ * Message template tags:
+ * - `#{this}` current asserted object
+ * - `#{act}` actual value
+ * - `#{exp}` expected value
+ *
+ * @param {Object} object (constructed Assertion)
+ * @param {Arguments} chai.Assertion.prototype.assert arguments
+ * @namespace Utils
+ * @name getMessage
+ * @api public
+ */
+
+module.exports = function getMessage(obj, args) {
+  var negate = flag(obj, 'negate')
+    , val = flag(obj, 'object')
+    , expected = args[3]
+    , actual = getActual(obj, args)
+    , msg = negate ? args[2] : args[1]
+    , flagMsg = flag(obj, 'message');
+
+  if(typeof msg === "function") msg = msg();
+  msg = msg || '';
+  msg = msg
+    .replace(/#\{this\}/g, function () { return objDisplay(val); })
+    .replace(/#\{act\}/g, function () { return objDisplay(actual); })
+    .replace(/#\{exp\}/g, function () { return objDisplay(expected); });
+
+  return flagMsg ? flagMsg + ': ' + msg : msg;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getOwnEnumerableProperties.js":
+/*!****************************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getOwnEnumerableProperties.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - getOwnEnumerableProperties utility
+ * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependancies
+ */
+
+var getOwnEnumerablePropertySymbols = __webpack_require__(/*! ./getOwnEnumerablePropertySymbols */ "../p4/node_modules/chai/lib/chai/utils/getOwnEnumerablePropertySymbols.js");
+
+/**
+ * ### .getOwnEnumerableProperties(object)
+ *
+ * This allows the retrieval of directly-owned enumerable property names and
+ * symbols of an object. This function is necessary because Object.keys only
+ * returns enumerable property names, not enumerable property symbols.
+ *
+ * @param {Object} object
+ * @returns {Array}
+ * @namespace Utils
+ * @name getOwnEnumerableProperties
+ * @api public
+ */
+
+module.exports = function getOwnEnumerableProperties(obj) {
+  return Object.keys(obj).concat(getOwnEnumerablePropertySymbols(obj));
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getOwnEnumerablePropertySymbols.js":
+/*!*********************************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getOwnEnumerablePropertySymbols.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - getOwnEnumerablePropertySymbols utility
+ * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getOwnEnumerablePropertySymbols(object)
+ *
+ * This allows the retrieval of directly-owned enumerable property symbols of an
+ * object. This function is necessary because Object.getOwnPropertySymbols
+ * returns both enumerable and non-enumerable property symbols.
+ *
+ * @param {Object} object
+ * @returns {Array}
+ * @namespace Utils
+ * @name getOwnEnumerablePropertySymbols
+ * @api public
+ */
+
+module.exports = function getOwnEnumerablePropertySymbols(obj) {
+  if (typeof Object.getOwnPropertySymbols !== 'function') return [];
+
+  return Object.getOwnPropertySymbols(obj).filter(function (sym) {
+    return Object.getOwnPropertyDescriptor(obj, sym).enumerable;
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/getProperties.js":
+/*!***************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/getProperties.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - getProperties utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getProperties(object)
+ *
+ * This allows the retrieval of property names of an object, enumerable or not,
+ * inherited or not.
+ *
+ * @param {Object} object
+ * @returns {Array}
+ * @namespace Utils
+ * @name getProperties
+ * @api public
+ */
+
+module.exports = function getProperties(object) {
+  var result = Object.getOwnPropertyNames(object);
+
+  function addProperty(property) {
+    if (result.indexOf(property) === -1) {
+      result.push(property);
+    }
+  }
+
+  var proto = Object.getPrototypeOf(object);
+  while (proto !== null) {
+    Object.getOwnPropertyNames(proto).forEach(addProperty);
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/index.js":
+/*!*******************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/index.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * chai
+ * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Dependencies that are used for multiple exports are required here only once
+ */
+
+var pathval = __webpack_require__(/*! pathval */ "../p4/node_modules/pathval/index.js");
+
+/*!
+ * test utility
+ */
+
+exports.test = __webpack_require__(/*! ./test */ "../p4/node_modules/chai/lib/chai/utils/test.js");
+
+/*!
+ * type utility
+ */
+
+exports.type = __webpack_require__(/*! type-detect */ "../p4/node_modules/type-detect/type-detect.js");
+
+/*!
+ * expectTypes utility
+ */
+exports.expectTypes = __webpack_require__(/*! ./expectTypes */ "../p4/node_modules/chai/lib/chai/utils/expectTypes.js");
+
+/*!
+ * message utility
+ */
+
+exports.getMessage = __webpack_require__(/*! ./getMessage */ "../p4/node_modules/chai/lib/chai/utils/getMessage.js");
+
+/*!
+ * actual utility
+ */
+
+exports.getActual = __webpack_require__(/*! ./getActual */ "../p4/node_modules/chai/lib/chai/utils/getActual.js");
+
+/*!
+ * Inspect util
+ */
+
+exports.inspect = __webpack_require__(/*! ./inspect */ "../p4/node_modules/chai/lib/chai/utils/inspect.js");
+
+/*!
+ * Object Display util
+ */
+
+exports.objDisplay = __webpack_require__(/*! ./objDisplay */ "../p4/node_modules/chai/lib/chai/utils/objDisplay.js");
+
+/*!
+ * Flag utility
+ */
+
+exports.flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+
+/*!
+ * Flag transferring utility
+ */
+
+exports.transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/*!
+ * Deep equal utility
+ */
+
+exports.eql = __webpack_require__(/*! deep-eql */ "../p4/node_modules/deep-eql/index.js");
+
+/*!
+ * Deep path info
+ */
+
+exports.getPathInfo = pathval.getPathInfo;
+
+/*!
+ * Check if a property exists
+ */
+
+exports.hasProperty = pathval.hasProperty;
+
+/*!
+ * Function name
+ */
+
+exports.getName = __webpack_require__(/*! get-func-name */ "../p4/node_modules/get-func-name/index.js");
+
+/*!
+ * add Property
+ */
+
+exports.addProperty = __webpack_require__(/*! ./addProperty */ "../p4/node_modules/chai/lib/chai/utils/addProperty.js");
+
+/*!
+ * add Method
+ */
+
+exports.addMethod = __webpack_require__(/*! ./addMethod */ "../p4/node_modules/chai/lib/chai/utils/addMethod.js");
+
+/*!
+ * overwrite Property
+ */
+
+exports.overwriteProperty = __webpack_require__(/*! ./overwriteProperty */ "../p4/node_modules/chai/lib/chai/utils/overwriteProperty.js");
+
+/*!
+ * overwrite Method
+ */
+
+exports.overwriteMethod = __webpack_require__(/*! ./overwriteMethod */ "../p4/node_modules/chai/lib/chai/utils/overwriteMethod.js");
+
+/*!
+ * Add a chainable method
+ */
+
+exports.addChainableMethod = __webpack_require__(/*! ./addChainableMethod */ "../p4/node_modules/chai/lib/chai/utils/addChainableMethod.js");
+
+/*!
+ * Overwrite chainable method
+ */
+
+exports.overwriteChainableMethod = __webpack_require__(/*! ./overwriteChainableMethod */ "../p4/node_modules/chai/lib/chai/utils/overwriteChainableMethod.js");
+
+/*!
+ * Compare by inspect method
+ */
+
+exports.compareByInspect = __webpack_require__(/*! ./compareByInspect */ "../p4/node_modules/chai/lib/chai/utils/compareByInspect.js");
+
+/*!
+ * Get own enumerable property symbols method
+ */
+
+exports.getOwnEnumerablePropertySymbols = __webpack_require__(/*! ./getOwnEnumerablePropertySymbols */ "../p4/node_modules/chai/lib/chai/utils/getOwnEnumerablePropertySymbols.js");
+
+/*!
+ * Get own enumerable properties method
+ */
+
+exports.getOwnEnumerableProperties = __webpack_require__(/*! ./getOwnEnumerableProperties */ "../p4/node_modules/chai/lib/chai/utils/getOwnEnumerableProperties.js");
+
+/*!
+ * Checks error against a given set of criteria
+ */
+
+exports.checkError = __webpack_require__(/*! check-error */ "../p4/node_modules/check-error/index.js");
+
+/*!
+ * Proxify util
+ */
+
+exports.proxify = __webpack_require__(/*! ./proxify */ "../p4/node_modules/chai/lib/chai/utils/proxify.js");
+
+/*!
+ * addLengthGuard util
+ */
+
+exports.addLengthGuard = __webpack_require__(/*! ./addLengthGuard */ "../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js");
+
+/*!
+ * isProxyEnabled helper
+ */
+
+exports.isProxyEnabled = __webpack_require__(/*! ./isProxyEnabled */ "../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js");
+
+/*!
+ * isNaN method
+ */
+
+exports.isNaN = __webpack_require__(/*! ./isNaN */ "../p4/node_modules/chai/lib/chai/utils/isNaN.js");
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/inspect.js":
+/*!*********************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/inspect.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// This is (almost) directly from Node.js utils
+// https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
+
+var getName = __webpack_require__(/*! get-func-name */ "../p4/node_modules/get-func-name/index.js");
+var getProperties = __webpack_require__(/*! ./getProperties */ "../p4/node_modules/chai/lib/chai/utils/getProperties.js");
+var getEnumerableProperties = __webpack_require__(/*! ./getEnumerableProperties */ "../p4/node_modules/chai/lib/chai/utils/getEnumerableProperties.js");
+var config = __webpack_require__(/*! ../config */ "../p4/node_modules/chai/lib/chai/config.js");
+
+module.exports = inspect;
+
+/**
+ * ### .inspect(obj, [showHidden], [depth], [colors])
+ *
+ * Echoes the value of a value. Tries to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Boolean} showHidden Flag that shows hidden (not enumerable)
+ *    properties of objects. Default is false.
+ * @param {Number} depth Depth in which to descend in object. Default is 2.
+ * @param {Boolean} colors Flag to turn on ANSI escape codes to color the
+ *    output. Default is false (no coloring).
+ * @namespace Utils
+ * @name inspect
+ */
+function inspect(obj, showHidden, depth, colors) {
+  var ctx = {
+    showHidden: showHidden,
+    seen: [],
+    stylize: function (str) { return str; }
+  };
+  return formatValue(ctx, obj, (typeof depth === 'undefined' ? 2 : depth));
+}
+
+// Returns true if object is a DOM element.
+var isDOMElement = function (object) {
+  if (typeof HTMLElement === 'object') {
+    return object instanceof HTMLElement;
+  } else {
+    return object &&
+      typeof object === 'object' &&
+      'nodeType' in object &&
+      object.nodeType === 1 &&
+      typeof object.nodeName === 'string';
+  }
+};
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (value && typeof value.inspect === 'function' &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (typeof ret !== 'string') {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // If this is a DOM element, try to get the outer HTML.
+  if (isDOMElement(value)) {
+    if ('outerHTML' in value) {
+      return value.outerHTML;
+      // This value does not have an outerHTML attribute,
+      //   it could still be an XML element
+    } else {
+      // Attempt to serialize it
+      try {
+        if (document.xmlVersion) {
+          var xmlSerializer = new XMLSerializer();
+          return xmlSerializer.serializeToString(value);
+        } else {
+          // Firefox 11- do not support outerHTML
+          //   It does, however, support innerHTML
+          //   Use the following to render the element
+          var ns = "http://www.w3.org/1999/xhtml";
+          var container = document.createElementNS(ns, '_');
+
+          container.appendChild(value.cloneNode(false));
+          var html = container.innerHTML
+            .replace('><', '>' + value.innerHTML + '<');
+          container.innerHTML = '';
+          return html;
+        }
+      } catch (err) {
+        // This could be a non-native DOM implementation,
+        //   continue with the normal flow:
+        //   printing the element as if it is an object.
+      }
+    }
+  }
+
+  // Look up the keys of the object.
+  var visibleKeys = getEnumerableProperties(value);
+  var keys = ctx.showHidden ? getProperties(value) : visibleKeys;
+
+  var name, nameSuffix;
+
+  // Some type of object without properties can be shortcutted.
+  // In IE, errors have a single `stack` property, or if they are vanilla `Error`,
+  // a `stack` plus `description` property; ignore those for consistency.
+  if (keys.length === 0 || (isError(value) && (
+      (keys.length === 1 && keys[0] === 'stack') ||
+      (keys.length === 2 && keys[0] === 'description' && keys[1] === 'stack')
+     ))) {
+    if (typeof value === 'function') {
+      name = getName(value);
+      nameSuffix = name ? ': ' + name : '';
+      return ctx.stylize('[Function' + nameSuffix + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toUTCString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = ''
+    , array = false
+    , typedArray = false
+    , braces = ['{', '}'];
+
+  if (isTypedArray(value)) {
+    typedArray = true;
+    braces = ['[', ']'];
+  }
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (typeof value === 'function') {
+    name = getName(value);
+    nameSuffix = name ? ': ' + name : '';
+    base = ' [Function' + nameSuffix + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    return formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else if (typedArray) {
+    return formatTypedArray(value);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  switch (typeof value) {
+    case 'undefined':
+      return ctx.stylize('undefined', 'undefined');
+
+    case 'string':
+      var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                               .replace(/'/g, "\\'")
+                                               .replace(/\\"/g, '"') + '\'';
+      return ctx.stylize(simple, 'string');
+
+    case 'number':
+      if (value === 0 && (1/value) === -Infinity) {
+        return ctx.stylize('-0', 'number');
+      }
+      return ctx.stylize('' + value, 'number');
+
+    case 'boolean':
+      return ctx.stylize('' + value, 'boolean');
+
+    case 'symbol':
+      return ctx.stylize(value.toString(), 'symbol');
+  }
+  // For some reason typeof null is "object", so special case here.
+  if (value === null) {
+    return ctx.stylize('null', 'null');
+  }
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (Object.prototype.hasOwnProperty.call(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+function formatTypedArray(value) {
+  var str = '[ ';
+
+  for (var i = 0; i < value.length; ++i) {
+    if (str.length >= config.truncateThreshold - 7) {
+      str += '...';
+      break;
+    }
+    str += value[i] + ', ';
+  }
+  str += ' ]';
+
+  // Removing trailing `, ` if the array was not truncated
+  if (str.indexOf(',  ]') !== -1) {
+    str = str.replace(',  ]', ' ]');
+  }
+
+  return str;
+}
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name;
+  var propDescriptor = Object.getOwnPropertyDescriptor(value, key);
+  var str;
+
+  if (propDescriptor) {
+    if (propDescriptor.get) {
+      if (propDescriptor.set) {
+        str = ctx.stylize('[Getter/Setter]', 'special');
+      } else {
+        str = ctx.stylize('[Getter]', 'special');
+      }
+    } else {
+      if (propDescriptor.set) {
+        str = ctx.stylize('[Setter]', 'special');
+      }
+    }
+  }
+  if (visibleKeys.indexOf(key) < 0) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(value[key]) < 0) {
+      if (recurseTimes === null) {
+        str = formatValue(ctx, value[key], null);
+      } else {
+        str = formatValue(ctx, value[key], recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (typeof name === 'undefined') {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+function isTypedArray(ar) {
+  // Unfortunately there's no way to check if an object is a TypedArray
+  // We have to check if it's one of these types
+  return (typeof ar === 'object' && /\w+Array]$/.test(objectToString(ar)));
+}
+
+function isArray(ar) {
+  return Array.isArray(ar) ||
+         (typeof ar === 'object' && objectToString(ar) === '[object Array]');
+}
+
+function isRegExp(re) {
+  return typeof re === 'object' && objectToString(re) === '[object RegExp]';
+}
+
+function isDate(d) {
+  return typeof d === 'object' && objectToString(d) === '[object Date]';
+}
+
+function isError(e) {
+  return typeof e === 'object' && objectToString(e) === '[object Error]';
+}
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/isNaN.js":
+/*!*******************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/isNaN.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - isNaN utility
+ * Copyright(c) 2012-2015 Sakthipriyan Vairamani <thechargingvolcano@gmail.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .isNaN(value)
+ *
+ * Checks if the given value is NaN or not.
+ *
+ *     utils.isNaN(NaN); // true
+ *
+ * @param {Value} The value which has to be checked if it is NaN
+ * @name isNaN
+ * @api private
+ */
+
+function isNaN(value) {
+  // Refer http://www.ecma-international.org/ecma-262/6.0/#sec-isnan-number
+  // section's NOTE.
+  return value !== value;
+}
+
+// If ECMAScript 6's Number.isNaN is present, prefer that.
+module.exports = Number.isNaN || isNaN;
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js":
+/*!****************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var config = __webpack_require__(/*! ../config */ "../p4/node_modules/chai/lib/chai/config.js");
+
+/*!
+ * Chai - isProxyEnabled helper
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .isProxyEnabled()
+ *
+ * Helper function to check if Chai's proxy protection feature is enabled. If
+ * proxies are unsupported or disabled via the user's Chai config, then return
+ * false. Otherwise, return true.
+ *
+ * @namespace Utils
+ * @name isProxyEnabled
+ */
+
+module.exports = function isProxyEnabled() {
+  return config.useProxy && 
+    typeof Proxy !== 'undefined' &&
+    typeof Reflect !== 'undefined';
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/objDisplay.js":
+/*!************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/objDisplay.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - flag utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependancies
+ */
+
+var inspect = __webpack_require__(/*! ./inspect */ "../p4/node_modules/chai/lib/chai/utils/inspect.js");
+var config = __webpack_require__(/*! ../config */ "../p4/node_modules/chai/lib/chai/config.js");
+
+/**
+ * ### .objDisplay(object)
+ *
+ * Determines if an object or an array matches
+ * criteria to be inspected in-line for error
+ * messages or should be truncated.
+ *
+ * @param {Mixed} javascript object to inspect
+ * @name objDisplay
+ * @namespace Utils
+ * @api public
+ */
+
+module.exports = function objDisplay(obj) {
+  var str = inspect(obj)
+    , type = Object.prototype.toString.call(obj);
+
+  if (config.truncateThreshold && str.length >= config.truncateThreshold) {
+    if (type === '[object Function]') {
+      return !obj.name || obj.name === ''
+        ? '[Function]'
+        : '[Function: ' + obj.name + ']';
+    } else if (type === '[object Array]') {
+      return '[ Array(' + obj.length + ') ]';
+    } else if (type === '[object Object]') {
+      var keys = Object.keys(obj)
+        , kstr = keys.length > 2
+          ? keys.splice(0, 2).join(', ') + ', ...'
+          : keys.join(', ');
+      return '{ Object (' + kstr + ') }';
+    } else {
+      return str;
+    }
+  } else {
+    return str;
+  }
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/overwriteChainableMethod.js":
+/*!**************************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/overwriteChainableMethod.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - overwriteChainableMethod utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/**
+ * ### .overwriteChainableMethod(ctx, name, method, chainingBehavior)
+ *
+ * Overwites an already existing chainable method
+ * and provides access to the previous function or
+ * property.  Must return functions to be used for
+ * name.
+ *
+ *     utils.overwriteChainableMethod(chai.Assertion.prototype, 'lengthOf',
+ *       function (_super) {
+ *       }
+ *     , function (_super) {
+ *       }
+ *     );
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.overwriteChainableMethod('foo', fn, fn);
+ *
+ * Then can be used as any other assertion.
+ *
+ *     expect(myFoo).to.have.lengthOf(3);
+ *     expect(myFoo).to.have.lengthOf.above(3);
+ *
+ * @param {Object} ctx object whose method / property is to be overwritten
+ * @param {String} name of method / property to overwrite
+ * @param {Function} method function that returns a function to be used for name
+ * @param {Function} chainingBehavior function that returns a function to be used for property
+ * @namespace Utils
+ * @name overwriteChainableMethod
+ * @api public
+ */
+
+module.exports = function overwriteChainableMethod(ctx, name, method, chainingBehavior) {
+  var chainableBehavior = ctx.__methods[name];
+
+  var _chainingBehavior = chainableBehavior.chainingBehavior;
+  chainableBehavior.chainingBehavior = function overwritingChainableMethodGetter() {
+    var result = chainingBehavior(_chainingBehavior).call(this);
+    if (result !== undefined) {
+      return result;
+    }
+
+    var newAssertion = new chai.Assertion();
+    transferFlags(this, newAssertion);
+    return newAssertion;
+  };
+
+  var _method = chainableBehavior.method;
+  chainableBehavior.method = function overwritingChainableMethodWrapper() {
+    var result = method(_method).apply(this, arguments);
+    if (result !== undefined) {
+      return result;
+    }
+
+    var newAssertion = new chai.Assertion();
+    transferFlags(this, newAssertion);
+    return newAssertion;
+  };
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/overwriteMethod.js":
+/*!*****************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/overwriteMethod.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - overwriteMethod utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var addLengthGuard = __webpack_require__(/*! ./addLengthGuard */ "../p4/node_modules/chai/lib/chai/utils/addLengthGuard.js");
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var proxify = __webpack_require__(/*! ./proxify */ "../p4/node_modules/chai/lib/chai/utils/proxify.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/**
+ * ### .overwriteMethod(ctx, name, fn)
+ *
+ * Overwites an already existing method and provides
+ * access to previous function. Must return function
+ * to be used for name.
+ *
+ *     utils.overwriteMethod(chai.Assertion.prototype, 'equal', function (_super) {
+ *       return function (str) {
+ *         var obj = utils.flag(this, 'object');
+ *         if (obj instanceof Foo) {
+ *           new chai.Assertion(obj.value).to.equal(str);
+ *         } else {
+ *           _super.apply(this, arguments);
+ *         }
+ *       }
+ *     });
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.overwriteMethod('foo', fn);
+ *
+ * Then can be used as any other assertion.
+ *
+ *     expect(myFoo).to.equal('bar');
+ *
+ * @param {Object} ctx object whose method is to be overwritten
+ * @param {String} name of method to overwrite
+ * @param {Function} method function that returns a function to be used for name
+ * @namespace Utils
+ * @name overwriteMethod
+ * @api public
+ */
+
+module.exports = function overwriteMethod(ctx, name, method) {
+  var _method = ctx[name]
+    , _super = function () {
+      throw new Error(name + ' is not a function');
+    };
+
+  if (_method && 'function' === typeof _method)
+    _super = _method;
+
+  var overwritingMethodWrapper = function () {
+    // Setting the `ssfi` flag to `overwritingMethodWrapper` causes this
+    // function to be the starting point for removing implementation frames from
+    // the stack trace of a failed assertion.
+    //
+    // However, we only want to use this function as the starting point if the
+    // `lockSsfi` flag isn't set.
+    //
+    // If the `lockSsfi` flag is set, then either this assertion has been
+    // overwritten by another assertion, or this assertion is being invoked from
+    // inside of another assertion. In the first case, the `ssfi` flag has
+    // already been set by the overwriting assertion. In the second case, the
+    // `ssfi` flag has already been set by the outer assertion.
+    if (!flag(this, 'lockSsfi')) {
+      flag(this, 'ssfi', overwritingMethodWrapper);
+    }
+
+    // Setting the `lockSsfi` flag to `true` prevents the overwritten assertion
+    // from changing the `ssfi` flag. By this point, the `ssfi` flag is already
+    // set to the correct starting point for this assertion.
+    var origLockSsfi = flag(this, 'lockSsfi');
+    flag(this, 'lockSsfi', true);
+    var result = method(_super).apply(this, arguments);
+    flag(this, 'lockSsfi', origLockSsfi);
+
+    if (result !== undefined) {
+      return result;
+    }
+
+    var newAssertion = new chai.Assertion();
+    transferFlags(this, newAssertion);
+    return newAssertion;
+  }
+
+  addLengthGuard(overwritingMethodWrapper, name, false);
+  ctx[name] = proxify(overwritingMethodWrapper, name);
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/overwriteProperty.js":
+/*!*******************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/overwriteProperty.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - overwriteProperty utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var chai = __webpack_require__(/*! ../../chai */ "../p4/node_modules/chai/lib/chai.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var isProxyEnabled = __webpack_require__(/*! ./isProxyEnabled */ "../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js");
+var transferFlags = __webpack_require__(/*! ./transferFlags */ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js");
+
+/**
+ * ### .overwriteProperty(ctx, name, fn)
+ *
+ * Overwites an already existing property getter and provides
+ * access to previous value. Must return function to use as getter.
+ *
+ *     utils.overwriteProperty(chai.Assertion.prototype, 'ok', function (_super) {
+ *       return function () {
+ *         var obj = utils.flag(this, 'object');
+ *         if (obj instanceof Foo) {
+ *           new chai.Assertion(obj.name).to.equal('bar');
+ *         } else {
+ *           _super.call(this);
+ *         }
+ *       }
+ *     });
+ *
+ *
+ * Can also be accessed directly from `chai.Assertion`.
+ *
+ *     chai.Assertion.overwriteProperty('foo', fn);
+ *
+ * Then can be used as any other assertion.
+ *
+ *     expect(myFoo).to.be.ok;
+ *
+ * @param {Object} ctx object whose property is to be overwritten
+ * @param {String} name of property to overwrite
+ * @param {Function} getter function that returns a getter function to be used for name
+ * @namespace Utils
+ * @name overwriteProperty
+ * @api public
+ */
+
+module.exports = function overwriteProperty(ctx, name, getter) {
+  var _get = Object.getOwnPropertyDescriptor(ctx, name)
+    , _super = function () {};
+
+  if (_get && 'function' === typeof _get.get)
+    _super = _get.get
+
+  Object.defineProperty(ctx, name,
+    { get: function overwritingPropertyGetter() {
+        // Setting the `ssfi` flag to `overwritingPropertyGetter` causes this
+        // function to be the starting point for removing implementation frames
+        // from the stack trace of a failed assertion.
+        //
+        // However, we only want to use this function as the starting point if
+        // the `lockSsfi` flag isn't set and proxy protection is disabled.
+        //
+        // If the `lockSsfi` flag is set, then either this assertion has been
+        // overwritten by another assertion, or this assertion is being invoked
+        // from inside of another assertion. In the first case, the `ssfi` flag
+        // has already been set by the overwriting assertion. In the second
+        // case, the `ssfi` flag has already been set by the outer assertion.
+        //
+        // If proxy protection is enabled, then the `ssfi` flag has already been
+        // set by the proxy getter.
+        if (!isProxyEnabled() && !flag(this, 'lockSsfi')) {
+          flag(this, 'ssfi', overwritingPropertyGetter);
+        }
+
+        // Setting the `lockSsfi` flag to `true` prevents the overwritten
+        // assertion from changing the `ssfi` flag. By this point, the `ssfi`
+        // flag is already set to the correct starting point for this assertion.
+        var origLockSsfi = flag(this, 'lockSsfi');
+        flag(this, 'lockSsfi', true);
+        var result = getter(_super).call(this);
+        flag(this, 'lockSsfi', origLockSsfi);
+
+        if (result !== undefined) {
+          return result;
+        }
+
+        var newAssertion = new chai.Assertion();
+        transferFlags(this, newAssertion);
+        return newAssertion;
+      }
+    , configurable: true
+  });
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/proxify.js":
+/*!*********************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/proxify.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var config = __webpack_require__(/*! ../config */ "../p4/node_modules/chai/lib/chai/config.js");
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+var getProperties = __webpack_require__(/*! ./getProperties */ "../p4/node_modules/chai/lib/chai/utils/getProperties.js");
+var isProxyEnabled = __webpack_require__(/*! ./isProxyEnabled */ "../p4/node_modules/chai/lib/chai/utils/isProxyEnabled.js");
+
+/*!
+ * Chai - proxify utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .proxify(object)
+ *
+ * Return a proxy of given object that throws an error when a non-existent
+ * property is read. By default, the root cause is assumed to be a misspelled
+ * property, and thus an attempt is made to offer a reasonable suggestion from
+ * the list of existing properties. However, if a nonChainableMethodName is
+ * provided, then the root cause is instead a failure to invoke a non-chainable
+ * method prior to reading the non-existent property.
+ * 
+ * If proxies are unsupported or disabled via the user's Chai config, then
+ * return object without modification.
+ *
+ * @param {Object} obj
+ * @param {String} nonChainableMethodName
+ * @namespace Utils
+ * @name proxify
+ */
+
+var builtins = ['__flags', '__methods', '_obj', 'assert'];
+
+module.exports = function proxify(obj, nonChainableMethodName) {
+  if (!isProxyEnabled()) return obj;
+
+  return new Proxy(obj, {
+    get: function proxyGetter(target, property) {
+      // This check is here because we should not throw errors on Symbol properties
+      // such as `Symbol.toStringTag`.
+      // The values for which an error should be thrown can be configured using
+      // the `config.proxyExcludedKeys` setting.
+      if (typeof property === 'string' &&
+          config.proxyExcludedKeys.indexOf(property) === -1 &&
+          !Reflect.has(target, property)) {
+        // Special message for invalid property access of non-chainable methods.
+        if (nonChainableMethodName) {
+          throw Error('Invalid Chai property: ' + nonChainableMethodName + '.' +
+            property + '. See docs for proper usage of "' +
+            nonChainableMethodName + '".');
+        }
+
+        var orderedProperties = getProperties(target).filter(function(property) {
+          return !Object.prototype.hasOwnProperty(property) &&
+            builtins.indexOf(property) === -1;
+        }).sort(function(a, b) {
+          return stringDistance(property, a) - stringDistance(property, b);
+        });
+
+        if (orderedProperties.length &&
+            stringDistance(orderedProperties[0], property) < 4) {
+          // If the property is reasonably close to an existing Chai property,
+          // suggest that property to the user.
+          throw Error('Invalid Chai property: ' + property +
+            '. Did you mean "' + orderedProperties[0] + '"?');
+        } else {
+          throw Error('Invalid Chai property: ' + property);
+        }
+      }
+
+      // Use this proxy getter as the starting point for removing implementation
+      // frames from the stack trace of a failed assertion. For property
+      // assertions, this prevents the proxy getter from showing up in the stack
+      // trace since it's invoked before the property getter. For method and
+      // chainable method assertions, this flag will end up getting changed to
+      // the method wrapper, which is good since this frame will no longer be in
+      // the stack once the method is invoked. Note that Chai builtin assertion
+      // properties such as `__flags` are skipped since this is only meant to
+      // capture the starting point of an assertion. This step is also skipped
+      // if the `lockSsfi` flag is set, thus indicating that this assertion is
+      // being called from within another assertion. In that case, the `ssfi`
+      // flag is already set to the outer assertion's starting point.
+      if (builtins.indexOf(property) === -1 && !flag(target, 'lockSsfi')) {
+        flag(target, 'ssfi', proxyGetter);
+      }
+
+      return Reflect.get(target, property);
+    }
+  });
+};
+
+/**
+ * # stringDistance(strA, strB)
+ * Return the Levenshtein distance between two strings.
+ * @param {string} strA
+ * @param {string} strB
+ * @return {number} the string distance between strA and strB
+ * @api private
+ */
+
+function stringDistance(strA, strB, memo) {
+  if (!memo) {
+    // `memo` is a two-dimensional array containing a cache of distances
+    // memo[i][j] is the distance between strA.slice(0, i) and
+    // strB.slice(0, j).
+    memo = [];
+    for (var i = 0; i <= strA.length; i++) {
+      memo[i] = [];
+    }
+  }
+
+  if (!memo[strA.length] || !memo[strA.length][strB.length]) {
+    if (strA.length === 0 || strB.length === 0) {
+      memo[strA.length][strB.length] = Math.max(strA.length, strB.length);
+    } else {
+      memo[strA.length][strB.length] = Math.min(
+        stringDistance(strA.slice(0, -1), strB, memo) + 1,
+        stringDistance(strA, strB.slice(0, -1), memo) + 1,
+        stringDistance(strA.slice(0, -1), strB.slice(0, -1), memo) +
+          (strA.slice(-1) === strB.slice(-1) ? 0 : 1)
+      );
+    }
+  }
+
+  return memo[strA.length][strB.length];
+}
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/test.js":
+/*!******************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/test.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Chai - test utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/*!
+ * Module dependancies
+ */
+
+var flag = __webpack_require__(/*! ./flag */ "../p4/node_modules/chai/lib/chai/utils/flag.js");
+
+/**
+ * ### .test(object, expression)
+ *
+ * Test and object for expression.
+ *
+ * @param {Object} object (constructed Assertion)
+ * @param {Arguments} chai.Assertion.prototype.assert arguments
+ * @namespace Utils
+ * @name test
+ */
+
+module.exports = function test(obj, args) {
+  var negate = flag(obj, 'negate')
+    , expr = args[0];
+  return negate ? !expr : expr;
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/chai/lib/chai/utils/transferFlags.js":
+/*!***************************************************************!*\
+  !*** ../p4/node_modules/chai/lib/chai/utils/transferFlags.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Chai - transferFlags utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .transferFlags(assertion, object, includeAll = true)
+ *
+ * Transfer all the flags for `assertion` to `object`. If
+ * `includeAll` is set to `false`, then the base Chai
+ * assertion flags (namely `object`, `ssfi`, `lockSsfi`,
+ * and `message`) will not be transferred.
+ *
+ *
+ *     var newAssertion = new Assertion();
+ *     utils.transferFlags(assertion, newAssertion);
+ *
+ *     var anotherAsseriton = new Assertion(myObj);
+ *     utils.transferFlags(assertion, anotherAssertion, false);
+ *
+ * @param {Assertion} assertion the assertion to transfer the flags from
+ * @param {Object} object the object to transfer the flags to; usually a new assertion
+ * @param {Boolean} includeAll
+ * @namespace Utils
+ * @name transferFlags
+ * @api private
+ */
+
+module.exports = function transferFlags(assertion, object, includeAll) {
+  var flags = assertion.__flags || (assertion.__flags = Object.create(null));
+
+  if (!object.__flags) {
+    object.__flags = Object.create(null);
+  }
+
+  includeAll = arguments.length === 3 ? includeAll : true;
+
+  for (var flag in flags) {
+    if (includeAll ||
+        (flag !== 'object' && flag !== 'ssfi' && flag !== 'lockSsfi' && flag != 'message')) {
+      object.__flags[flag] = flags[flag];
+    }
+  }
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/check-error/index.js":
+/*!***********************************************!*\
+  !*** ../p4/node_modules/check-error/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* !
+ * Chai - checkError utility
+ * Copyright(c) 2012-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .checkError
+ *
+ * Checks that an error conforms to a given set of criteria and/or retrieves information about it.
+ *
+ * @api public
+ */
+
+/**
+ * ### .compatibleInstance(thrown, errorLike)
+ *
+ * Checks if two instances are compatible (strict equal).
+ * Returns false if errorLike is not an instance of Error, because instances
+ * can only be compatible if they're both error instances.
+ *
+ * @name compatibleInstance
+ * @param {Error} thrown error
+ * @param {Error|ErrorConstructor} errorLike object to compare against
+ * @namespace Utils
+ * @api public
+ */
+
+function compatibleInstance(thrown, errorLike) {
+  return errorLike instanceof Error && thrown === errorLike;
+}
+
+/**
+ * ### .compatibleConstructor(thrown, errorLike)
+ *
+ * Checks if two constructors are compatible.
+ * This function can receive either an error constructor or
+ * an error instance as the `errorLike` argument.
+ * Constructors are compatible if they're the same or if one is
+ * an instance of another.
+ *
+ * @name compatibleConstructor
+ * @param {Error} thrown error
+ * @param {Error|ErrorConstructor} errorLike object to compare against
+ * @namespace Utils
+ * @api public
+ */
+
+function compatibleConstructor(thrown, errorLike) {
+  if (errorLike instanceof Error) {
+    // If `errorLike` is an instance of any error we compare their constructors
+    return thrown.constructor === errorLike.constructor || thrown instanceof errorLike.constructor;
+  } else if (errorLike.prototype instanceof Error || errorLike === Error) {
+    // If `errorLike` is a constructor that inherits from Error, we compare `thrown` to `errorLike` directly
+    return thrown.constructor === errorLike || thrown instanceof errorLike;
+  }
+
+  return false;
+}
+
+/**
+ * ### .compatibleMessage(thrown, errMatcher)
+ *
+ * Checks if an error's message is compatible with a matcher (String or RegExp).
+ * If the message contains the String or passes the RegExp test,
+ * it is considered compatible.
+ *
+ * @name compatibleMessage
+ * @param {Error} thrown error
+ * @param {String|RegExp} errMatcher to look for into the message
+ * @namespace Utils
+ * @api public
+ */
+
+function compatibleMessage(thrown, errMatcher) {
+  var comparisonString = typeof thrown === 'string' ? thrown : thrown.message;
+  if (errMatcher instanceof RegExp) {
+    return errMatcher.test(comparisonString);
+  } else if (typeof errMatcher === 'string') {
+    return comparisonString.indexOf(errMatcher) !== -1; // eslint-disable-line no-magic-numbers
+  }
+
+  return false;
+}
+
+/**
+ * ### .getFunctionName(constructorFn)
+ *
+ * Returns the name of a function.
+ * This also includes a polyfill function if `constructorFn.name` is not defined.
+ *
+ * @name getFunctionName
+ * @param {Function} constructorFn
+ * @namespace Utils
+ * @api private
+ */
+
+var functionNameMatch = /\s*function(?:\s|\s*\/\*[^(?:*\/)]+\*\/\s*)*([^\(\/]+)/;
+function getFunctionName(constructorFn) {
+  var name = '';
+  if (typeof constructorFn.name === 'undefined') {
+    // Here we run a polyfill if constructorFn.name is not defined
+    var match = String(constructorFn).match(functionNameMatch);
+    if (match) {
+      name = match[1];
+    }
+  } else {
+    name = constructorFn.name;
+  }
+
+  return name;
+}
+
+/**
+ * ### .getConstructorName(errorLike)
+ *
+ * Gets the constructor name for an Error instance or constructor itself.
+ *
+ * @name getConstructorName
+ * @param {Error|ErrorConstructor} errorLike
+ * @namespace Utils
+ * @api public
+ */
+
+function getConstructorName(errorLike) {
+  var constructorName = errorLike;
+  if (errorLike instanceof Error) {
+    constructorName = getFunctionName(errorLike.constructor);
+  } else if (typeof errorLike === 'function') {
+    // If `err` is not an instance of Error it is an error constructor itself or another function.
+    // If we've got a common function we get its name, otherwise we may need to create a new instance
+    // of the error just in case it's a poorly-constructed error. Please see chaijs/chai/issues/45 to know more.
+    constructorName = getFunctionName(errorLike).trim() ||
+        getFunctionName(new errorLike()); // eslint-disable-line new-cap
+  }
+
+  return constructorName;
+}
+
+/**
+ * ### .getMessage(errorLike)
+ *
+ * Gets the error message from an error.
+ * If `err` is a String itself, we return it.
+ * If the error has no message, we return an empty string.
+ *
+ * @name getMessage
+ * @param {Error|String} errorLike
+ * @namespace Utils
+ * @api public
+ */
+
+function getMessage(errorLike) {
+  var msg = '';
+  if (errorLike && errorLike.message) {
+    msg = errorLike.message;
+  } else if (typeof errorLike === 'string') {
+    msg = errorLike;
+  }
+
+  return msg;
+}
+
+module.exports = {
+  compatibleInstance: compatibleInstance,
+  compatibleConstructor: compatibleConstructor,
+  compatibleMessage: compatibleMessage,
+  getMessage: getMessage,
+  getConstructorName: getConstructorName,
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/deep-eql/index.js":
+/*!********************************************!*\
+  !*** ../p4/node_modules/deep-eql/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* globals Symbol: false, Uint8Array: false, WeakMap: false */
+/*!
+ * deep-eql
+ * Copyright(c) 2013 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+var type = __webpack_require__(/*! type-detect */ "../p4/node_modules/type-detect/type-detect.js");
+function FakeMap() {
+  this._key = 'chai/deep-eql__' + Math.random() + Date.now();
+}
+
+FakeMap.prototype = {
+  get: function getMap(key) {
+    return key[this._key];
+  },
+  set: function setMap(key, value) {
+    if (Object.isExtensible(key)) {
+      Object.defineProperty(key, this._key, {
+        value: value,
+        configurable: true,
+      });
+    }
+  },
+};
+
+var MemoizeMap = typeof WeakMap === 'function' ? WeakMap : FakeMap;
+/*!
+ * Check to see if the MemoizeMap has recorded a result of the two operands
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {MemoizeMap} memoizeMap
+ * @returns {Boolean|null} result
+*/
+function memoizeCompare(leftHandOperand, rightHandOperand, memoizeMap) {
+  // Technically, WeakMap keys can *only* be objects, not primitives.
+  if (!memoizeMap || isPrimitive(leftHandOperand) || isPrimitive(rightHandOperand)) {
+    return null;
+  }
+  var leftHandMap = memoizeMap.get(leftHandOperand);
+  if (leftHandMap) {
+    var result = leftHandMap.get(rightHandOperand);
+    if (typeof result === 'boolean') {
+      return result;
+    }
+  }
+  return null;
+}
+
+/*!
+ * Set the result of the equality into the MemoizeMap
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {MemoizeMap} memoizeMap
+ * @param {Boolean} result
+*/
+function memoizeSet(leftHandOperand, rightHandOperand, memoizeMap, result) {
+  // Technically, WeakMap keys can *only* be objects, not primitives.
+  if (!memoizeMap || isPrimitive(leftHandOperand) || isPrimitive(rightHandOperand)) {
+    return;
+  }
+  var leftHandMap = memoizeMap.get(leftHandOperand);
+  if (leftHandMap) {
+    leftHandMap.set(rightHandOperand, result);
+  } else {
+    leftHandMap = new MemoizeMap();
+    leftHandMap.set(rightHandOperand, result);
+    memoizeMap.set(leftHandOperand, leftHandMap);
+  }
+}
+
+/*!
+ * Primary Export
+ */
+
+module.exports = deepEqual;
+module.exports.MemoizeMap = MemoizeMap;
+
+/**
+ * Assert deeply nested sameValue equality between two objects of any type.
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {Object} [options] (optional) Additional options
+ * @param {Array} [options.comparator] (optional) Override default algorithm, determining custom equality.
+ * @param {Array} [options.memoize] (optional) Provide a custom memoization object which will cache the results of
+    complex objects for a speed boost. By passing `false` you can disable memoization, but this will cause circular
+    references to blow the stack.
+ * @return {Boolean} equal match
+ */
+function deepEqual(leftHandOperand, rightHandOperand, options) {
+  // If we have a comparator, we can't assume anything; so bail to its check first.
+  if (options && options.comparator) {
+    return extensiveDeepEqual(leftHandOperand, rightHandOperand, options);
+  }
+
+  var simpleResult = simpleEqual(leftHandOperand, rightHandOperand);
+  if (simpleResult !== null) {
+    return simpleResult;
+  }
+
+  // Deeper comparisons are pushed through to a larger function
+  return extensiveDeepEqual(leftHandOperand, rightHandOperand, options);
+}
+
+/**
+ * Many comparisons can be canceled out early via simple equality or primitive checks.
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @return {Boolean|null} equal match
+ */
+function simpleEqual(leftHandOperand, rightHandOperand) {
+  // Equal references (except for Numbers) can be returned early
+  if (leftHandOperand === rightHandOperand) {
+    // Handle +-0 cases
+    return leftHandOperand !== 0 || 1 / leftHandOperand === 1 / rightHandOperand;
+  }
+
+  // handle NaN cases
+  if (
+    leftHandOperand !== leftHandOperand && // eslint-disable-line no-self-compare
+    rightHandOperand !== rightHandOperand // eslint-disable-line no-self-compare
+  ) {
+    return true;
+  }
+
+  // Anything that is not an 'object', i.e. symbols, functions, booleans, numbers,
+  // strings, and undefined, can be compared by reference.
+  if (isPrimitive(leftHandOperand) || isPrimitive(rightHandOperand)) {
+    // Easy out b/c it would have passed the first equality check
+    return false;
+  }
+  return null;
+}
+
+/*!
+ * The main logic of the `deepEqual` function.
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {Object} [options] (optional) Additional options
+ * @param {Array} [options.comparator] (optional) Override default algorithm, determining custom equality.
+ * @param {Array} [options.memoize] (optional) Provide a custom memoization object which will cache the results of
+    complex objects for a speed boost. By passing `false` you can disable memoization, but this will cause circular
+    references to blow the stack.
+ * @return {Boolean} equal match
+*/
+function extensiveDeepEqual(leftHandOperand, rightHandOperand, options) {
+  options = options || {};
+  options.memoize = options.memoize === false ? false : options.memoize || new MemoizeMap();
+  var comparator = options && options.comparator;
+
+  // Check if a memoized result exists.
+  var memoizeResultLeft = memoizeCompare(leftHandOperand, rightHandOperand, options.memoize);
+  if (memoizeResultLeft !== null) {
+    return memoizeResultLeft;
+  }
+  var memoizeResultRight = memoizeCompare(rightHandOperand, leftHandOperand, options.memoize);
+  if (memoizeResultRight !== null) {
+    return memoizeResultRight;
+  }
+
+  // If a comparator is present, use it.
+  if (comparator) {
+    var comparatorResult = comparator(leftHandOperand, rightHandOperand);
+    // Comparators may return null, in which case we want to go back to default behavior.
+    if (comparatorResult === false || comparatorResult === true) {
+      memoizeSet(leftHandOperand, rightHandOperand, options.memoize, comparatorResult);
+      return comparatorResult;
+    }
+    // To allow comparators to override *any* behavior, we ran them first. Since it didn't decide
+    // what to do, we need to make sure to return the basic tests first before we move on.
+    var simpleResult = simpleEqual(leftHandOperand, rightHandOperand);
+    if (simpleResult !== null) {
+      // Don't memoize this, it takes longer to set/retrieve than to just compare.
+      return simpleResult;
+    }
+  }
+
+  var leftHandType = type(leftHandOperand);
+  if (leftHandType !== type(rightHandOperand)) {
+    memoizeSet(leftHandOperand, rightHandOperand, options.memoize, false);
+    return false;
+  }
+
+  // Temporarily set the operands in the memoize object to prevent blowing the stack
+  memoizeSet(leftHandOperand, rightHandOperand, options.memoize, true);
+
+  var result = extensiveDeepEqualByType(leftHandOperand, rightHandOperand, leftHandType, options);
+  memoizeSet(leftHandOperand, rightHandOperand, options.memoize, result);
+  return result;
+}
+
+function extensiveDeepEqualByType(leftHandOperand, rightHandOperand, leftHandType, options) {
+  switch (leftHandType) {
+    case 'String':
+    case 'Number':
+    case 'Boolean':
+    case 'Date':
+      // If these types are their instance types (e.g. `new Number`) then re-deepEqual against their values
+      return deepEqual(leftHandOperand.valueOf(), rightHandOperand.valueOf());
+    case 'Promise':
+    case 'Symbol':
+    case 'function':
+    case 'WeakMap':
+    case 'WeakSet':
+    case 'Error':
+      return leftHandOperand === rightHandOperand;
+    case 'Arguments':
+    case 'Int8Array':
+    case 'Uint8Array':
+    case 'Uint8ClampedArray':
+    case 'Int16Array':
+    case 'Uint16Array':
+    case 'Int32Array':
+    case 'Uint32Array':
+    case 'Float32Array':
+    case 'Float64Array':
+    case 'Array':
+      return iterableEqual(leftHandOperand, rightHandOperand, options);
+    case 'RegExp':
+      return regexpEqual(leftHandOperand, rightHandOperand);
+    case 'Generator':
+      return generatorEqual(leftHandOperand, rightHandOperand, options);
+    case 'DataView':
+      return iterableEqual(new Uint8Array(leftHandOperand.buffer), new Uint8Array(rightHandOperand.buffer), options);
+    case 'ArrayBuffer':
+      return iterableEqual(new Uint8Array(leftHandOperand), new Uint8Array(rightHandOperand), options);
+    case 'Set':
+      return entriesEqual(leftHandOperand, rightHandOperand, options);
+    case 'Map':
+      return entriesEqual(leftHandOperand, rightHandOperand, options);
+    default:
+      return objectEqual(leftHandOperand, rightHandOperand, options);
+  }
+}
+
+/*!
+ * Compare two Regular Expressions for equality.
+ *
+ * @param {RegExp} leftHandOperand
+ * @param {RegExp} rightHandOperand
+ * @return {Boolean} result
+ */
+
+function regexpEqual(leftHandOperand, rightHandOperand) {
+  return leftHandOperand.toString() === rightHandOperand.toString();
+}
+
+/*!
+ * Compare two Sets/Maps for equality. Faster than other equality functions.
+ *
+ * @param {Set} leftHandOperand
+ * @param {Set} rightHandOperand
+ * @param {Object} [options] (Optional)
+ * @return {Boolean} result
+ */
+
+function entriesEqual(leftHandOperand, rightHandOperand, options) {
+  // IE11 doesn't support Set#entries or Set#@@iterator, so we need manually populate using Set#forEach
+  if (leftHandOperand.size !== rightHandOperand.size) {
+    return false;
+  }
+  if (leftHandOperand.size === 0) {
+    return true;
+  }
+  var leftHandItems = [];
+  var rightHandItems = [];
+  leftHandOperand.forEach(function gatherEntries(key, value) {
+    leftHandItems.push([ key, value ]);
+  });
+  rightHandOperand.forEach(function gatherEntries(key, value) {
+    rightHandItems.push([ key, value ]);
+  });
+  return iterableEqual(leftHandItems.sort(), rightHandItems.sort(), options);
+}
+
+/*!
+ * Simple equality for flat iterable objects such as Arrays, TypedArrays or Node.js buffers.
+ *
+ * @param {Iterable} leftHandOperand
+ * @param {Iterable} rightHandOperand
+ * @param {Object} [options] (Optional)
+ * @return {Boolean} result
+ */
+
+function iterableEqual(leftHandOperand, rightHandOperand, options) {
+  var length = leftHandOperand.length;
+  if (length !== rightHandOperand.length) {
+    return false;
+  }
+  if (length === 0) {
+    return true;
+  }
+  var index = -1;
+  while (++index < length) {
+    if (deepEqual(leftHandOperand[index], rightHandOperand[index], options) === false) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*!
+ * Simple equality for generator objects such as those returned by generator functions.
+ *
+ * @param {Iterable} leftHandOperand
+ * @param {Iterable} rightHandOperand
+ * @param {Object} [options] (Optional)
+ * @return {Boolean} result
+ */
+
+function generatorEqual(leftHandOperand, rightHandOperand, options) {
+  return iterableEqual(getGeneratorEntries(leftHandOperand), getGeneratorEntries(rightHandOperand), options);
+}
+
+/*!
+ * Determine if the given object has an @@iterator function.
+ *
+ * @param {Object} target
+ * @return {Boolean} `true` if the object has an @@iterator function.
+ */
+function hasIteratorFunction(target) {
+  return typeof Symbol !== 'undefined' &&
+    typeof target === 'object' &&
+    typeof Symbol.iterator !== 'undefined' &&
+    typeof target[Symbol.iterator] === 'function';
+}
+
+/*!
+ * Gets all iterator entries from the given Object. If the Object has no @@iterator function, returns an empty array.
+ * This will consume the iterator - which could have side effects depending on the @@iterator implementation.
+ *
+ * @param {Object} target
+ * @returns {Array} an array of entries from the @@iterator function
+ */
+function getIteratorEntries(target) {
+  if (hasIteratorFunction(target)) {
+    try {
+      return getGeneratorEntries(target[Symbol.iterator]());
+    } catch (iteratorError) {
+      return [];
+    }
+  }
+  return [];
+}
+
+/*!
+ * Gets all entries from a Generator. This will consume the generator - which could have side effects.
+ *
+ * @param {Generator} target
+ * @returns {Array} an array of entries from the Generator.
+ */
+function getGeneratorEntries(generator) {
+  var generatorResult = generator.next();
+  var accumulator = [ generatorResult.value ];
+  while (generatorResult.done === false) {
+    generatorResult = generator.next();
+    accumulator.push(generatorResult.value);
+  }
+  return accumulator;
+}
+
+/*!
+ * Gets all own and inherited enumerable keys from a target.
+ *
+ * @param {Object} target
+ * @returns {Array} an array of own and inherited enumerable keys from the target.
+ */
+function getEnumerableKeys(target) {
+  var keys = [];
+  for (var key in target) {
+    keys.push(key);
+  }
+  return keys;
+}
+
+/*!
+ * Determines if two objects have matching values, given a set of keys. Defers to deepEqual for the equality check of
+ * each key. If any value of the given key is not equal, the function will return false (early).
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {Array} keys An array of keys to compare the values of leftHandOperand and rightHandOperand against
+ * @param {Object} [options] (Optional)
+ * @return {Boolean} result
+ */
+function keysEqual(leftHandOperand, rightHandOperand, keys, options) {
+  var length = keys.length;
+  if (length === 0) {
+    return true;
+  }
+  for (var i = 0; i < length; i += 1) {
+    if (deepEqual(leftHandOperand[keys[i]], rightHandOperand[keys[i]], options) === false) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*!
+ * Recursively check the equality of two Objects. Once basic sameness has been established it will defer to `deepEqual`
+ * for each enumerable key in the object.
+ *
+ * @param {Mixed} leftHandOperand
+ * @param {Mixed} rightHandOperand
+ * @param {Object} [options] (Optional)
+ * @return {Boolean} result
+ */
+
+function objectEqual(leftHandOperand, rightHandOperand, options) {
+  var leftHandKeys = getEnumerableKeys(leftHandOperand);
+  var rightHandKeys = getEnumerableKeys(rightHandOperand);
+  if (leftHandKeys.length && leftHandKeys.length === rightHandKeys.length) {
+    leftHandKeys.sort();
+    rightHandKeys.sort();
+    if (iterableEqual(leftHandKeys, rightHandKeys) === false) {
+      return false;
+    }
+    return keysEqual(leftHandOperand, rightHandOperand, leftHandKeys, options);
+  }
+
+  var leftHandEntries = getIteratorEntries(leftHandOperand);
+  var rightHandEntries = getIteratorEntries(rightHandOperand);
+  if (leftHandEntries.length && leftHandEntries.length === rightHandEntries.length) {
+    leftHandEntries.sort();
+    rightHandEntries.sort();
+    return iterableEqual(leftHandEntries, rightHandEntries, options);
+  }
+
+  if (leftHandKeys.length === 0 &&
+      leftHandEntries.length === 0 &&
+      rightHandKeys.length === 0 &&
+      rightHandEntries.length === 0) {
+    return true;
+  }
+
+  return false;
+}
+
+/*!
+ * Returns true if the argument is a primitive.
+ *
+ * This intentionally returns true for all objects that can be compared by reference,
+ * including functions and symbols.
+ *
+ * @param {Mixed} value
+ * @return {Boolean} result
+ */
+function isPrimitive(value) {
+  return value === null || typeof value !== 'object';
+}
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/get-func-name/index.js":
+/*!*************************************************!*\
+  !*** ../p4/node_modules/get-func-name/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* !
+ * Chai - getFuncName utility
+ * Copyright(c) 2012-2016 Jake Luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+
+/**
+ * ### .getFuncName(constructorFn)
+ *
+ * Returns the name of a function.
+ * When a non-function instance is passed, returns `null`.
+ * This also includes a polyfill function if `aFunc.name` is not defined.
+ *
+ * @name getFuncName
+ * @param {Function} funct
+ * @namespace Utils
+ * @api public
+ */
+
+var toString = Function.prototype.toString;
+var functionNameMatch = /\s*function(?:\s|\s*\/\*[^(?:*\/)]+\*\/\s*)*([^\s\(\/]+)/;
+function getFuncName(aFunc) {
+  if (typeof aFunc !== 'function') {
+    return null;
+  }
+
+  var name = '';
+  if (typeof Function.prototype.name === 'undefined' && typeof aFunc.name === 'undefined') {
+    // Here we run a polyfill if Function does not support the `name` property and if aFunc.name is not defined
+    var match = toString.call(aFunc).match(functionNameMatch);
+    if (match) {
+      name = match[1];
+    }
+  } else {
+    // If we've got a `name` property we just use it
+    name = aFunc.name;
+  }
+
+  return name;
+}
+
+module.exports = getFuncName;
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/jStat/dist/jstat.js":
+/*!**********************************************!*\
+  !*** ../p4/node_modules/jStat/dist/jstat.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (window, factory) {
+    if (true) {
+        module.exports = factory();
+    } else {}
+})(this, function () {
+var jStat = (function(Math, undefined) {
+
+// For quick reference.
+var concat = Array.prototype.concat;
+var slice = Array.prototype.slice;
+var toString = Object.prototype.toString;
+
+// Calculate correction for IEEE error
+// TODO: This calculation can be improved.
+function calcRdx(n, m) {
+  var val = n > m ? n : m;
+  return Math.pow(10,
+                  17 - ~~(Math.log(((val > 0) ? val : -val)) * Math.LOG10E));
+}
+
+
+var isArray = Array.isArray || function isArray(arg) {
+  return toString.call(arg) === '[object Array]';
+};
+
+
+function isFunction(arg) {
+  return toString.call(arg) === '[object Function]';
+}
+
+
+function isNumber(arg) {
+  return typeof arg === 'number' && arg === arg;
+}
+
+
+// Converts the jStat matrix to vector.
+function toVector(arr) {
+  return concat.apply([], arr);
+}
+
+
+// The one and only jStat constructor.
+function jStat() {
+  return new jStat._init(arguments);
+}
+
+
+// TODO: Remove after all references in src files have been removed.
+jStat.fn = jStat.prototype;
+
+
+// By separating the initializer from the constructor it's easier to handle
+// always returning a new instance whether "new" was used or not.
+jStat._init = function _init(args) {
+  var i;
+
+  // If first argument is an array, must be vector or matrix.
+  if (isArray(args[0])) {
+    // Check if matrix.
+    if (isArray(args[0][0])) {
+      // See if a mapping function was also passed.
+      if (isFunction(args[1]))
+        args[0] = jStat.map(args[0], args[1]);
+      // Iterate over each is faster than this.push.apply(this, args[0].
+      for (var i = 0; i < args[0].length; i++)
+        this[i] = args[0][i];
+      this.length = args[0].length;
+
+    // Otherwise must be a vector.
+    } else {
+      this[0] = isFunction(args[1]) ? jStat.map(args[0], args[1]) : args[0];
+      this.length = 1;
+    }
+
+  // If first argument is number, assume creation of sequence.
+  } else if (isNumber(args[0])) {
+    this[0] = jStat.seq.apply(null, args);
+    this.length = 1;
+
+  // Handle case when jStat object is passed to jStat.
+  } else if (args[0] instanceof jStat) {
+    // Duplicate the object and pass it back.
+    return jStat(args[0].toArray());
+
+  // Unexpected argument value, return empty jStat object.
+  // TODO: This is strange behavior. Shouldn't this throw or some such to let
+  // the user know they had bad arguments?
+  } else {
+    this[0] = [];
+    this.length = 1;
+  }
+
+  return this;
+};
+jStat._init.prototype = jStat.prototype;
+jStat._init.constructor = jStat;
+
+
+// Utility functions.
+// TODO: for internal use only?
+jStat.utils = {
+  calcRdx: calcRdx,
+  isArray: isArray,
+  isFunction: isFunction,
+  isNumber: isNumber,
+  toVector: toVector
+};
+
+
+// Easily extend the jStat object.
+// TODO: is this seriously necessary?
+jStat.extend = function extend(obj) {
+  var i, j;
+
+  if (arguments.length === 1) {
+    for (j in obj)
+      jStat[j] = obj[j];
+    return this;
+  }
+
+  for (var i = 1; i < arguments.length; i++) {
+    for (j in arguments[i])
+      obj[j] = arguments[i][j];
+  }
+
+  return obj;
+};
+
+
+// Returns the number of rows in the matrix.
+jStat.rows = function rows(arr) {
+  return arr.length || 1;
+};
+
+
+// Returns the number of columns in the matrix.
+jStat.cols = function cols(arr) {
+  return arr[0].length || 1;
+};
+
+
+// Returns the dimensions of the object { rows: i, cols: j }
+jStat.dimensions = function dimensions(arr) {
+  return {
+    rows: jStat.rows(arr),
+    cols: jStat.cols(arr)
+  };
+};
+
+
+// Returns a specified row as a vector or return a sub matrix by pick some rows
+jStat.row = function row(arr, index) {
+  if (isArray(index)) {
+    return index.map(function(i) {
+      return jStat.row(arr, i);
+    })
+  }
+  return arr[index];
+};
+
+
+// return row as array
+// rowa([[1,2],[3,4]],0) -> [1,2]
+jStat.rowa = function rowa(arr, i) {
+  return jStat.row(arr, i);
+};
+
+
+// Returns the specified column as a vector or return a sub matrix by pick some
+// columns
+jStat.col = function col(arr, index) {
+  if (isArray(index)) {
+    var submat = jStat.arange(arr.length).map(function(i) {
+      return new Array(index.length);
+    });
+    index.forEach(function(ind, i){
+      jStat.arange(arr.length).forEach(function(j) {
+        submat[j][i] = arr[j][ind];
+      });
+    });
+    return submat;
+  }
+  var column = new Array(arr.length);
+  for (var i = 0; i < arr.length; i++)
+    column[i] = [arr[i][index]];
+  return column;
+};
+
+
+// return column as array
+// cola([[1,2],[3,4]],0) -> [1,3]
+jStat.cola = function cola(arr, i) {
+  return jStat.col(arr, i).map(function(a){ return a[0] });
+};
+
+
+// Returns the diagonal of the matrix
+jStat.diag = function diag(arr) {
+  var nrow = jStat.rows(arr);
+  var res = new Array(nrow);
+  for (var row = 0; row < nrow; row++)
+    res[row] = [arr[row][row]];
+  return res;
+};
+
+
+// Returns the anti-diagonal of the matrix
+jStat.antidiag = function antidiag(arr) {
+  var nrow = jStat.rows(arr) - 1;
+  var res = new Array(nrow);
+  for (var i = 0; nrow >= 0; nrow--, i++)
+    res[i] = [arr[i][nrow]];
+  return res;
+};
+
+// Transpose a matrix or array.
+jStat.transpose = function transpose(arr) {
+  var obj = [];
+  var objArr, rows, cols, j, i;
+
+  // Make sure arr is in matrix format.
+  if (!isArray(arr[0]))
+    arr = [arr];
+
+  rows = arr.length;
+  cols = arr[0].length;
+
+  for (var i = 0; i < cols; i++) {
+    objArr = new Array(rows);
+    for (j = 0; j < rows; j++)
+      objArr[j] = arr[j][i];
+    obj.push(objArr);
+  }
+
+  // If obj is vector, return only single array.
+  return obj.length === 1 ? obj[0] : obj;
+};
+
+
+// Map a function to an array or array of arrays.
+// "toAlter" is an internal variable.
+jStat.map = function map(arr, func, toAlter) {
+  var row, nrow, ncol, res, col;
+
+  if (!isArray(arr[0]))
+    arr = [arr];
+
+  nrow = arr.length;
+  ncol = arr[0].length;
+  res = toAlter ? arr : new Array(nrow);
+
+  for (row = 0; row < nrow; row++) {
+    // if the row doesn't exist, create it
+    if (!res[row])
+      res[row] = new Array(ncol);
+    for (col = 0; col < ncol; col++)
+      res[row][col] = func(arr[row][col], row, col);
+  }
+
+  return res.length === 1 ? res[0] : res;
+};
+
+
+// Cumulatively combine the elements of an array or array of arrays using a function.
+jStat.cumreduce = function cumreduce(arr, func, toAlter) {
+  var row, nrow, ncol, res, col;
+
+  if (!isArray(arr[0]))
+    arr = [arr];
+
+  nrow = arr.length;
+  ncol = arr[0].length;
+  res = toAlter ? arr : new Array(nrow);
+
+  for (row = 0; row < nrow; row++) {
+    // if the row doesn't exist, create it
+    if (!res[row])
+      res[row] = new Array(ncol);
+    if (ncol > 0)
+      res[row][0] = arr[row][0];
+    for (col = 1; col < ncol; col++)
+      res[row][col] = func(res[row][col-1], arr[row][col]);
+  }
+  return res.length === 1 ? res[0] : res;
+};
+
+
+// Destructively alter an array.
+jStat.alter = function alter(arr, func) {
+  return jStat.map(arr, func, true);
+};
+
+
+// Generate a rows x cols matrix according to the supplied function.
+jStat.create = function  create(rows, cols, func) {
+  var res = new Array(rows);
+  var i, j;
+
+  if (isFunction(cols)) {
+    func = cols;
+    cols = rows;
+  }
+
+  for (var i = 0; i < rows; i++) {
+    res[i] = new Array(cols);
+    for (j = 0; j < cols; j++)
+      res[i][j] = func(i, j);
+  }
+
+  return res;
+};
+
+
+function retZero() { return 0; }
+
+
+// Generate a rows x cols matrix of zeros.
+jStat.zeros = function zeros(rows, cols) {
+  if (!isNumber(cols))
+    cols = rows;
+  return jStat.create(rows, cols, retZero);
+};
+
+
+function retOne() { return 1; }
+
+
+// Generate a rows x cols matrix of ones.
+jStat.ones = function ones(rows, cols) {
+  if (!isNumber(cols))
+    cols = rows;
+  return jStat.create(rows, cols, retOne);
+};
+
+
+// Generate a rows x cols matrix of uniformly random numbers.
+jStat.rand = function rand(rows, cols) {
+  if (!isNumber(cols))
+    cols = rows;
+  return jStat.create(rows, cols, Math.random);
+};
+
+
+function retIdent(i, j) { return i === j ? 1 : 0; }
+
+
+// Generate an identity matrix of size row x cols.
+jStat.identity = function identity(rows, cols) {
+  if (!isNumber(cols))
+    cols = rows;
+  return jStat.create(rows, cols, retIdent);
+};
+
+
+// Tests whether a matrix is symmetric
+jStat.symmetric = function symmetric(arr) {
+  var issymmetric = true;
+  var size = arr.length;
+  var row, col;
+
+  if (arr.length !== arr[0].length)
+    return false;
+
+  for (row = 0; row < size; row++) {
+    for (col = 0; col < size; col++)
+      if (arr[col][row] !== arr[row][col])
+        return false;
+  }
+
+  return true;
+};
+
+
+// Set all values to zero.
+jStat.clear = function clear(arr) {
+  return jStat.alter(arr, retZero);
+};
+
+
+// Generate sequence.
+jStat.seq = function seq(min, max, length, func) {
+  if (!isFunction(func))
+    func = false;
+
+  var arr = [];
+  var hival = calcRdx(min, max);
+  var step = (max * hival - min * hival) / ((length - 1) * hival);
+  var current = min;
+  var cnt;
+
+  // Current is assigned using a technique to compensate for IEEE error.
+  // TODO: Needs better implementation.
+  for (cnt = 0;
+       current <= max && cnt < length;
+       cnt++, current = (min * hival + step * hival * cnt) / hival) {
+    arr.push((func ? func(current, cnt) : current));
+  }
+
+  return arr;
+};
+
+
+// arange(5) -> [0,1,2,3,4]
+// arange(1,5) -> [1,2,3,4]
+// arange(5,1,-1) -> [5,4,3,2]
+jStat.arange = function arange(start, end, step) {
+  var rl = [];
+  step = step || 1;
+  if (end === undefined) {
+    end = start;
+    start = 0;
+  }
+  if (start === end || step === 0) {
+    return [];
+  }
+  if (start < end && step < 0) {
+    return [];
+  }
+  if (start > end && step > 0) {
+    return [];
+  }
+  if (step > 0) {
+    for (i = start; i < end; i += step) {
+      rl.push(i);
+    }
+  } else {
+    for (i = start; i > end; i += step) {
+      rl.push(i);
+    }
+  }
+  return rl;
+};
+
+
+// A=[[1,2,3],[4,5,6],[7,8,9]]
+// slice(A,{row:{end:2},col:{start:1}}) -> [[2,3],[5,6]]
+// slice(A,1,{start:1}) -> [5,6]
+// as numpy code A[:2,1:]
+jStat.slice = (function(){
+  function _slice(list, start, end, step) {
+    // note it's not equal to range.map mode it's a bug
+    var i;
+    var rl = [];
+    var length = list.length;
+    if (start === undefined && end === undefined && step === undefined) {
+      return jStat.copy(list);
+    }
+
+    start = start || 0;
+    end = end || list.length;
+    start = start >= 0 ? start : length + start;
+    end = end >= 0 ? end : length + end;
+    step = step || 1;
+    if (start === end || step === 0) {
+      return [];
+    }
+    if (start < end && step < 0) {
+      return [];
+    }
+    if (start > end && step > 0) {
+      return [];
+    }
+    if (step > 0) {
+      for (i = start; i < end; i += step) {
+        rl.push(list[i]);
+      }
+    } else {
+      for (i = start; i > end;i += step) {
+        rl.push(list[i]);
+      }
+    }
+    return rl;
+  }
+
+  function slice(list, rcSlice) {
+    rcSlice = rcSlice || {};
+    if (isNumber(rcSlice.row)) {
+      if (isNumber(rcSlice.col))
+        return list[rcSlice.row][rcSlice.col];
+      var row = jStat.rowa(list, rcSlice.row);
+      var colSlice = rcSlice.col || {};
+      return _slice(row, colSlice.start, colSlice.end, colSlice.step);
+    }
+
+    if (isNumber(rcSlice.col)) {
+      var col = jStat.cola(list, rcSlice.col);
+      var rowSlice = rcSlice.row || {};
+      return _slice(col, rowSlice.start, rowSlice.end, rowSlice.step);
+    }
+
+    var rowSlice = rcSlice.row || {};
+    var colSlice = rcSlice.col || {};
+    var rows = _slice(list, rowSlice.start, rowSlice.end, rowSlice.step);
+    return rows.map(function(row) {
+      return _slice(row, colSlice.start, colSlice.end, colSlice.step);
+    });
+  }
+
+  return slice;
+}());
+
+
+// A=[[1,2,3],[4,5,6],[7,8,9]]
+// sliceAssign(A,{row:{start:1},col:{start:1}},[[0,0],[0,0]])
+// A=[[1,2,3],[4,0,0],[7,0,0]]
+jStat.sliceAssign = function sliceAssign(A, rcSlice, B) {
+  if (isNumber(rcSlice.row)) {
+    if (isNumber(rcSlice.col))
+      return A[rcSlice.row][rcSlice.col] = B;
+    rcSlice.col = rcSlice.col || {};
+    rcSlice.col.start = rcSlice.col.start || 0;
+    rcSlice.col.end = rcSlice.col.end || A[0].length;
+    rcSlice.col.step = rcSlice.col.step || 1;
+    var nl = jStat.arange(rcSlice.col.start,
+                          Math.min(A.length, rcSlice.col.end),
+                          rcSlice.col.step);
+    var m = rcSlice.row;
+    nl.forEach(function(n, i) {
+      A[m][n] = B[i];
+    });
+    return A;
+  }
+
+  if (isNumber(rcSlice.col)) {
+    rcSlice.row = rcSlice.row || {};
+    rcSlice.row.start = rcSlice.row.start || 0;
+    rcSlice.row.end = rcSlice.row.end || A.length;
+    rcSlice.row.step = rcSlice.row.step || 1;
+    var ml = jStat.arange(rcSlice.row.start,
+                          Math.min(A[0].length, rcSlice.row.end),
+                          rcSlice.row.step);
+    var n = rcSlice.col;
+    ml.forEach(function(m, j) {
+      A[m][n] = B[j];
+    });
+    return A;
+  }
+
+  if (B[0].length === undefined) {
+    B = [B];
+  }
+  rcSlice.row.start = rcSlice.row.start || 0;
+  rcSlice.row.end = rcSlice.row.end || A.length;
+  rcSlice.row.step = rcSlice.row.step || 1;
+  rcSlice.col.start = rcSlice.col.start || 0;
+  rcSlice.col.end = rcSlice.col.end || A[0].length;
+  rcSlice.col.step = rcSlice.col.step || 1;
+  var ml = jStat.arange(rcSlice.row.start,
+                        Math.min(A.length, rcSlice.row.end),
+                        rcSlice.row.step);
+  var nl = jStat.arange(rcSlice.col.start,
+                        Math.min(A[0].length, rcSlice.col.end),
+                        rcSlice.col.step);
+  ml.forEach(function(m, i) {
+    nl.forEach(function(n, j) {
+      A[m][n] = B[i][j];
+    });
+  });
+  return A;
+};
+
+
+// [1,2,3] ->
+// [[1,0,0],[0,2,0],[0,0,3]]
+jStat.diagonal = function diagonal(diagArray) {
+  var mat = jStat.zeros(diagArray.length, diagArray.length);
+  diagArray.forEach(function(t, i) {
+    mat[i][i] = t;
+  });
+  return mat;
+};
+
+
+// return copy of A
+jStat.copy = function copy(A) {
+  return A.map(function(row) {
+    if (isNumber(row))
+      return row;
+    return row.map(function(t) {
+      return t;
+    });
+  });
+};
+
+
+// TODO: Go over this entire implementation. Seems a tragic waste of resources
+// doing all this work. Instead, and while ugly, use new Function() to generate
+// a custom function for each static method.
+
+// Quick reference.
+var jProto = jStat.prototype;
+
+// Default length.
+jProto.length = 0;
+
+// For internal use only.
+// TODO: Check if they're actually used, and if they are then rename them
+// to _*
+jProto.push = Array.prototype.push;
+jProto.sort = Array.prototype.sort;
+jProto.splice = Array.prototype.splice;
+jProto.slice = Array.prototype.slice;
+
+
+// Return a clean array.
+jProto.toArray = function toArray() {
+  return this.length > 1 ? slice.call(this) : slice.call(this)[0];
+};
+
+
+// Map a function to a matrix or vector.
+jProto.map = function map(func, toAlter) {
+  return jStat(jStat.map(this, func, toAlter));
+};
+
+
+// Cumulatively combine the elements of a matrix or vector using a function.
+jProto.cumreduce = function cumreduce(func, toAlter) {
+  return jStat(jStat.cumreduce(this, func, toAlter));
+};
+
+
+// Destructively alter an array.
+jProto.alter = function alter(func) {
+  jStat.alter(this, func);
+  return this;
+};
+
+
+// Extend prototype with methods that have no argument.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jProto[passfunc] = function(func) {
+      var self = this,
+      results;
+      // Check for callback.
+      if (func) {
+        setTimeout(function() {
+          func.call(self, jProto[passfunc].call(self));
+        });
+        return this;
+      }
+      results = jStat[passfunc](this);
+      return isArray(results) ? jStat(results) : results;
+    };
+  })(funcs[i]);
+})('transpose clear symmetric rows cols dimensions diag antidiag'.split(' '));
+
+
+// Extend prototype with methods that have one argument.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jProto[passfunc] = function(index, func) {
+      var self = this;
+      // check for callback
+      if (func) {
+        setTimeout(function() {
+          func.call(self, jProto[passfunc].call(self, index));
+        });
+        return this;
+      }
+      return jStat(jStat[passfunc](this, index));
+    };
+  })(funcs[i]);
+})('row col'.split(' '));
+
+
+// Extend prototype with simple shortcut methods.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jProto[passfunc] = new Function(
+        'return jStat(jStat.' + passfunc + '.apply(null, arguments));');
+  })(funcs[i]);
+})('create zeros ones rand identity'.split(' '));
+
+
+// Exposing jStat.
+return jStat;
+
+}(Math));
+(function(jStat, Math) {
+
+var isFunction = jStat.utils.isFunction;
+
+// Ascending functions for sort
+function ascNum(a, b) { return a - b; }
+
+function clip(arg, min, max) {
+  return Math.max(min, Math.min(arg, max));
+}
+
+
+// sum of an array
+jStat.sum = function sum(arr) {
+  var sum = 0;
+  var i = arr.length;
+  while (--i >= 0)
+    sum += arr[i];
+  return sum;
+};
+
+
+// sum squared
+jStat.sumsqrd = function sumsqrd(arr) {
+  var sum = 0;
+  var i = arr.length;
+  while (--i >= 0)
+    sum += arr[i] * arr[i];
+  return sum;
+};
+
+
+// sum of squared errors of prediction (SSE)
+jStat.sumsqerr = function sumsqerr(arr) {
+  var mean = jStat.mean(arr);
+  var sum = 0;
+  var i = arr.length;
+  var tmp;
+  while (--i >= 0) {
+    tmp = arr[i] - mean;
+    sum += tmp * tmp;
+  }
+  return sum;
+};
+
+// sum of an array in each row
+jStat.sumrow = function sumrow(arr) {
+  var sum = 0;
+  var i = arr.length;
+  while (--i >= 0)
+    sum += arr[i];
+  return sum;
+};
+
+// product of an array
+jStat.product = function product(arr) {
+  var prod = 1;
+  var i = arr.length;
+  while (--i >= 0)
+    prod *= arr[i];
+  return prod;
+};
+
+
+// minimum value of an array
+jStat.min = function min(arr) {
+  var low = arr[0];
+  var i = 0;
+  while (++i < arr.length)
+    if (arr[i] < low)
+      low = arr[i];
+  return low;
+};
+
+
+// maximum value of an array
+jStat.max = function max(arr) {
+  var high = arr[0];
+  var i = 0;
+  while (++i < arr.length)
+    if (arr[i] > high)
+      high = arr[i];
+  return high;
+};
+
+
+// unique values of an array
+jStat.unique = function unique(arr) {
+  var hash = {}, _arr = [];
+  for(var i = 0; i < arr.length; i++) {
+    if (!hash[arr[i]]) {
+      hash[arr[i]] = true;
+      _arr.push(arr[i]);
+    }
+  }
+  return _arr;
+};
+
+
+// mean value of an array
+jStat.mean = function mean(arr) {
+  return jStat.sum(arr) / arr.length;
+};
+
+
+// mean squared error (MSE)
+jStat.meansqerr = function meansqerr(arr) {
+  return jStat.sumsqerr(arr) / arr.length;
+};
+
+
+// geometric mean of an array
+jStat.geomean = function geomean(arr) {
+  return Math.pow(jStat.product(arr), 1 / arr.length);
+};
+
+
+// median of an array
+jStat.median = function median(arr) {
+  var arrlen = arr.length;
+  var _arr = arr.slice().sort(ascNum);
+  // check if array is even or odd, then return the appropriate
+  return !(arrlen & 1)
+    ? (_arr[(arrlen / 2) - 1 ] + _arr[(arrlen / 2)]) / 2
+    : _arr[(arrlen / 2) | 0 ];
+};
+
+
+// cumulative sum of an array
+jStat.cumsum = function cumsum(arr) {
+  return jStat.cumreduce(arr, function (a, b) { return a + b; });
+};
+
+
+// cumulative product of an array
+jStat.cumprod = function cumprod(arr) {
+  return jStat.cumreduce(arr, function (a, b) { return a * b; });
+};
+
+
+// successive differences of a sequence
+jStat.diff = function diff(arr) {
+  var diffs = [];
+  var arrLen = arr.length;
+  var i;
+  for (var i = 1; i < arrLen; i++)
+    diffs.push(arr[i] - arr[i - 1]);
+  return diffs;
+};
+
+
+// ranks of an array
+jStat.rank = function (arr) {
+  var arrlen = arr.length;
+  var sorted = arr.slice().sort(ascNum);
+  var ranks = new Array(arrlen);
+  for (var i = 0; i < arrlen; i++) {
+    var first = sorted.indexOf(arr[i]);
+    var last = sorted.lastIndexOf(arr[i]);
+    if (first === last) {
+      var val = first;
+    } else {
+      var val = (first + last) / 2;
+    }
+    ranks[i] = val + 1;
+  }
+  return ranks;
+};
+
+
+// mode of an array
+// if there are multiple modes of an array, return all of them
+// is this the appropriate way of handling it?
+jStat.mode = function mode(arr) {
+  var arrLen = arr.length;
+  var _arr = arr.slice().sort(ascNum);
+  var count = 1;
+  var maxCount = 0;
+  var numMaxCount = 0;
+  var mode_arr = [];
+  var i;
+
+  for (var i = 0; i < arrLen; i++) {
+    if (_arr[i] === _arr[i + 1]) {
+      count++;
+    } else {
+      if (count > maxCount) {
+        mode_arr = [_arr[i]];
+        maxCount = count;
+        numMaxCount = 0;
+      }
+      // are there multiple max counts
+      else if (count === maxCount) {
+        mode_arr.push(_arr[i]);
+        numMaxCount++;
+      }
+      // resetting count for new value in array
+      count = 1;
+    }
+  }
+
+  return numMaxCount === 0 ? mode_arr[0] : mode_arr;
+};
+
+
+// range of an array
+jStat.range = function range(arr) {
+  return jStat.max(arr) - jStat.min(arr);
+};
+
+// variance of an array
+// flag = true indicates sample instead of population
+jStat.variance = function variance(arr, flag) {
+  return jStat.sumsqerr(arr) / (arr.length - (flag ? 1 : 0));
+};
+
+// pooled variance of an array of arrays
+jStat.pooledvariance = function pooledvariance(arr) {
+  var sumsqerr = arr.reduce(function (a, samples) {return a + jStat.sumsqerr(samples);}, 0);
+  var count = arr.reduce(function (a, samples) {return a + samples.length;}, 0);
+  return sumsqerr / (count - arr.length);
+};
+
+// deviation of an array
+jStat.deviation = function (arr) {
+  var mean = jStat.mean(arr);
+  var arrlen = arr.length;
+  var dev = new Array(arrlen);
+  for (var i = 0; i < arrlen; i++) {
+    dev[i] = arr[i] - mean;
+  }
+  return dev;
+};
+
+// standard deviation of an array
+// flag = true indicates sample instead of population
+jStat.stdev = function stdev(arr, flag) {
+  return Math.sqrt(jStat.variance(arr, flag));
+};
+
+// pooled standard deviation of an array of arrays
+jStat.pooledstdev = function pooledstdev(arr) {
+  return Math.sqrt(jStat.pooledvariance(arr));
+};
+
+// mean deviation (mean absolute deviation) of an array
+jStat.meandev = function meandev(arr) {
+  var mean = jStat.mean(arr);
+  var a = [];
+  for (var i = arr.length - 1; i >= 0; i--) {
+    a.push(Math.abs(arr[i] - mean));
+  }
+  return jStat.mean(a);
+};
+
+
+// median deviation (median absolute deviation) of an array
+jStat.meddev = function meddev(arr) {
+  var median = jStat.median(arr);
+  var a = [];
+  for (var i = arr.length - 1; i >= 0; i--) {
+    a.push(Math.abs(arr[i] - median));
+  }
+  return jStat.median(a);
+};
+
+
+// coefficient of variation
+jStat.coeffvar = function coeffvar(arr) {
+  return jStat.stdev(arr) / jStat.mean(arr);
+};
+
+
+// quartiles of an array
+jStat.quartiles = function quartiles(arr) {
+  var arrlen = arr.length;
+  var _arr = arr.slice().sort(ascNum);
+  return [
+    _arr[ Math.round((arrlen) / 4) - 1 ],
+    _arr[ Math.round((arrlen) / 2) - 1 ],
+    _arr[ Math.round((arrlen) * 3 / 4) - 1 ]
+  ];
+};
+
+
+// Arbitary quantiles of an array. Direct port of the scipy.stats
+// implementation by Pierre GF Gerard-Marchant.
+jStat.quantiles = function quantiles(arr, quantilesArray, alphap, betap) {
+  var sortedArray = arr.slice().sort(ascNum);
+  var quantileVals = [quantilesArray.length];
+  var n = arr.length;
+  var i, p, m, aleph, k, gamma;
+
+  if (typeof alphap === 'undefined')
+    alphap = 3 / 8;
+  if (typeof betap === 'undefined')
+    betap = 3 / 8;
+
+  for (var i = 0; i < quantilesArray.length; i++) {
+    p = quantilesArray[i];
+    m = alphap + p * (1 - alphap - betap);
+    aleph = n * p + m;
+    k = Math.floor(clip(aleph, 1, n - 1));
+    gamma = clip(aleph - k, 0, 1);
+    quantileVals[i] = (1 - gamma) * sortedArray[k - 1] + gamma * sortedArray[k];
+  }
+
+  return quantileVals;
+};
+
+// Returns the k-th percentile of values in a range, where k is in the
+// range 0..1, exclusive.
+jStat.percentile = function percentile(arr, k) {
+  var _arr = arr.slice().sort(ascNum);
+  var realIndex = k * (_arr.length - 1);
+  var index = parseInt(realIndex);
+  var frac = realIndex - index;
+
+  if (index + 1 < _arr.length) {
+    return _arr[index] * (1 - frac) + _arr[index + 1] * frac;
+  } else {
+    return _arr[index];
+  }
+}
+
+
+// The percentile rank of score in a given array. Returns the percentage
+// of all values in the input array that are less than (kind='strict') or
+// less or equal than (kind='weak') score. Default is weak.
+jStat.percentileOfScore = function percentileOfScore(arr, score, kind) {
+  var counter = 0;
+  var len = arr.length;
+  var strict = false;
+  var value, i;
+
+  if (kind === 'strict')
+    strict = true;
+
+  for (var i = 0; i < len; i++) {
+    value = arr[i];
+    if ((strict && value < score) ||
+        (!strict && value <= score)) {
+      counter++;
+    }
+  }
+
+  return counter / len;
+};
+
+
+// Histogram (bin count) data
+jStat.histogram = function histogram(arr, bins) {
+  var first = jStat.min(arr);
+  var binCnt = bins || 4;
+  var binWidth = (jStat.max(arr) - first) / binCnt;
+  var len = arr.length;
+  var bins = [];
+  var i;
+
+  for (var i = 0; i < binCnt; i++)
+    bins[i] = 0;
+  for (var i = 0; i < len; i++)
+    bins[Math.min(Math.floor(((arr[i] - first) / binWidth)), binCnt - 1)] += 1;
+
+  return bins;
+};
+
+
+// covariance of two arrays
+jStat.covariance = function covariance(arr1, arr2) {
+  var u = jStat.mean(arr1);
+  var v = jStat.mean(arr2);
+  var arr1Len = arr1.length;
+  var sq_dev = new Array(arr1Len);
+  var i;
+
+  for (var i = 0; i < arr1Len; i++)
+    sq_dev[i] = (arr1[i] - u) * (arr2[i] - v);
+
+  return jStat.sum(sq_dev) / (arr1Len - 1);
+};
+
+
+// (pearson's) population correlation coefficient, rho
+jStat.corrcoeff = function corrcoeff(arr1, arr2) {
+  return jStat.covariance(arr1, arr2) /
+      jStat.stdev(arr1, 1) /
+      jStat.stdev(arr2, 1);
+};
+
+  // (spearman's) rank correlation coefficient, sp
+jStat.spearmancoeff =  function (arr1, arr2) {
+  arr1 = jStat.rank(arr1);
+  arr2 = jStat.rank(arr2);
+  //return pearson's correlation of the ranks:
+  return jStat.corrcoeff(arr1, arr2);
+}
+
+
+// statistical standardized moments (general form of skew/kurt)
+jStat.stanMoment = function stanMoment(arr, n) {
+  var mu = jStat.mean(arr);
+  var sigma = jStat.stdev(arr);
+  var len = arr.length;
+  var skewSum = 0;
+
+  for (var i = 0; i < len; i++)
+    skewSum += Math.pow((arr[i] - mu) / sigma, n);
+
+  return skewSum / arr.length;
+};
+
+// (pearson's) moment coefficient of skewness
+jStat.skewness = function skewness(arr) {
+  return jStat.stanMoment(arr, 3);
+};
+
+// (pearson's) (excess) kurtosis
+jStat.kurtosis = function kurtosis(arr) {
+  return jStat.stanMoment(arr, 4) - 3;
+};
+
+
+var jProto = jStat.prototype;
+
+
+// Extend jProto with method for calculating cumulative sums and products.
+// This differs from the similar extension below as cumsum and cumprod should
+// not be run again in the case fullbool === true.
+// If a matrix is passed, automatically assume operation should be done on the
+// columns.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    // If a matrix is passed, automatically assume operation should be done on
+    // the columns.
+    jProto[passfunc] = function(fullbool, func) {
+      var arr = [];
+      var i = 0;
+      var tmpthis = this;
+      // Assignment reassignation depending on how parameters were passed in.
+      if (isFunction(fullbool)) {
+        func = fullbool;
+        fullbool = false;
+      }
+      // Check if a callback was passed with the function.
+      if (func) {
+        setTimeout(function() {
+          func.call(tmpthis, jProto[passfunc].call(tmpthis, fullbool));
+        });
+        return this;
+      }
+      // Check if matrix and run calculations.
+      if (this.length > 1) {
+        tmpthis = fullbool === true ? this : this.transpose();
+        for (; i < tmpthis.length; i++)
+          arr[i] = jStat[passfunc](tmpthis[i]);
+        return arr;
+      }
+      // Pass fullbool if only vector, not a matrix. for variance and stdev.
+      return jStat[passfunc](this[0], fullbool);
+    };
+  })(funcs[i]);
+})(('cumsum cumprod').split(' '));
+
+
+// Extend jProto with methods which don't require arguments and work on columns.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    // If a matrix is passed, automatically assume operation should be done on
+    // the columns.
+    jProto[passfunc] = function(fullbool, func) {
+      var arr = [];
+      var i = 0;
+      var tmpthis = this;
+      // Assignment reassignation depending on how parameters were passed in.
+      if (isFunction(fullbool)) {
+        func = fullbool;
+        fullbool = false;
+      }
+      // Check if a callback was passed with the function.
+      if (func) {
+        setTimeout(function() {
+          func.call(tmpthis, jProto[passfunc].call(tmpthis, fullbool));
+        });
+        return this;
+      }
+      // Check if matrix and run calculations.
+      if (this.length > 1) {
+        if (passfunc !== 'sumrow')
+          tmpthis = fullbool === true ? this : this.transpose();
+        for (; i < tmpthis.length; i++)
+          arr[i] = jStat[passfunc](tmpthis[i]);
+        return fullbool === true
+            ? jStat[passfunc](jStat.utils.toVector(arr))
+            : arr;
+      }
+      // Pass fullbool if only vector, not a matrix. for variance and stdev.
+      return jStat[passfunc](this[0], fullbool);
+    };
+  })(funcs[i]);
+})(('sum sumsqrd sumsqerr sumrow product min max unique mean meansqerr ' +
+    'geomean median diff rank mode range variance deviation stdev meandev ' +
+    'meddev coeffvar quartiles histogram skewness kurtosis').split(' '));
+
+
+// Extend jProto with functions that take arguments. Operations on matrices are
+// done on columns.
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jProto[passfunc] = function() {
+      var arr = [];
+      var i = 0;
+      var tmpthis = this;
+      var args = Array.prototype.slice.call(arguments);
+
+      // If the last argument is a function, we assume it's a callback; we
+      // strip the callback out and call the function again.
+      if (isFunction(args[args.length - 1])) {
+        var callbackFunction = args[args.length - 1];
+        var argsToPass = args.slice(0, args.length - 1);
+
+        setTimeout(function() {
+          callbackFunction.call(tmpthis,
+                                jProto[passfunc].apply(tmpthis, argsToPass));
+        });
+        return this;
+
+      // Otherwise we curry the function args and call normally.
+      } else {
+        var callbackFunction = undefined;
+        var curriedFunction = function curriedFunction(vector) {
+          return jStat[passfunc].apply(tmpthis, [vector].concat(args));
+        }
+      }
+
+      // If this is a matrix, run column-by-column.
+      if (this.length > 1) {
+        tmpthis = tmpthis.transpose();
+        for (; i < tmpthis.length; i++)
+          arr[i] = curriedFunction(tmpthis[i]);
+        return arr;
+      }
+
+      // Otherwise run on the vector.
+      return curriedFunction(this[0]);
+    };
+  })(funcs[i]);
+})('quantiles percentileOfScore'.split(' '));
+
+}(jStat, Math));
+// Special functions //
+(function(jStat, Math) {
+
+// Log-gamma function
+jStat.gammaln = function gammaln(x) {
+  var j = 0;
+  var cof = [
+    76.18009172947146, -86.50532032941677, 24.01409824083091,
+    -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5
+  ];
+  var ser = 1.000000000190015;
+  var xx, y, tmp;
+  tmp = (y = xx = x) + 5.5;
+  tmp -= (xx + 0.5) * Math.log(tmp);
+  for (; j < 6; j++)
+    ser += cof[j] / ++y;
+  return Math.log(2.5066282746310005 * ser / xx) - tmp;
+};
+
+
+// gamma of x
+jStat.gammafn = function gammafn(x) {
+  var p = [-1.716185138865495, 24.76565080557592, -379.80425647094563,
+           629.3311553128184, 866.9662027904133, -31451.272968848367,
+           -36144.413418691176, 66456.14382024054
+  ];
+  var q = [-30.8402300119739, 315.35062697960416, -1015.1563674902192,
+           -3107.771671572311, 22538.118420980151, 4755.8462775278811,
+           -134659.9598649693, -115132.2596755535];
+  var fact = false;
+  var n = 0;
+  var xden = 0;
+  var xnum = 0;
+  var y = x;
+  var i, z, yi, res, sum, ysq;
+  if (y <= 0) {
+    res = y % 1 + 3.6e-16;
+    if (res) {
+      fact = (!(y & 1) ? 1 : -1) * Math.PI / Math.sin(Math.PI * res);
+      y = 1 - y;
+    } else {
+      return Infinity;
+    }
+  }
+  yi = y;
+  if (y < 1) {
+    z = y++;
+  } else {
+    z = (y -= n = (y | 0) - 1) - 1;
+  }
+  for (var i = 0; i < 8; ++i) {
+    xnum = (xnum + p[i]) * z;
+    xden = xden * z + q[i];
+  }
+  res = xnum / xden + 1;
+  if (yi < y) {
+    res /= yi;
+  } else if (yi > y) {
+    for (var i = 0; i < n; ++i) {
+      res *= y;
+      y++;
+    }
+  }
+  if (fact) {
+    res = fact / res;
+  }
+  return res;
+};
+
+
+// lower incomplete gamma function, which is usually typeset with a
+// lower-case greek gamma as the function symbol
+jStat.gammap = function gammap(a, x) {
+  return jStat.lowRegGamma(a, x) * jStat.gammafn(a);
+};
+
+
+// The lower regularized incomplete gamma function, usually written P(a,x)
+jStat.lowRegGamma = function lowRegGamma(a, x) {
+  var aln = jStat.gammaln(a);
+  var ap = a;
+  var sum = 1 / a;
+  var del = sum;
+  var b = x + 1 - a;
+  var c = 1 / 1.0e-30;
+  var d = 1 / b;
+  var h = d;
+  var i = 1;
+  // calculate maximum number of itterations required for a
+  var ITMAX = -~(Math.log((a >= 1) ? a : 1 / a) * 8.5 + a * 0.4 + 17);
+  var an, endval;
+
+  if (x < 0 || a <= 0) {
+    return NaN;
+  } else if (x < a + 1) {
+    for (; i <= ITMAX; i++) {
+      sum += del *= x / ++ap;
+    }
+    return (sum * Math.exp(-x + a * Math.log(x) - (aln)));
+  }
+
+  for (; i <= ITMAX; i++) {
+    an = -i * (i - a);
+    b += 2;
+    d = an * d + b;
+    c = b + an / c;
+    d = 1 / d;
+    h *= d * c;
+  }
+
+  return (1 - h * Math.exp(-x + a * Math.log(x) - (aln)));
+};
+
+// natural log factorial of n
+jStat.factorialln = function factorialln(n) {
+  return n < 0 ? NaN : jStat.gammaln(n + 1);
+};
+
+// factorial of n
+jStat.factorial = function factorial(n) {
+  return n < 0 ? NaN : jStat.gammafn(n + 1);
+};
+
+// combinations of n, m
+jStat.combination = function combination(n, m) {
+  // make sure n or m don't exceed the upper limit of usable values
+  return (n > 170 || m > 170)
+      ? Math.exp(jStat.combinationln(n, m))
+      : (jStat.factorial(n) / jStat.factorial(m)) / jStat.factorial(n - m);
+};
+
+
+jStat.combinationln = function combinationln(n, m){
+  return jStat.factorialln(n) - jStat.factorialln(m) - jStat.factorialln(n - m);
+};
+
+
+// permutations of n, m
+jStat.permutation = function permutation(n, m) {
+  return jStat.factorial(n) / jStat.factorial(n - m);
+};
+
+
+// beta function
+jStat.betafn = function betafn(x, y) {
+  // ensure arguments are positive
+  if (x <= 0 || y <= 0)
+    return undefined;
+  // make sure x + y doesn't exceed the upper limit of usable values
+  return (x + y > 170)
+      ? Math.exp(jStat.betaln(x, y))
+      : jStat.gammafn(x) * jStat.gammafn(y) / jStat.gammafn(x + y);
+};
+
+
+// natural logarithm of beta function
+jStat.betaln = function betaln(x, y) {
+  return jStat.gammaln(x) + jStat.gammaln(y) - jStat.gammaln(x + y);
+};
+
+
+// Evaluates the continued fraction for incomplete beta function by modified
+// Lentz's method.
+jStat.betacf = function betacf(x, a, b) {
+  var fpmin = 1e-30;
+  var m = 1;
+  var qab = a + b;
+  var qap = a + 1;
+  var qam = a - 1;
+  var c = 1;
+  var d = 1 - qab * x / qap;
+  var m2, aa, del, h;
+
+  // These q's will be used in factors that occur in the coefficients
+  if (Math.abs(d) < fpmin)
+    d = fpmin;
+  d = 1 / d;
+  h = d;
+
+  for (; m <= 100; m++) {
+    m2 = 2 * m;
+    aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    // One step (the even one) of the recurrence
+    d = 1 + aa * d;
+    if (Math.abs(d) < fpmin)
+      d = fpmin;
+    c = 1 + aa / c;
+    if (Math.abs(c) < fpmin)
+      c = fpmin;
+    d = 1 / d;
+    h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    // Next step of the recurrence (the odd one)
+    d = 1 + aa * d;
+    if (Math.abs(d) < fpmin)
+      d = fpmin;
+    c = 1 + aa / c;
+    if (Math.abs(c) < fpmin)
+      c = fpmin;
+    d = 1 / d;
+    del = d * c;
+    h *= del;
+    if (Math.abs(del - 1.0) < 3e-7)
+      break;
+  }
+
+  return h;
+};
+
+
+// Returns the inverse of the lower regularized inomplete gamma function
+jStat.gammapinv = function gammapinv(p, a) {
+  var j = 0;
+  var a1 = a - 1;
+  var EPS = 1e-8;
+  var gln = jStat.gammaln(a);
+  var x, err, t, u, pp, lna1, afac;
+
+  if (p >= 1)
+    return Math.max(100, a + 100 * Math.sqrt(a));
+  if (p <= 0)
+    return 0;
+  if (a > 1) {
+    lna1 = Math.log(a1);
+    afac = Math.exp(a1 * (lna1 - 1) - gln);
+    pp = (p < 0.5) ? p : 1 - p;
+    t = Math.sqrt(-2 * Math.log(pp));
+    x = (2.30753 + t * 0.27061) / (1 + t * (0.99229 + t * 0.04481)) - t;
+    if (p < 0.5)
+      x = -x;
+    x = Math.max(1e-3,
+                 a * Math.pow(1 - 1 / (9 * a) - x / (3 * Math.sqrt(a)), 3));
+  } else {
+    t = 1 - a * (0.253 + a * 0.12);
+    if (p < t)
+      x = Math.pow(p / t, 1 / a);
+    else
+      x = 1 - Math.log(1 - (p - t) / (1 - t));
+  }
+
+  for(; j < 12; j++) {
+    if (x <= 0)
+      return 0;
+    err = jStat.lowRegGamma(a, x) - p;
+    if (a > 1)
+      t = afac * Math.exp(-(x - a1) + a1 * (Math.log(x) - lna1));
+    else
+      t = Math.exp(-x + a1 * Math.log(x) - gln);
+    u = err / t;
+    x -= (t = u / (1 - 0.5 * Math.min(1, u * ((a - 1) / x - 1))));
+    if (x <= 0)
+      x = 0.5 * (x + t);
+    if (Math.abs(t) < EPS * x)
+      break;
+  }
+
+  return x;
+};
+
+
+// Returns the error function erf(x)
+jStat.erf = function erf(x) {
+  var cof = [-1.3026537197817094, 6.4196979235649026e-1, 1.9476473204185836e-2,
+             -9.561514786808631e-3, -9.46595344482036e-4, 3.66839497852761e-4,
+             4.2523324806907e-5, -2.0278578112534e-5, -1.624290004647e-6,
+             1.303655835580e-6, 1.5626441722e-8, -8.5238095915e-8,
+             6.529054439e-9, 5.059343495e-9, -9.91364156e-10,
+             -2.27365122e-10, 9.6467911e-11, 2.394038e-12,
+             -6.886027e-12, 8.94487e-13, 3.13092e-13,
+             -1.12708e-13, 3.81e-16, 7.106e-15,
+             -1.523e-15, -9.4e-17, 1.21e-16,
+             -2.8e-17];
+  var j = cof.length - 1;
+  var isneg = false;
+  var d = 0;
+  var dd = 0;
+  var t, ty, tmp, res;
+
+  if (x < 0) {
+    x = -x;
+    isneg = true;
+  }
+
+  t = 2 / (2 + x);
+  ty = 4 * t - 2;
+
+  for(; j > 0; j--) {
+    tmp = d;
+    d = ty * d - dd + cof[j];
+    dd = tmp;
+  }
+
+  res = t * Math.exp(-x * x + 0.5 * (cof[0] + ty * d) - dd);
+  return isneg ? res - 1 : 1 - res;
+};
+
+
+// Returns the complmentary error function erfc(x)
+jStat.erfc = function erfc(x) {
+  return 1 - jStat.erf(x);
+};
+
+
+// Returns the inverse of the complementary error function
+jStat.erfcinv = function erfcinv(p) {
+  var j = 0;
+  var x, err, t, pp;
+  if (p >= 2)
+    return -100;
+  if (p <= 0)
+    return 100;
+  pp = (p < 1) ? p : 2 - p;
+  t = Math.sqrt(-2 * Math.log(pp / 2));
+  x = -0.70711 * ((2.30753 + t * 0.27061) /
+                  (1 + t * (0.99229 + t * 0.04481)) - t);
+  for (; j < 2; j++) {
+    err = jStat.erfc(x) - pp;
+    x += err / (1.12837916709551257 * Math.exp(-x * x) - x * err);
+  }
+  return (p < 1) ? x : -x;
+};
+
+
+// Returns the inverse of the incomplete beta function
+jStat.ibetainv = function ibetainv(p, a, b) {
+  var EPS = 1e-8;
+  var a1 = a - 1;
+  var b1 = b - 1;
+  var j = 0;
+  var lna, lnb, pp, t, u, err, x, al, h, w, afac;
+  if (p <= 0)
+    return 0;
+  if (p >= 1)
+    return 1;
+  if (a >= 1 && b >= 1) {
+    pp = (p < 0.5) ? p : 1 - p;
+    t = Math.sqrt(-2 * Math.log(pp));
+    x = (2.30753 + t * 0.27061) / (1 + t* (0.99229 + t * 0.04481)) - t;
+    if (p < 0.5)
+      x = -x;
+    al = (x * x - 3) / 6;
+    h = 2 / (1 / (2 * a - 1)  + 1 / (2 * b - 1));
+    w = (x * Math.sqrt(al + h) / h) - (1 / (2 * b - 1) - 1 / (2 * a - 1)) *
+        (al + 5 / 6 - 2 / (3 * h));
+    x = a / (a + b * Math.exp(2 * w));
+  } else {
+    lna = Math.log(a / (a + b));
+    lnb = Math.log(b / (a + b));
+    t = Math.exp(a * lna) / a;
+    u = Math.exp(b * lnb) / b;
+    w = t + u;
+    if (p < t / w)
+      x = Math.pow(a * w * p, 1 / a);
+    else
+      x = 1 - Math.pow(b * w * (1 - p), 1 / b);
+  }
+  afac = -jStat.gammaln(a) - jStat.gammaln(b) + jStat.gammaln(a + b);
+  for(; j < 10; j++) {
+    if (x === 0 || x === 1)
+      return x;
+    err = jStat.ibeta(x, a, b) - p;
+    t = Math.exp(a1 * Math.log(x) + b1 * Math.log(1 - x) + afac);
+    u = err / t;
+    x -= (t = u / (1 - 0.5 * Math.min(1, u * (a1 / x - b1 / (1 - x)))));
+    if (x <= 0)
+      x = 0.5 * (x + t);
+    if (x >= 1)
+      x = 0.5 * (x + t + 1);
+    if (Math.abs(t) < EPS * x && j > 0)
+      break;
+  }
+  return x;
+};
+
+
+// Returns the incomplete beta function I_x(a,b)
+jStat.ibeta = function ibeta(x, a, b) {
+  // Factors in front of the continued fraction.
+  var bt = (x === 0 || x === 1) ?  0 :
+    Math.exp(jStat.gammaln(a + b) - jStat.gammaln(a) -
+             jStat.gammaln(b) + a * Math.log(x) + b *
+             Math.log(1 - x));
+  if (x < 0 || x > 1)
+    return false;
+  if (x < (a + 1) / (a + b + 2))
+    // Use continued fraction directly.
+    return bt * jStat.betacf(x, a, b) / a;
+  // else use continued fraction after making the symmetry transformation.
+  return 1 - bt * jStat.betacf(1 - x, b, a) / b;
+};
+
+
+// Returns a normal deviate (mu=0, sigma=1).
+// If n and m are specified it returns a object of normal deviates.
+jStat.randn = function randn(n, m) {
+  var u, v, x, y, q, mat;
+  if (!m)
+    m = n;
+  if (n)
+    return jStat.create(n, m, function() { return jStat.randn(); });
+  do {
+    u = Math.random();
+    v = 1.7156 * (Math.random() - 0.5);
+    x = u - 0.449871;
+    y = Math.abs(v) + 0.386595;
+    q = x * x + y * (0.19600 * y - 0.25472 * x);
+  } while (q > 0.27597 && (q > 0.27846 || v * v > -4 * Math.log(u) * u * u));
+  return v / u;
+};
+
+
+// Returns a gamma deviate by the method of Marsaglia and Tsang.
+jStat.randg = function randg(shape, n, m) {
+  var oalph = shape;
+  var a1, a2, u, v, x, mat;
+  if (!m)
+    m = n;
+  if (!shape)
+    shape = 1;
+  if (n) {
+    mat = jStat.zeros(n,m);
+    mat.alter(function() { return jStat.randg(shape); });
+    return mat;
+  }
+  if (shape < 1)
+    shape += 1;
+  a1 = shape - 1 / 3;
+  a2 = 1 / Math.sqrt(9 * a1);
+  do {
+    do {
+      x = jStat.randn();
+      v = 1 + a2 * x;
+    } while(v <= 0);
+    v = v * v * v;
+    u = Math.random();
+  } while(u > 1 - 0.331 * Math.pow(x, 4) &&
+          Math.log(u) > 0.5 * x*x + a1 * (1 - v + Math.log(v)));
+  // alpha > 1
+  if (shape == oalph)
+    return a1 * v;
+  // alpha < 1
+  do {
+    u = Math.random();
+  } while(u === 0);
+  return Math.pow(u, 1 / oalph) * a1 * v;
+};
+
+
+// making use of static methods on the instance
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jStat.fn[passfunc] = function() {
+      return jStat(
+          jStat.map(this, function(value) { return jStat[passfunc](value); }));
+    }
+  })(funcs[i]);
+})('gammaln gammafn factorial factorialln'.split(' '));
+
+
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jStat.fn[passfunc] = function() {
+      return jStat(jStat[passfunc].apply(null, arguments));
+    };
+  })(funcs[i]);
+})('randn'.split(' '));
+
+}(jStat, Math));
+(function(jStat, Math) {
+
+// generate all distribution instance methods
+(function(list) {
+  for (var i = 0; i < list.length; i++) (function(func) {
+    // distribution instance method
+    jStat[func] = function(a, b, c) {
+      if (!(this instanceof arguments.callee))
+        return new arguments.callee(a, b, c);
+      this._a = a;
+      this._b = b;
+      this._c = c;
+      return this;
+    };
+    // distribution method to be used on a jStat instance
+    jStat.fn[func] = function(a, b, c) {
+      var newthis = jStat[func](a, b, c);
+      newthis.data = this;
+      return newthis;
+    };
+    // sample instance method
+    jStat[func].prototype.sample = function(arr) {
+      var a = this._a;
+      var b = this._b;
+      var c = this._c;
+      if (arr)
+        return jStat.alter(arr, function() {
+          return jStat[func].sample(a, b, c);
+        });
+      else
+        return jStat[func].sample(a, b, c);
+    };
+    // generate the pdf, cdf and inv instance methods
+    (function(vals) {
+      for (var i = 0; i < vals.length; i++) (function(fnfunc) {
+        jStat[func].prototype[fnfunc] = function(x) {
+          var a = this._a;
+          var b = this._b;
+          var c = this._c;
+          if (!x && x !== 0)
+            x = this.data;
+          if (typeof x !== 'number') {
+            return jStat.fn.map.call(x, function(x) {
+              return jStat[func][fnfunc](x, a, b, c);
+            });
+          }
+          return jStat[func][fnfunc](x, a, b, c);
+        };
+      })(vals[i]);
+    })('pdf cdf inv'.split(' '));
+    // generate the mean, median, mode and variance instance methods
+    (function(vals) {
+      for (var i = 0; i < vals.length; i++) (function(fnfunc) {
+        jStat[func].prototype[fnfunc] = function() {
+          return jStat[func][fnfunc](this._a, this._b, this._c);
+        };
+      })(vals[i]);
+    })('mean median mode variance'.split(' '));
+  })(list[i]);
+})((
+  'beta centralF cauchy chisquare exponential gamma invgamma kumaraswamy ' +
+  'laplace lognormal noncentralt normal pareto studentt weibull uniform ' +
+  'binomial negbin hypgeom poisson triangular tukey arcsine'
+).split(' '));
+
+
+
+// extend beta function with static methods
+jStat.extend(jStat.beta, {
+  pdf: function pdf(x, alpha, beta) {
+    // PDF is zero outside the support
+    if (x > 1 || x < 0)
+      return 0;
+    // PDF is one for the uniform case
+    if (alpha == 1 && beta == 1)
+      return 1;
+
+    if (alpha < 512 && beta < 512) {
+      return (Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1)) /
+          jStat.betafn(alpha, beta);
+    } else {
+      return Math.exp((alpha - 1) * Math.log(x) +
+                      (beta - 1) * Math.log(1 - x) -
+                      jStat.betaln(alpha, beta));
+    }
+  },
+
+  cdf: function cdf(x, alpha, beta) {
+    return (x > 1 || x < 0) ? (x > 1) * 1 : jStat.ibeta(x, alpha, beta);
+  },
+
+  inv: function inv(x, alpha, beta) {
+    return jStat.ibetainv(x, alpha, beta);
+  },
+
+  mean: function mean(alpha, beta) {
+    return alpha / (alpha + beta);
+  },
+
+  median: function median(alpha, beta) {
+    return jStat.ibetainv(0.5, alpha, beta);
+  },
+
+  mode: function mode(alpha, beta) {
+    return (alpha - 1 ) / ( alpha + beta - 2);
+  },
+
+  // return a random sample
+  sample: function sample(alpha, beta) {
+    var u = jStat.randg(alpha);
+    return u / (u + jStat.randg(beta));
+  },
+
+  variance: function variance(alpha, beta) {
+    return (alpha * beta) / (Math.pow(alpha + beta, 2) * (alpha + beta + 1));
+  }
+});
+
+// extend F function with static methods
+jStat.extend(jStat.centralF, {
+  // This implementation of the pdf function avoids float overflow
+  // See the way that R calculates this value:
+  // https://svn.r-project.org/R/trunk/src/nmath/df.c
+  pdf: function pdf(x, df1, df2) {
+    var p, q, f;
+
+    if (x < 0)
+      return 0;
+
+    if (df1 <= 2) {
+      if (x === 0 && df1 < 2) {
+        return Infinity;
+      }
+      if (x === 0 && df1 === 2) {
+        return 1;
+      }
+      return (1 / jStat.betafn(df1 / 2, df2 / 2)) *
+              Math.pow(df1 / df2, df1 / 2) *
+              Math.pow(x, (df1/2) - 1) *
+              Math.pow((1 + (df1 / df2) * x), -(df1 + df2) / 2);
+    }
+
+    p = (df1 * x) / (df2 + x * df1);
+    q = df2 / (df2 + x * df1);
+    f = df1 * q / 2.0;
+    return f * jStat.binomial.pdf((df1 - 2) / 2, (df1 + df2 - 2) / 2, p);
+  },
+
+  cdf: function cdf(x, df1, df2) {
+    if (x < 0)
+      return 0;
+    return jStat.ibeta((df1 * x) / (df1 * x + df2), df1 / 2, df2 / 2);
+  },
+
+  inv: function inv(x, df1, df2) {
+    return df2 / (df1 * (1 / jStat.ibetainv(x, df1 / 2, df2 / 2) - 1));
+  },
+
+  mean: function mean(df1, df2) {
+    return (df2 > 2) ? df2 / (df2 - 2) : undefined;
+  },
+
+  mode: function mode(df1, df2) {
+    return (df1 > 2) ? (df2 * (df1 - 2)) / (df1 * (df2 + 2)) : undefined;
+  },
+
+  // return a random sample
+  sample: function sample(df1, df2) {
+    var x1 = jStat.randg(df1 / 2) * 2;
+    var x2 = jStat.randg(df2 / 2) * 2;
+    return (x1 / df1) / (x2 / df2);
+  },
+
+  variance: function variance(df1, df2) {
+    if (df2 <= 4)
+      return undefined;
+    return 2 * df2 * df2 * (df1 + df2 - 2) /
+        (df1 * (df2 - 2) * (df2 - 2) * (df2 - 4));
+  }
+});
+
+
+// extend cauchy function with static methods
+jStat.extend(jStat.cauchy, {
+  pdf: function pdf(x, local, scale) {
+    if (scale < 0) { return 0; }
+
+    return (scale / (Math.pow(x - local, 2) + Math.pow(scale, 2))) / Math.PI;
+  },
+
+  cdf: function cdf(x, local, scale) {
+    return Math.atan((x - local) / scale) / Math.PI + 0.5;
+  },
+
+  inv: function(p, local, scale) {
+    return local + scale * Math.tan(Math.PI * (p - 0.5));
+  },
+
+  median: function median(local, scale) {
+    return local;
+  },
+
+  mode: function mode(local, scale) {
+    return local;
+  },
+
+  sample: function sample(local, scale) {
+    return jStat.randn() *
+        Math.sqrt(1 / (2 * jStat.randg(0.5))) * scale + local;
+  }
+});
+
+
+
+// extend chisquare function with static methods
+jStat.extend(jStat.chisquare, {
+  pdf: function pdf(x, dof) {
+    if (x < 0)
+      return 0;
+    return (x === 0 && dof === 2) ? 0.5 :
+        Math.exp((dof / 2 - 1) * Math.log(x) - x / 2 - (dof / 2) *
+                 Math.log(2) - jStat.gammaln(dof / 2));
+  },
+
+  cdf: function cdf(x, dof) {
+    if (x < 0)
+      return 0;
+    return jStat.lowRegGamma(dof / 2, x / 2);
+  },
+
+  inv: function(p, dof) {
+    return 2 * jStat.gammapinv(p, 0.5 * dof);
+  },
+
+  mean : function(dof) {
+    return dof;
+  },
+
+  // TODO: this is an approximation (is there a better way?)
+  median: function median(dof) {
+    return dof * Math.pow(1 - (2 / (9 * dof)), 3);
+  },
+
+  mode: function mode(dof) {
+    return (dof - 2 > 0) ? dof - 2 : 0;
+  },
+
+  sample: function sample(dof) {
+    return jStat.randg(dof / 2) * 2;
+  },
+
+  variance: function variance(dof) {
+    return 2 * dof;
+  }
+});
+
+
+
+// extend exponential function with static methods
+jStat.extend(jStat.exponential, {
+  pdf: function pdf(x, rate) {
+    return x < 0 ? 0 : rate * Math.exp(-rate * x);
+  },
+
+  cdf: function cdf(x, rate) {
+    return x < 0 ? 0 : 1 - Math.exp(-rate * x);
+  },
+
+  inv: function(p, rate) {
+    return -Math.log(1 - p) / rate;
+  },
+
+  mean : function(rate) {
+    return 1 / rate;
+  },
+
+  median: function (rate) {
+    return (1 / rate) * Math.log(2);
+  },
+
+  mode: function mode(rate) {
+    return 0;
+  },
+
+  sample: function sample(rate) {
+    return -1 / rate * Math.log(Math.random());
+  },
+
+  variance : function(rate) {
+    return Math.pow(rate, -2);
+  }
+});
+
+
+
+// extend gamma function with static methods
+jStat.extend(jStat.gamma, {
+  pdf: function pdf(x, shape, scale) {
+    if (x < 0)
+      return 0;
+    return (x === 0 && shape === 1) ? 1 / scale :
+            Math.exp((shape - 1) * Math.log(x) - x / scale -
+                    jStat.gammaln(shape) - shape * Math.log(scale));
+  },
+
+  cdf: function cdf(x, shape, scale) {
+    if (x < 0)
+      return 0;
+    return jStat.lowRegGamma(shape, x / scale);
+  },
+
+  inv: function(p, shape, scale) {
+    return jStat.gammapinv(p, shape) * scale;
+  },
+
+  mean : function(shape, scale) {
+    return shape * scale;
+  },
+
+  mode: function mode(shape, scale) {
+    if(shape > 1) return (shape - 1) * scale;
+    return undefined;
+  },
+
+  sample: function sample(shape, scale) {
+    return jStat.randg(shape) * scale;
+  },
+
+  variance: function variance(shape, scale) {
+    return shape * scale * scale;
+  }
+});
+
+// extend inverse gamma function with static methods
+jStat.extend(jStat.invgamma, {
+  pdf: function pdf(x, shape, scale) {
+    if (x <= 0)
+      return 0;
+    return Math.exp(-(shape + 1) * Math.log(x) - scale / x -
+                    jStat.gammaln(shape) + shape * Math.log(scale));
+  },
+
+  cdf: function cdf(x, shape, scale) {
+    if (x <= 0)
+      return 0;
+    return 1 - jStat.lowRegGamma(shape, scale / x);
+  },
+
+  inv: function(p, shape, scale) {
+    return scale / jStat.gammapinv(1 - p, shape);
+  },
+
+  mean : function(shape, scale) {
+    return (shape > 1) ? scale / (shape - 1) : undefined;
+  },
+
+  mode: function mode(shape, scale) {
+    return scale / (shape + 1);
+  },
+
+  sample: function sample(shape, scale) {
+    return scale / jStat.randg(shape);
+  },
+
+  variance: function variance(shape, scale) {
+    if (shape <= 2)
+      return undefined;
+    return scale * scale / ((shape - 1) * (shape - 1) * (shape - 2));
+  }
+});
+
+
+// extend kumaraswamy function with static methods
+jStat.extend(jStat.kumaraswamy, {
+  pdf: function pdf(x, alpha, beta) {
+    if (x === 0 && alpha === 1)
+      return beta;
+    else if (x === 1 && beta === 1)
+      return alpha;
+    return Math.exp(Math.log(alpha) + Math.log(beta) + (alpha - 1) *
+                    Math.log(x) + (beta - 1) *
+                    Math.log(1 - Math.pow(x, alpha)));
+  },
+
+  cdf: function cdf(x, alpha, beta) {
+    if (x < 0)
+      return 0;
+    else if (x > 1)
+      return 1;
+    return (1 - Math.pow(1 - Math.pow(x, alpha), beta));
+  },
+
+  inv: function inv(p, alpha, beta) {
+    return Math.pow(1 - Math.pow(1 - p, 1 / beta), 1 / alpha);
+  },
+
+  mean : function(alpha, beta) {
+    return (beta * jStat.gammafn(1 + 1 / alpha) *
+            jStat.gammafn(beta)) / (jStat.gammafn(1 + 1 / alpha + beta));
+  },
+
+  median: function median(alpha, beta) {
+    return Math.pow(1 - Math.pow(2, -1 / beta), 1 / alpha);
+  },
+
+  mode: function mode(alpha, beta) {
+    if (!(alpha >= 1 && beta >= 1 && (alpha !== 1 && beta !== 1)))
+      return undefined;
+    return Math.pow((alpha - 1) / (alpha * beta - 1), 1 / alpha);
+  },
+
+  variance: function variance(alpha, beta) {
+    throw new Error('variance not yet implemented');
+    // TODO: complete this
+  }
+});
+
+
+
+// extend lognormal function with static methods
+jStat.extend(jStat.lognormal, {
+  pdf: function pdf(x, mu, sigma) {
+    if (x <= 0)
+      return 0;
+    return Math.exp(-Math.log(x) - 0.5 * Math.log(2 * Math.PI) -
+                    Math.log(sigma) - Math.pow(Math.log(x) - mu, 2) /
+                    (2 * sigma * sigma));
+  },
+
+  cdf: function cdf(x, mu, sigma) {
+    if (x < 0)
+      return 0;
+    return 0.5 +
+        (0.5 * jStat.erf((Math.log(x) - mu) / Math.sqrt(2 * sigma * sigma)));
+  },
+
+  inv: function(p, mu, sigma) {
+    return Math.exp(-1.41421356237309505 * sigma * jStat.erfcinv(2 * p) + mu);
+  },
+
+  mean: function mean(mu, sigma) {
+    return Math.exp(mu + sigma * sigma / 2);
+  },
+
+  median: function median(mu, sigma) {
+    return Math.exp(mu);
+  },
+
+  mode: function mode(mu, sigma) {
+    return Math.exp(mu - sigma * sigma);
+  },
+
+  sample: function sample(mu, sigma) {
+    return Math.exp(jStat.randn() * sigma + mu);
+  },
+
+  variance: function variance(mu, sigma) {
+    return (Math.exp(sigma * sigma) - 1) * Math.exp(2 * mu + sigma * sigma);
+  }
+});
+
+
+
+// extend noncentralt function with static methods
+jStat.extend(jStat.noncentralt, {
+  pdf: function pdf(x, dof, ncp) {
+    var tol = 1e-14;
+    if (Math.abs(ncp) < tol)  // ncp approx 0; use student-t
+      return jStat.studentt.pdf(x, dof)
+
+    if (Math.abs(x) < tol) {  // different formula for x == 0
+      return Math.exp(jStat.gammaln((dof + 1) / 2) - ncp * ncp / 2 -
+                      0.5 * Math.log(Math.PI * dof) - jStat.gammaln(dof / 2));
+    }
+
+    // formula for x != 0
+    return dof / x *
+        (jStat.noncentralt.cdf(x * Math.sqrt(1 + 2 / dof), dof+2, ncp) -
+         jStat.noncentralt.cdf(x, dof, ncp));
+  },
+
+  cdf: function cdf(x, dof, ncp) {
+    var tol = 1e-14;
+    var min_iterations = 200;
+
+    if (Math.abs(ncp) < tol)  // ncp approx 0; use student-t
+      return jStat.studentt.cdf(x, dof);
+
+    // turn negative x into positive and flip result afterwards
+    var flip = false;
+    if (x < 0) {
+      flip = true;
+      ncp = -ncp;
+    }
+
+    var prob = jStat.normal.cdf(-ncp, 0, 1);
+    var value = tol + 1;
+    // use value at last two steps to determine convergence
+    var lastvalue = value;
+    var y = x * x / (x * x + dof);
+    var j = 0;
+    var p = Math.exp(-ncp * ncp / 2);
+    var q = Math.exp(-ncp * ncp / 2 - 0.5 * Math.log(2) -
+                     jStat.gammaln(3 / 2)) * ncp;
+    while (j < min_iterations || lastvalue > tol || value > tol) {
+      lastvalue = value;
+      if (j > 0) {
+        p *= (ncp * ncp) / (2 * j);
+        q *= (ncp * ncp) / (2 * (j + 1 / 2));
+      }
+      value = p * jStat.beta.cdf(y, j + 0.5, dof / 2) +
+          q * jStat.beta.cdf(y, j+1, dof/2);
+      prob += 0.5 * value;
+      j++;
+    }
+
+    return flip ? (1 - prob) : prob;
+  }
+});
+
+
+// extend normal function with static methods
+jStat.extend(jStat.normal, {
+  pdf: function pdf(x, mean, std) {
+    return Math.exp(-0.5 * Math.log(2 * Math.PI) -
+                    Math.log(std) - Math.pow(x - mean, 2) / (2 * std * std));
+  },
+
+  cdf: function cdf(x, mean, std) {
+    return 0.5 * (1 + jStat.erf((x - mean) / Math.sqrt(2 * std * std)));
+  },
+
+  inv: function(p, mean, std) {
+    return -1.41421356237309505 * std * jStat.erfcinv(2 * p) + mean;
+  },
+
+  mean : function(mean, std) {
+    return mean;
+  },
+
+  median: function median(mean, std) {
+    return mean;
+  },
+
+  mode: function (mean, std) {
+    return mean;
+  },
+
+  sample: function sample(mean, std) {
+    return jStat.randn() * std + mean;
+  },
+
+  variance : function(mean, std) {
+    return std * std;
+  }
+});
+
+
+
+// extend pareto function with static methods
+jStat.extend(jStat.pareto, {
+  pdf: function pdf(x, scale, shape) {
+    if (x < scale)
+      return 0;
+    return (shape * Math.pow(scale, shape)) / Math.pow(x, shape + 1);
+  },
+
+  cdf: function cdf(x, scale, shape) {
+    if (x < scale)
+      return 0;
+    return 1 - Math.pow(scale / x, shape);
+  },
+
+  inv: function inv(p, scale, shape) {
+    return scale / Math.pow(1 - p, 1 / shape);
+  },
+
+  mean: function mean(scale, shape) {
+    if (shape <= 1)
+      return undefined;
+    return (shape * Math.pow(scale, shape)) / (shape - 1);
+  },
+
+  median: function median(scale, shape) {
+    return scale * (shape * Math.SQRT2);
+  },
+
+  mode: function mode(scale, shape) {
+    return scale;
+  },
+
+  variance : function(scale, shape) {
+    if (shape <= 2)
+      return undefined;
+    return (scale*scale * shape) / (Math.pow(shape - 1, 2) * (shape - 2));
+  }
+});
+
+
+
+// extend studentt function with static methods
+jStat.extend(jStat.studentt, {
+  pdf: function pdf(x, dof) {
+    dof = dof > 1e100 ? 1e100 : dof;
+    return (1/(Math.sqrt(dof) * jStat.betafn(0.5, dof/2))) *
+        Math.pow(1 + ((x * x) / dof), -((dof + 1) / 2));
+  },
+
+  cdf: function cdf(x, dof) {
+    var dof2 = dof / 2;
+    return jStat.ibeta((x + Math.sqrt(x * x + dof)) /
+                       (2 * Math.sqrt(x * x + dof)), dof2, dof2);
+  },
+
+  inv: function(p, dof) {
+    var x = jStat.ibetainv(2 * Math.min(p, 1 - p), 0.5 * dof, 0.5);
+    x = Math.sqrt(dof * (1 - x) / x);
+    return (p > 0.5) ? x : -x;
+  },
+
+  mean: function mean(dof) {
+    return (dof > 1) ? 0 : undefined;
+  },
+
+  median: function median(dof) {
+    return 0;
+  },
+
+  mode: function mode(dof) {
+    return 0;
+  },
+
+  sample: function sample(dof) {
+    return jStat.randn() * Math.sqrt(dof / (2 * jStat.randg(dof / 2)));
+  },
+
+  variance: function variance(dof) {
+    return (dof  > 2) ? dof / (dof - 2) : (dof > 1) ? Infinity : undefined;
+  }
+});
+
+
+
+// extend weibull function with static methods
+jStat.extend(jStat.weibull, {
+  pdf: function pdf(x, scale, shape) {
+    if (x < 0 || scale < 0 || shape < 0)
+      return 0;
+    return (shape / scale) * Math.pow((x / scale), (shape - 1)) *
+        Math.exp(-(Math.pow((x / scale), shape)));
+  },
+
+  cdf: function cdf(x, scale, shape) {
+    return x < 0 ? 0 : 1 - Math.exp(-Math.pow((x / scale), shape));
+  },
+
+  inv: function(p, scale, shape) {
+    return scale * Math.pow(-Math.log(1 - p), 1 / shape);
+  },
+
+  mean : function(scale, shape) {
+    return scale * jStat.gammafn(1 + 1 / shape);
+  },
+
+  median: function median(scale, shape) {
+    return scale * Math.pow(Math.log(2), 1 / shape);
+  },
+
+  mode: function mode(scale, shape) {
+    if (shape <= 1)
+      return 0;
+    return scale * Math.pow((shape - 1) / shape, 1 / shape);
+  },
+
+  sample: function sample(scale, shape) {
+    return scale * Math.pow(-Math.log(Math.random()), 1 / shape);
+  },
+
+  variance: function variance(scale, shape) {
+    return scale * scale * jStat.gammafn(1 + 2 / shape) -
+        Math.pow(jStat.weibull.mean(scale, shape), 2);
+  }
+});
+
+
+
+// extend uniform function with static methods
+jStat.extend(jStat.uniform, {
+  pdf: function pdf(x, a, b) {
+    return (x < a || x > b) ? 0 : 1 / (b - a);
+  },
+
+  cdf: function cdf(x, a, b) {
+    if (x < a)
+      return 0;
+    else if (x < b)
+      return (x - a) / (b - a);
+    return 1;
+  },
+
+  inv: function(p, a, b) {
+    return a + (p * (b - a));
+  },
+
+  mean: function mean(a, b) {
+    return 0.5 * (a + b);
+  },
+
+  median: function median(a, b) {
+    return jStat.mean(a, b);
+  },
+
+  mode: function mode(a, b) {
+    throw new Error('mode is not yet implemented');
+  },
+
+  sample: function sample(a, b) {
+    return (a / 2 + b / 2) + (b / 2 - a / 2) * (2 * Math.random() - 1);
+  },
+
+  variance: function variance(a, b) {
+    return Math.pow(b - a, 2) / 12;
+  }
+});
+
+
+
+// extend uniform function with static methods
+jStat.extend(jStat.binomial, {
+  pdf: function pdf(k, n, p) {
+    return (p === 0 || p === 1) ?
+      ((n * p) === k ? 1 : 0) :
+      jStat.combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+  },
+
+  cdf: function cdf(x, n, p) {
+    var binomarr = [],
+    k = 0;
+    if (x < 0) {
+      return 0;
+    }
+    if (x < n) {
+      for (; k <= x; k++) {
+        binomarr[ k ] = jStat.binomial.pdf(k, n, p);
+      }
+      return jStat.sum(binomarr);
+    }
+    return 1;
+  }
+});
+
+
+
+// extend uniform function with static methods
+jStat.extend(jStat.negbin, {
+  pdf: function pdf(k, r, p) {
+    if (k !== k >>> 0)
+      return false;
+    if (k < 0)
+      return 0;
+    return jStat.combination(k + r - 1, r - 1) *
+        Math.pow(1 - p, k) * Math.pow(p, r);
+  },
+
+  cdf: function cdf(x, r, p) {
+    var sum = 0,
+    k = 0;
+    if (x < 0) return 0;
+    for (; k <= x; k++) {
+      sum += jStat.negbin.pdf(k, r, p);
+    }
+    return sum;
+  }
+});
+
+
+
+// extend uniform function with static methods
+jStat.extend(jStat.hypgeom, {
+  pdf: function pdf(k, N, m, n) {
+    // Hypergeometric PDF.
+
+    // A simplification of the CDF algorithm below.
+
+    // k = number of successes drawn
+    // N = population size
+    // m = number of successes in population
+    // n = number of items drawn from population
+
+    if(k !== k | 0) {
+      return false;
+    } else if(k < 0 || k < m - (N - n)) {
+      // It's impossible to have this few successes drawn.
+      return 0;
+    } else if(k > n || k > m) {
+      // It's impossible to have this many successes drawn.
+      return 0;
+    } else if (m * 2 > N) {
+      // More than half the population is successes.
+
+      if(n * 2 > N) {
+        // More than half the population is sampled.
+
+        return jStat.hypgeom.pdf(N - m - n + k, N, N - m, N - n)
+      } else {
+        // Half or less of the population is sampled.
+
+        return jStat.hypgeom.pdf(n - k, N, N - m, n);
+      }
+
+    } else if(n * 2 > N) {
+      // Half or less is successes.
+
+      return jStat.hypgeom.pdf(m - k, N, m, N - n);
+
+    } else if(m < n) {
+      // We want to have the number of things sampled to be less than the
+      // successes available. So swap the definitions of successful and sampled.
+      return jStat.hypgeom.pdf(k, N, n, m);
+    } else {
+      // If we get here, half or less of the population was sampled, half or
+      // less of it was successes, and we had fewer sampled things than
+      // successes. Now we can do this complicated iterative algorithm in an
+      // efficient way.
+
+      // The basic premise of the algorithm is that we partially normalize our
+      // intermediate product to keep it in a numerically good region, and then
+      // finish the normalization at the end.
+
+      // This variable holds the scaled probability of the current number of
+      // successes.
+      var scaledPDF = 1;
+
+      // This keeps track of how much we have normalized.
+      var samplesDone = 0;
+
+      for(var i = 0; i < k; i++) {
+        // For every possible number of successes up to that observed...
+
+        while(scaledPDF > 1 && samplesDone < n) {
+          // Intermediate result is growing too big. Apply some of the
+          // normalization to shrink everything.
+
+          scaledPDF *= 1 - (m / (N - samplesDone));
+
+          // Say we've normalized by this sample already.
+          samplesDone++;
+        }
+
+        // Work out the partially-normalized hypergeometric PDF for the next
+        // number of successes
+        scaledPDF *= (n - i) * (m - i) / ((i + 1) * (N - m - n + i + 1));
+      }
+
+      for(; samplesDone < n; samplesDone++) {
+        // Apply all the rest of the normalization
+        scaledPDF *= 1 - (m / (N - samplesDone));
+      }
+
+      // Bound answer sanely before returning.
+      return Math.min(1, Math.max(0, scaledPDF));
+    }
+  },
+
+  cdf: function cdf(x, N, m, n) {
+    // Hypergeometric CDF.
+
+    // This algorithm is due to Prof. Thomas S. Ferguson, <tom@math.ucla.edu>,
+    // and comes from his hypergeometric test calculator at
+    // <http://www.math.ucla.edu/~tom/distributions/Hypergeometric.html>.
+
+    // x = number of successes drawn
+    // N = population size
+    // m = number of successes in population
+    // n = number of items drawn from population
+
+    if(x < 0 || x < m - (N - n)) {
+      // It's impossible to have this few successes drawn or fewer.
+      return 0;
+    } else if(x >= n || x >= m) {
+      // We will always have this many successes or fewer.
+      return 1;
+    } else if (m * 2 > N) {
+      // More than half the population is successes.
+
+      if(n * 2 > N) {
+        // More than half the population is sampled.
+
+        return jStat.hypgeom.cdf(N - m - n + x, N, N - m, N - n)
+      } else {
+        // Half or less of the population is sampled.
+
+        return 1 - jStat.hypgeom.cdf(n - x - 1, N, N - m, n);
+      }
+
+    } else if(n * 2 > N) {
+      // Half or less is successes.
+
+      return 1 - jStat.hypgeom.cdf(m - x - 1, N, m, N - n);
+
+    } else if(m < n) {
+      // We want to have the number of things sampled to be less than the
+      // successes available. So swap the definitions of successful and sampled.
+      return jStat.hypgeom.cdf(x, N, n, m);
+    } else {
+      // If we get here, half or less of the population was sampled, half or
+      // less of it was successes, and we had fewer sampled things than
+      // successes. Now we can do this complicated iterative algorithm in an
+      // efficient way.
+
+      // The basic premise of the algorithm is that we partially normalize our
+      // intermediate sum to keep it in a numerically good region, and then
+      // finish the normalization at the end.
+
+      // Holds the intermediate, scaled total CDF.
+      var scaledCDF = 1;
+
+      // This variable holds the scaled probability of the current number of
+      // successes.
+      var scaledPDF = 1;
+
+      // This keeps track of how much we have normalized.
+      var samplesDone = 0;
+
+      for(var i = 0; i < x; i++) {
+        // For every possible number of successes up to that observed...
+
+        while(scaledCDF > 1 && samplesDone < n) {
+          // Intermediate result is growing too big. Apply some of the
+          // normalization to shrink everything.
+
+          var factor = 1 - (m / (N - samplesDone));
+
+          scaledPDF *= factor;
+          scaledCDF *= factor;
+
+          // Say we've normalized by this sample already.
+          samplesDone++;
+        }
+
+        // Work out the partially-normalized hypergeometric PDF for the next
+        // number of successes
+        scaledPDF *= (n - i) * (m - i) / ((i + 1) * (N - m - n + i + 1));
+
+        // Add to the CDF answer.
+        scaledCDF += scaledPDF;
+      }
+
+      for(; samplesDone < n; samplesDone++) {
+        // Apply all the rest of the normalization
+        scaledCDF *= 1 - (m / (N - samplesDone));
+      }
+
+      // Bound answer sanely before returning.
+      return Math.min(1, Math.max(0, scaledCDF));
+    }
+  }
+});
+
+
+
+// extend uniform function with static methods
+jStat.extend(jStat.poisson, {
+  pdf: function pdf(k, l) {
+    if (l < 0 || (k % 1) !== 0 || k < 0) {
+      return 0;
+    }
+
+    return Math.pow(l, k) * Math.exp(-l) / jStat.factorial(k);
+  },
+
+  cdf: function cdf(x, l) {
+    var sumarr = [],
+    k = 0;
+    if (x < 0) return 0;
+    for (; k <= x; k++) {
+      sumarr.push(jStat.poisson.pdf(k, l));
+    }
+    return jStat.sum(sumarr);
+  },
+
+  mean : function(l) {
+    return l;
+  },
+
+  variance : function(l) {
+    return l;
+  },
+
+  sample: function sample(l) {
+    var p = 1, k = 0, L = Math.exp(-l);
+    do {
+      k++;
+      p *= Math.random();
+    } while (p > L);
+    return k - 1;
+  }
+});
+
+// extend triangular function with static methods
+jStat.extend(jStat.triangular, {
+  pdf: function pdf(x, a, b, c) {
+    if (b <= a || c < a || c > b) {
+      return NaN;
+    } else {
+      if (x < a || x > b) {
+        return 0;
+      } else if (x < c) {
+          return (2 * (x - a)) / ((b - a) * (c - a));
+      } else if (x === c) {
+          return (2 / (b - a));
+      } else { // x > c
+          return (2 * (b - x)) / ((b - a) * (b - c));
+      }
+    }
+  },
+
+  cdf: function cdf(x, a, b, c) {
+    if (b <= a || c < a || c > b)
+      return NaN;
+    if (x <= a)
+      return 0;
+    else if (x >= b)
+      return 1;
+    if (x <= c)
+      return Math.pow(x - a, 2) / ((b - a) * (c - a));
+    else // x > c
+      return 1 - Math.pow(b - x, 2) / ((b - a) * (b - c));
+  },
+
+  inv: function inv(p, a, b, c) {
+    if (b <= a || c < a || c > b) {
+      return NaN;
+    } else {
+      if (p <= ((c - a) / (b - a))) {
+        return a + (b - a) * Math.sqrt(p * ((c - a) / (b - a)));
+      } else { // p > ((c - a) / (b - a))
+        return a + (b - a) * (1 - Math.sqrt((1 - p) * (1 - ((c - a) / (b - a)))));
+      }
+    }
+  },
+
+  mean: function mean(a, b, c) {
+    return (a + b + c) / 3;
+  },
+
+  median: function median(a, b, c) {
+    if (c <= (a + b) / 2) {
+      return b - Math.sqrt((b - a) * (b - c)) / Math.sqrt(2);
+    } else if (c > (a + b) / 2) {
+      return a + Math.sqrt((b - a) * (c - a)) / Math.sqrt(2);
+    }
+  },
+
+  mode: function mode(a, b, c) {
+    return c;
+  },
+
+  sample: function sample(a, b, c) {
+    var u = Math.random();
+    if (u < ((c - a) / (b - a)))
+      return a + Math.sqrt(u * (b - a) * (c - a))
+    return b - Math.sqrt((1 - u) * (b - a) * (b - c));
+  },
+
+  variance: function variance(a, b, c) {
+    return (a * a + b * b + c * c - a * b - a * c - b * c) / 18;
+  }
+});
+
+
+// extend arcsine function with static methods
+jStat.extend(jStat.arcsine, {
+  pdf: function pdf(x, a, b) {
+    if (b <= a) return NaN;
+
+    return (x <= a || x >= b) ? 0 :
+      (2 / Math.PI) *
+        Math.pow(Math.pow(b - a, 2) -
+                  Math.pow(2 * x - a - b, 2), -0.5);
+  },
+
+  cdf: function cdf(x, a, b) {
+    if (x < a)
+      return 0;
+    else if (x < b)
+      return (2 / Math.PI) * Math.asin(Math.sqrt((x - a)/(b - a)));
+    return 1;
+  },
+
+  inv: function(p, a, b) {
+    return a + (0.5 - 0.5 * Math.cos(Math.PI * p)) * (b - a);
+  },
+
+  mean: function mean(a, b) {
+    if (b <= a) return NaN;
+    return (a + b) / 2;
+  },
+
+  median: function median(a, b) {
+    if (b <= a) return NaN;
+    return (a + b) / 2;
+  },
+
+  mode: function mode(a, b) {
+    throw new Error('mode is not yet implemented');
+  },
+
+  sample: function sample(a, b) {
+    return ((a + b) / 2) + ((b - a) / 2) *
+      Math.sin(2 * Math.PI * jStat.uniform.sample(0, 1));
+  },
+
+  variance: function variance(a, b) {
+    if (b <= a) return NaN;
+    return Math.pow(b - a, 2) / 8;
+  }
+});
+
+
+function laplaceSign(x) { return x / Math.abs(x); }
+
+jStat.extend(jStat.laplace, {
+  pdf: function pdf(x, mu, b) {
+    return (b <= 0) ? 0 : (Math.exp(-Math.abs(x - mu) / b)) / (2 * b);
+  },
+
+  cdf: function cdf(x, mu, b) {
+    if (b <= 0) { return 0; }
+
+    if(x < mu) {
+      return 0.5 * Math.exp((x - mu) / b);
+    } else {
+      return 1 - 0.5 * Math.exp(- (x - mu) / b);
+    }
+  },
+
+  mean: function(mu, b) {
+    return mu;
+  },
+
+  median: function(mu, b) {
+    return mu;
+  },
+
+  mode: function(mu, b) {
+    return mu;
+  },
+
+  variance: function(mu, b) {
+    return 2 * b * b;
+  },
+
+  sample: function sample(mu, b) {
+    var u = Math.random() - 0.5;
+
+    return mu - (b * laplaceSign(u) * Math.log(1 - (2 * Math.abs(u))));
+  }
+});
+
+function tukeyWprob(w, rr, cc) {
+  var nleg = 12;
+  var ihalf = 6;
+
+  var C1 = -30;
+  var C2 = -50;
+  var C3 = 60;
+  var bb   = 8;
+  var wlar = 3;
+  var wincr1 = 2;
+  var wincr2 = 3;
+  var xleg = [
+    0.981560634246719250690549090149,
+    0.904117256370474856678465866119,
+    0.769902674194304687036893833213,
+    0.587317954286617447296702418941,
+    0.367831498998180193752691536644,
+    0.125233408511468915472441369464
+  ];
+  var aleg = [
+    0.047175336386511827194615961485,
+    0.106939325995318430960254718194,
+    0.160078328543346226334652529543,
+    0.203167426723065921749064455810,
+    0.233492536538354808760849898925,
+    0.249147045813402785000562436043
+  ];
+
+  var qsqz = w * 0.5;
+
+  // if w >= 16 then the integral lower bound (occurs for c=20)
+  // is 0.99999999999995 so return a value of 1.
+
+  if (qsqz >= bb)
+    return 1.0;
+
+  // find (f(w/2) - 1) ^ cc
+  // (first term in integral of hartley's form).
+
+  var pr_w = 2 * jStat.normal.cdf(qsqz, 0, 1, 1, 0) - 1; // erf(qsqz / M_SQRT2)
+  // if pr_w ^ cc < 2e-22 then set pr_w = 0
+  if (pr_w >= Math.exp(C2 / cc))
+    pr_w = Math.pow(pr_w, cc);
+  else
+    pr_w = 0.0;
+
+  // if w is large then the second component of the
+  // integral is small, so fewer intervals are needed.
+
+  var wincr;
+  if (w > wlar)
+    wincr = wincr1;
+  else
+    wincr = wincr2;
+
+  // find the integral of second term of hartley's form
+  // for the integral of the range for equal-length
+  // intervals using legendre quadrature.  limits of
+  // integration are from (w/2, 8).  two or three
+  // equal-length intervals are used.
+
+  // blb and bub are lower and upper limits of integration.
+
+  var blb = qsqz;
+  var binc = (bb - qsqz) / wincr;
+  var bub = blb + binc;
+  var einsum = 0.0;
+
+  // integrate over each interval
+
+  var cc1 = cc - 1.0;
+  for (var wi = 1; wi <= wincr; wi++) {
+    var elsum = 0.0;
+    var a = 0.5 * (bub + blb);
+
+    // legendre quadrature with order = nleg
+
+    var b = 0.5 * (bub - blb);
+
+    for (var jj = 1; jj <= nleg; jj++) {
+      var j, xx;
+      if (ihalf < jj) {
+        j = (nleg - jj) + 1;
+        xx = xleg[j-1];
+      } else {
+        j = jj;
+        xx = -xleg[j-1];
+      }
+      var c = b * xx;
+      var ac = a + c;
+
+      // if exp(-qexpo/2) < 9e-14,
+      // then doesn't contribute to integral
+
+      var qexpo = ac * ac;
+      if (qexpo > C3)
+        break;
+
+      var pplus = 2 * jStat.normal.cdf(ac, 0, 1, 1, 0);
+      var pminus= 2 * jStat.normal.cdf(ac, w, 1, 1, 0);
+
+      // if rinsum ^ (cc-1) < 9e-14,
+      // then doesn't contribute to integral
+
+      var rinsum = (pplus * 0.5) - (pminus * 0.5);
+      if (rinsum >= Math.exp(C1 / cc1)) {
+        rinsum = (aleg[j-1] * Math.exp(-(0.5 * qexpo))) * Math.pow(rinsum, cc1);
+        elsum += rinsum;
+      }
+    }
+    elsum *= (((2.0 * b) * cc) / Math.sqrt(2 * Math.PI));
+    einsum += elsum;
+    blb = bub;
+    bub += binc;
+  }
+
+  // if pr_w ^ rr < 9e-14, then return 0
+  pr_w += einsum;
+  if (pr_w <= Math.exp(C1 / rr))
+    return 0;
+
+  pr_w = Math.pow(pr_w, rr);
+  if (pr_w >= 1) // 1 was iMax was eps
+    return 1;
+  return pr_w;
+}
+
+function tukeyQinv(p, c, v) {
+  var p0 = 0.322232421088;
+  var q0 = 0.993484626060e-01;
+  var p1 = -1.0;
+  var q1 = 0.588581570495;
+  var p2 = -0.342242088547;
+  var q2 = 0.531103462366;
+  var p3 = -0.204231210125;
+  var q3 = 0.103537752850;
+  var p4 = -0.453642210148e-04;
+  var q4 = 0.38560700634e-02;
+  var c1 = 0.8832;
+  var c2 = 0.2368;
+  var c3 = 1.214;
+  var c4 = 1.208;
+  var c5 = 1.4142;
+  var vmax = 120.0;
+
+  var ps = 0.5 - 0.5 * p;
+  var yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
+  var t = yi + (((( yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0)
+     / (((( yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
+  if (v < vmax) t += (t * t * t + t) / v / 4.0;
+  var q = c1 - c2 * t;
+  if (v < vmax) q += -c3 / v + c4 * t / v;
+  return t * (q * Math.log(c - 1.0) + c5);
+}
+
+jStat.extend(jStat.tukey, {
+  cdf: function cdf(q, nmeans, df) {
+    // Identical implementation as the R ptukey() function as of commit 68947
+    var rr = 1;
+    var cc = nmeans;
+
+    var nlegq = 16;
+    var ihalfq = 8;
+
+    var eps1 = -30.0;
+    var eps2 = 1.0e-14;
+    var dhaf  = 100.0;
+    var dquar = 800.0;
+    var deigh = 5000.0;
+    var dlarg = 25000.0;
+    var ulen1 = 1.0;
+    var ulen2 = 0.5;
+    var ulen3 = 0.25;
+    var ulen4 = 0.125;
+    var xlegq = [
+      0.989400934991649932596154173450,
+      0.944575023073232576077988415535,
+      0.865631202387831743880467897712,
+      0.755404408355003033895101194847,
+      0.617876244402643748446671764049,
+      0.458016777657227386342419442984,
+      0.281603550779258913230460501460,
+      0.950125098376374401853193354250e-1
+    ];
+    var alegq = [
+      0.271524594117540948517805724560e-1,
+      0.622535239386478928628438369944e-1,
+      0.951585116824927848099251076022e-1,
+      0.124628971255533872052476282192,
+      0.149595988816576732081501730547,
+      0.169156519395002538189312079030,
+      0.182603415044923588866763667969,
+      0.189450610455068496285396723208
+    ];
+
+    if (q <= 0)
+      return 0;
+
+    // df must be > 1
+    // there must be at least two values
+
+    if (df < 2 || rr < 1 || cc < 2) return NaN;
+
+    if (!Number.isFinite(q))
+      return 1;
+
+    if (df > dlarg)
+      return tukeyWprob(q, rr, cc);
+
+    // calculate leading constant
+
+    var f2 = df * 0.5;
+    var f2lf = ((f2 * Math.log(df)) - (df * Math.log(2))) - jStat.gammaln(f2);
+    var f21 = f2 - 1.0;
+
+    // integral is divided into unit, half-unit, quarter-unit, or
+    // eighth-unit length intervals depending on the value of the
+    // degrees of freedom.
+
+    var ff4 = df * 0.25;
+    var ulen;
+    if      (df <= dhaf)  ulen = ulen1;
+    else if (df <= dquar) ulen = ulen2;
+    else if (df <= deigh) ulen = ulen3;
+    else                  ulen = ulen4;
+
+    f2lf += Math.log(ulen);
+
+    // integrate over each subinterval
+
+    var ans = 0.0;
+
+    for (var i = 1; i <= 50; i++) {
+      var otsum = 0.0;
+
+      // legendre quadrature with order = nlegq
+      // nodes (stored in xlegq) are symmetric around zero.
+
+      var twa1 = (2 * i - 1) * ulen;
+
+      for (var jj = 1; jj <= nlegq; jj++) {
+        var j, t1;
+        if (ihalfq < jj) {
+          j = jj - ihalfq - 1;
+          t1 = (f2lf + (f21 * Math.log(twa1 + (xlegq[j] * ulen))))
+              - (((xlegq[j] * ulen) + twa1) * ff4);
+        } else {
+          j = jj - 1;
+          t1 = (f2lf + (f21 * Math.log(twa1 - (xlegq[j] * ulen))))
+              + (((xlegq[j] * ulen) - twa1) * ff4);
+        }
+
+        // if exp(t1) < 9e-14, then doesn't contribute to integral
+        var qsqz;
+        if (t1 >= eps1) {
+          if (ihalfq < jj) {
+            qsqz = q * Math.sqrt(((xlegq[j] * ulen) + twa1) * 0.5);
+          } else {
+            qsqz = q * Math.sqrt(((-(xlegq[j] * ulen)) + twa1) * 0.5);
+          }
+
+          // call wprob to find integral of range portion
+
+          var wprb = tukeyWprob(qsqz, rr, cc);
+          var rotsum = (wprb * alegq[j]) * Math.exp(t1);
+          otsum += rotsum;
+        }
+        // end legendre integral for interval i
+        // L200:
+      }
+
+      // if integral for interval i < 1e-14, then stop.
+      // However, in order to avoid small area under left tail,
+      // at least  1 / ulen  intervals are calculated.
+      if (i * ulen >= 1.0 && otsum <= eps2)
+        break;
+
+      // end of interval i
+      // L330:
+
+      ans += otsum;
+    }
+
+    if (otsum > eps2) { // not converged
+      throw new Error('tukey.cdf failed to converge');
+    }
+    if (ans > 1)
+      ans = 1;
+    return ans;
+  },
+
+  inv: function(p, nmeans, df) {
+    // Identical implementation as the R qtukey() function as of commit 68947
+    var rr = 1;
+    var cc = nmeans;
+
+    var eps = 0.0001;
+    var maxiter = 50;
+
+    // df must be > 1 ; there must be at least two values
+    if (df < 2 || rr < 1 || cc < 2) return NaN;
+
+    if (p < 0 || p > 1) return NaN;
+    if (p === 0) return 0;
+    if (p === 1) return Infinity;
+
+    // Initial value
+
+    var x0 = tukeyQinv(p, cc, df);
+
+    // Find prob(value < x0)
+
+    var valx0 = jStat.tukey.cdf(x0, nmeans, df) - p;
+
+    // Find the second iterate and prob(value < x1).
+    // If the first iterate has probability value
+    // exceeding p then second iterate is 1 less than
+    // first iterate; otherwise it is 1 greater.
+
+    var x1;
+    if (valx0 > 0.0)
+      x1 = Math.max(0.0, x0 - 1.0);
+    else
+      x1 = x0 + 1.0;
+    var valx1 = jStat.tukey.cdf(x1, nmeans, df) - p;
+
+    // Find new iterate
+
+    var ans;
+    for(var iter = 1; iter < maxiter; iter++) {
+      ans = x1 - ((valx1 * (x1 - x0)) / (valx1 - valx0));
+      valx0 = valx1;
+
+      // New iterate must be >= 0
+
+      x0 = x1;
+      if (ans < 0.0) {
+        ans = 0.0;
+        valx1 = -p;
+      }
+      // Find prob(value < new iterate)
+
+      valx1 = jStat.tukey.cdf(ans, nmeans, df) - p;
+      x1 = ans;
+
+      // If the difference between two successive
+      // iterates is less than eps, stop
+
+      var xabs = Math.abs(x1 - x0);
+      if (xabs < eps)
+        return ans;
+    }
+
+    throw new Error('tukey.inv failed to converge');
+  }
+});
+
+}(jStat, Math));
+/* Provides functions for the solution of linear system of equations, integration, extrapolation,
+ * interpolation, eigenvalue problems, differential equations and PCA analysis. */
+
+(function(jStat, Math) {
+
+var push = Array.prototype.push;
+var isArray = jStat.utils.isArray;
+
+function isUsable(arg) {
+  return isArray(arg) || arg instanceof jStat;
+}
+
+jStat.extend({
+
+  // add a vector/matrix to a vector/matrix or scalar
+  add: function add(arr, arg) {
+    // check if arg is a vector or scalar
+    if (isUsable(arg)) {
+      if (!isUsable(arg[0])) arg = [ arg ];
+      return jStat.map(arr, function(value, row, col) {
+        return value + arg[row][col];
+      });
+    }
+    return jStat.map(arr, function(value) { return value + arg; });
+  },
+
+  // subtract a vector or scalar from the vector
+  subtract: function subtract(arr, arg) {
+    // check if arg is a vector or scalar
+    if (isUsable(arg)) {
+      if (!isUsable(arg[0])) arg = [ arg ];
+      return jStat.map(arr, function(value, row, col) {
+        return value - arg[row][col] || 0;
+      });
+    }
+    return jStat.map(arr, function(value) { return value - arg; });
+  },
+
+  // matrix division
+  divide: function divide(arr, arg) {
+    if (isUsable(arg)) {
+      if (!isUsable(arg[0])) arg = [ arg ];
+      return jStat.multiply(arr, jStat.inv(arg));
+    }
+    return jStat.map(arr, function(value) { return value / arg; });
+  },
+
+  // matrix multiplication
+  multiply: function multiply(arr, arg) {
+    var row, col, nrescols, sum, nrow, ncol, res, rescols;
+    // eg: arr = 2 arg = 3 -> 6 for res[0][0] statement closure
+    if (arr.length === undefined && arg.length === undefined) {
+      return arr * arg;
+    }
+    nrow = arr.length,
+    ncol = arr[0].length,
+    res = jStat.zeros(nrow, nrescols = (isUsable(arg)) ? arg[0].length : ncol),
+    rescols = 0;
+    if (isUsable(arg)) {
+      for (; rescols < nrescols; rescols++) {
+        for (row = 0; row < nrow; row++) {
+          sum = 0;
+          for (col = 0; col < ncol; col++)
+          sum += arr[row][col] * arg[col][rescols];
+          res[row][rescols] = sum;
+        }
+      }
+      return (nrow === 1 && rescols === 1) ? res[0][0] : res;
+    }
+    return jStat.map(arr, function(value) { return value * arg; });
+  },
+
+  // outer([1,2,3],[4,5,6])
+  // ===
+  // [[1],[2],[3]] times [[4,5,6]]
+  // ->
+  // [[4,5,6],[8,10,12],[12,15,18]]
+  outer:function outer(A, B) {
+    return jStat.multiply(A.map(function(t){ return [t] }), [B]);
+  },
+
+
+  // Returns the dot product of two matricies
+  dot: function dot(arr, arg) {
+    if (!isUsable(arr[0])) arr = [ arr ];
+    if (!isUsable(arg[0])) arg = [ arg ];
+    // convert column to row vector
+    var left = (arr[0].length === 1 && arr.length !== 1) ? jStat.transpose(arr) : arr,
+    right = (arg[0].length === 1 && arg.length !== 1) ? jStat.transpose(arg) : arg,
+    res = [],
+    row = 0,
+    nrow = left.length,
+    ncol = left[0].length,
+    sum, col;
+    for (; row < nrow; row++) {
+      res[row] = [];
+      sum = 0;
+      for (col = 0; col < ncol; col++)
+      sum += left[row][col] * right[row][col];
+      res[row] = sum;
+    }
+    return (res.length === 1) ? res[0] : res;
+  },
+
+  // raise every element by a scalar
+  pow: function pow(arr, arg) {
+    return jStat.map(arr, function(value) { return Math.pow(value, arg); });
+  },
+
+  // exponentiate every element
+  exp: function exp(arr) {
+    return jStat.map(arr, function(value) { return Math.exp(value); });
+  },
+
+  // generate the natural log of every element
+  log: function exp(arr) {
+    return jStat.map(arr, function(value) { return Math.log(value); });
+  },
+
+  // generate the absolute values of the vector
+  abs: function abs(arr) {
+    return jStat.map(arr, function(value) { return Math.abs(value); });
+  },
+
+  // computes the p-norm of the vector
+  // In the case that a matrix is passed, uses the first row as the vector
+  norm: function norm(arr, p) {
+    var nnorm = 0,
+    i = 0;
+    // check the p-value of the norm, and set for most common case
+    if (isNaN(p)) p = 2;
+    // check if multi-dimensional array, and make vector correction
+    if (isUsable(arr[0])) arr = arr[0];
+    // vector norm
+    for (; i < arr.length; i++) {
+      nnorm += Math.pow(Math.abs(arr[i]), p);
+    }
+    return Math.pow(nnorm, 1 / p);
+  },
+
+  // computes the angle between two vectors in rads
+  // In case a matrix is passed, this uses the first row as the vector
+  angle: function angle(arr, arg) {
+    return Math.acos(jStat.dot(arr, arg) / (jStat.norm(arr) * jStat.norm(arg)));
+  },
+
+  // augment one matrix by another
+  // Note: this function returns a matrix, not a jStat object
+  aug: function aug(a, b) {
+    var newarr = [];
+    for (var i = 0; i < a.length; i++) {
+      newarr.push(a[i].slice());
+    }
+    for (var i = 0; i < newarr.length; i++) {
+      push.apply(newarr[i], b[i]);
+    }
+    return newarr;
+  },
+
+  // The inv() function calculates the inverse of a matrix
+  // Create the inverse by augmenting the matrix by the identity matrix of the
+  // appropriate size, and then use G-J elimination on the augmented matrix.
+  inv: function inv(a) {
+    var rows = a.length;
+    var cols = a[0].length;
+    var b = jStat.identity(rows, cols);
+    var c = jStat.gauss_jordan(a, b);
+    var result = [];
+    var i = 0;
+    var j;
+
+    //We need to copy the inverse portion to a new matrix to rid G-J artifacts
+    for (; i < rows; i++) {
+      result[i] = [];
+      for (j = cols; j < c[0].length; j++)
+        result[i][j - cols] = c[i][j];
+    }
+    return result;
+  },
+
+  // calculate the determinant of a matrix
+  det: function det(a) {
+    var alen = a.length,
+    alend = alen * 2,
+    vals = new Array(alend),
+    rowshift = alen - 1,
+    colshift = alend - 1,
+    mrow = rowshift - alen + 1,
+    mcol = colshift,
+    i = 0,
+    result = 0,
+    j;
+    // check for special 2x2 case
+    if (alen === 2) {
+      return a[0][0] * a[1][1] - a[0][1] * a[1][0];
+    }
+    for (; i < alend; i++) {
+      vals[i] = 1;
+    }
+    for (var i = 0; i < alen; i++) {
+      for (j = 0; j < alen; j++) {
+        vals[(mrow < 0) ? mrow + alen : mrow ] *= a[i][j];
+        vals[(mcol < alen) ? mcol + alen : mcol ] *= a[i][j];
+        mrow++;
+        mcol--;
+      }
+      mrow = --rowshift - alen + 1;
+      mcol = --colshift;
+    }
+    for (var i = 0; i < alen; i++) {
+      result += vals[i];
+    }
+    for (; i < alend; i++) {
+      result -= vals[i];
+    }
+    return result;
+  },
+
+  gauss_elimination: function gauss_elimination(a, b) {
+    var i = 0,
+    j = 0,
+    n = a.length,
+    m = a[0].length,
+    factor = 1,
+    sum = 0,
+    x = [],
+    maug, pivot, temp, k;
+    a = jStat.aug(a, b);
+    maug = a[0].length;
+    for(var i = 0; i < n; i++) {
+      pivot = a[i][i];
+      j = i;
+      for (k = i + 1; k < m; k++) {
+        if (pivot < Math.abs(a[k][i])) {
+          pivot = a[k][i];
+          j = k;
+        }
+      }
+      if (j != i) {
+        for(k = 0; k < maug; k++) {
+          temp = a[i][k];
+          a[i][k] = a[j][k];
+          a[j][k] = temp;
+        }
+      }
+      for (j = i + 1; j < n; j++) {
+        factor = a[j][i] / a[i][i];
+        for(k = i; k < maug; k++) {
+          a[j][k] = a[j][k] - factor * a[i][k];
+        }
+      }
+    }
+    for (var i = n - 1; i >= 0; i--) {
+      sum = 0;
+      for (j = i + 1; j<= n - 1; j++) {
+        sum = sum + x[j] * a[i][j];
+      }
+      x[i] =(a[i][maug - 1] - sum) / a[i][i];
+    }
+    return x;
+  },
+
+  gauss_jordan: function gauss_jordan(a, b) {
+    var m = jStat.aug(a, b),
+    h = m.length,
+    w = m[0].length;
+    var c = 0;
+    // find max pivot
+    for (var y = 0; y < h; y++) {
+      var maxrow = y;
+      for (var y2 = y+1; y2 < h; y2++) {
+        if (Math.abs(m[y2][y]) > Math.abs(m[maxrow][y]))
+          maxrow = y2;
+      }
+      var tmp = m[y];
+      m[y] = m[maxrow];
+      m[maxrow] = tmp
+      for (var y2 = y+1; y2 < h; y2++) {
+        c = m[y2][y] / m[y][y];
+        for (var x = y; x < w; x++) {
+          m[y2][x] -= m[y][x] * c;
+        }
+      }
+    }
+    // backsubstitute
+    for (var y = h-1; y >= 0; y--) {
+      c = m[y][y];
+      for (var y2 = 0; y2 < y; y2++) {
+        for (var x = w-1; x > y-1; x--) {
+          m[y2][x] -= m[y][x] * m[y2][y] / c;
+        }
+      }
+      m[y][y] /= c;
+      for (var x = h; x < w; x++) {
+        m[y][x] /= c;
+      }
+    }
+    return m;
+  },
+
+  // solve equation
+  // Ax=b
+  // A is upper triangular matrix
+  // A=[[1,2,3],[0,4,5],[0,6,7]]
+  // b=[1,2,3]
+  // triaUpSolve(A,b) // -> [2.666,0.1666,1.666]
+  // if you use matrix style
+  // A=[[1,2,3],[0,4,5],[0,6,7]]
+  // b=[[1],[2],[3]]
+  // will return [[2.666],[0.1666],[1.666]]
+  triaUpSolve: function triaUpSolve(A, b) {
+    var size = A[0].length;
+    var x = jStat.zeros(1, size)[0];
+    var parts;
+    var matrix_mode = false;
+
+    if (b[0].length != undefined) {
+      b = b.map(function(i){ return i[0] });
+      matrix_mode = true;
+    }
+
+    jStat.arange(size - 1, -1, -1).forEach(function(i) {
+      parts = jStat.arange(i + 1, size).map(function(j) {
+        return x[j] * A[i][j];
+      });
+      x[i] = (b[i] - jStat.sum(parts)) / A[i][i];
+    });
+
+    if (matrix_mode)
+      return x.map(function(i){ return [i] });
+    return x;
+  },
+
+  triaLowSolve: function triaLowSolve(A, b) {
+    // like to triaUpSolve but A is lower triangular matrix
+    var size = A[0].length;
+    var x = jStat.zeros(1, size)[0];
+    var parts;
+
+    var matrix_mode=false;
+    if (b[0].length != undefined) {
+      b = b.map(function(i){ return i[0] });
+      matrix_mode = true;
+    }
+
+    jStat.arange(size).forEach(function(i) {
+      parts = jStat.arange(i).map(function(j) {
+        return A[i][j] * x[j];
+      });
+      x[i] = (b[i] - jStat.sum(parts)) / A[i][i];
+    })
+
+    if (matrix_mode)
+      return x.map(function(i){ return [i] });
+    return x;
+  },
+
+
+  // A -> [L,U]
+  // A=LU
+  // L is lower triangular matrix
+  // U is upper triangular matrix
+  lu: function lu(A) {
+    var size = A.length;
+    //var L=jStat.diagonal(jStat.ones(1,size)[0]);
+    var L = jStat.identity(size);
+    var R = jStat.zeros(A.length, A[0].length);
+    var parts;
+    jStat.arange(size).forEach(function(t) {
+      R[0][t] = A[0][t];
+    });
+    jStat.arange(1, size).forEach(function(l) {
+      jStat.arange(l).forEach(function(i) {
+        parts = jStat.arange(i).map(function(jj) {
+          return L[l][jj] * R[jj][i];
+        });
+        L[l][i] = (A[l][i] - jStat.sum(parts)) / R[i][i];
+      });
+      jStat.arange(l, size).forEach(function(j) {
+        parts = jStat.arange(l).map(function(jj) {
+          return L[l][jj] * R[jj][j];
+        });
+        R[l][j] = A[i][j] - jStat.sum(parts);
+      });
+    });
+    return [L, R];
+  },
+
+  // A -> T
+  // A=TT'
+  // T is lower triangular matrix
+  cholesky: function cholesky(A) {
+    var size = A.length;
+    var T = jStat.zeros(A.length, A[0].length);
+    var parts;
+    jStat.arange(size).forEach(function(i) {
+      parts = jStat.arange(i).map(function(t) {
+        return Math.pow(T[i][t],2);
+      });
+      T[i][i] = Math.sqrt(A[i][i] - jStat.sum(parts));
+      jStat.arange(i + 1, size).forEach(function(j) {
+        parts = jStat.arange(i).map(function(t) {
+          return T[i][t] * T[j][t];
+        });
+        T[j][i] = (A[i][j] - jStat.sum(parts)) / T[i][i];
+      });
+    });
+    return T;
+  },
+
+
+  gauss_jacobi: function gauss_jacobi(a, b, x, r) {
+    var i = 0;
+    var j = 0;
+    var n = a.length;
+    var l = [];
+    var u = [];
+    var d = [];
+    var xv, c, h, xk;
+    for (; i < n; i++) {
+      l[i] = [];
+      u[i] = [];
+      d[i] = [];
+      for (j = 0; j < n; j++) {
+        if (i > j) {
+          l[i][j] = a[i][j];
+          u[i][j] = d[i][j] = 0;
+        } else if (i < j) {
+          u[i][j] = a[i][j];
+          l[i][j] = d[i][j] = 0;
+        } else {
+          d[i][j] = a[i][j];
+          l[i][j] = u[i][j] = 0;
+        }
+      }
+    }
+    h = jStat.multiply(jStat.multiply(jStat.inv(d), jStat.add(l, u)), -1);
+    c = jStat.multiply(jStat.inv(d), b);
+    xv = x;
+    xk = jStat.add(jStat.multiply(h, x), c);
+    i = 2;
+    while (Math.abs(jStat.norm(jStat.subtract(xk,xv))) > r) {
+      xv = xk;
+      xk = jStat.add(jStat.multiply(h, xv), c);
+      i++;
+    }
+    return xk;
+  },
+
+  gauss_seidel: function gauss_seidel(a, b, x, r) {
+    var i = 0;
+    var n = a.length;
+    var l = [];
+    var u = [];
+    var d = [];
+    var j, xv, c, h, xk;
+    for (; i < n; i++) {
+      l[i] = [];
+      u[i] = [];
+      d[i] = [];
+      for (j = 0; j < n; j++) {
+        if (i > j) {
+          l[i][j] = a[i][j];
+          u[i][j] = d[i][j] = 0;
+        } else if (i < j) {
+          u[i][j] = a[i][j];
+          l[i][j] = d[i][j] = 0;
+        } else {
+          d[i][j] = a[i][j];
+          l[i][j] = u[i][j] = 0;
+        }
+      }
+    }
+    h = jStat.multiply(jStat.multiply(jStat.inv(jStat.add(d, l)), u), -1);
+    c = jStat.multiply(jStat.inv(jStat.add(d, l)), b);
+    xv = x;
+    xk = jStat.add(jStat.multiply(h, x), c);
+    i = 2;
+    while (Math.abs(jStat.norm(jStat.subtract(xk, xv))) > r) {
+      xv = xk;
+      xk = jStat.add(jStat.multiply(h, xv), c);
+      i = i + 1;
+    }
+    return xk;
+  },
+
+  SOR: function SOR(a, b, x, r, w) {
+    var i = 0;
+    var n = a.length;
+    var l = [];
+    var u = [];
+    var d = [];
+    var j, xv, c, h, xk;
+    for (; i < n; i++) {
+      l[i] = [];
+      u[i] = [];
+      d[i] = [];
+      for (j = 0; j < n; j++) {
+        if (i > j) {
+          l[i][j] = a[i][j];
+          u[i][j] = d[i][j] = 0;
+        } else if (i < j) {
+          u[i][j] = a[i][j];
+          l[i][j] = d[i][j] = 0;
+        } else {
+          d[i][j] = a[i][j];
+          l[i][j] = u[i][j] = 0;
+        }
+      }
+    }
+    h = jStat.multiply(jStat.inv(jStat.add(d, jStat.multiply(l, w))),
+                       jStat.subtract(jStat.multiply(d, 1 - w),
+                                      jStat.multiply(u, w)));
+    c = jStat.multiply(jStat.multiply(jStat.inv(jStat.add(d,
+        jStat.multiply(l, w))), b), w);
+    xv = x;
+    xk = jStat.add(jStat.multiply(h, x), c);
+    i = 2;
+    while (Math.abs(jStat.norm(jStat.subtract(xk, xv))) > r) {
+      xv = xk;
+      xk = jStat.add(jStat.multiply(h, xv), c);
+      i++;
+    }
+    return xk;
+  },
+
+  householder: function householder(a) {
+    var m = a.length;
+    var n = a[0].length;
+    var i = 0;
+    var w = [];
+    var p = [];
+    var alpha, r, k, j, factor;
+    for (; i < m - 1; i++) {
+      alpha = 0;
+      for (j = i + 1; j < n; j++)
+      alpha += (a[j][i] * a[j][i]);
+      factor = (a[i + 1][i] > 0) ? -1 : 1;
+      alpha = factor * Math.sqrt(alpha);
+      r = Math.sqrt((((alpha * alpha) - a[i + 1][i] * alpha) / 2));
+      w = jStat.zeros(m, 1);
+      w[i + 1][0] = (a[i + 1][i] - alpha) / (2 * r);
+      for (k = i + 2; k < m; k++) w[k][0] = a[k][i] / (2 * r);
+      p = jStat.subtract(jStat.identity(m, n),
+          jStat.multiply(jStat.multiply(w, jStat.transpose(w)), 2));
+      a = jStat.multiply(p, jStat.multiply(a, p));
+    }
+    return a;
+  },
+
+  // A -> [Q,R]
+  // Q is orthogonal matrix
+  // R is upper triangular
+  QR: (function() {
+    // x -> Q
+    // find a orthogonal matrix Q st.
+    // Qx=y
+    // y is [||x||,0,0,...]
+
+    // quick ref
+    var sum   = jStat.sum;
+    var range = jStat.arange;
+
+    function get_Q1(x) {
+      var size = x.length;
+      var norm_x = jStat.norm(x, 2);
+      var e1 = jStat.zeros(1, size)[0];
+      e1[0] = 1;
+      var u = jStat.add(jStat.multiply(jStat.multiply(e1, norm_x), -1), x);
+      var norm_u = jStat.norm(u, 2);
+      var v = jStat.divide(u, norm_u);
+      var Q = jStat.subtract(jStat.identity(size),
+                             jStat.multiply(jStat.outer(v, v), 2));
+      return Q;
+    }
+
+    function qr(A) {
+      var size = A[0].length;
+      var QList = [];
+      jStat.arange(size).forEach(function(i) {
+        var x = jStat.slice(A, { row: { start: i }, col: i });
+        var Q = get_Q1(x);
+        var Qn = jStat.identity(A.length);
+        Qn = jStat.sliceAssign(Qn, { row: { start: i }, col: { start: i }}, Q);
+        A = jStat.multiply(Qn, A);
+        QList.push(Qn);
+      });
+      var Q = QList.reduce(function(x, y){ return jStat.multiply(x,y) });
+      var R = A;
+      return [Q, R];
+    }
+
+    function qr2(x) {
+      // quick impletation
+      // https://www.stat.wisc.edu/~larget/math496/qr.html
+
+      var n = x.length;
+      var p = x[0].length;
+
+      x = jStat.copy(x);
+      r = jStat.zeros(p, p);
+
+      var i,j,k;
+      for(j = 0; j < p; j++){
+        r[j][j] = Math.sqrt(sum(range(n).map(function(i){
+          return x[i][j] * x[i][j];
+        })));
+        for(i = 0; i < n; i++){
+          x[i][j] = x[i][j] / r[j][j];
+        }
+        for(k = j+1; k < p; k++){
+          r[j][k] = sum(range(n).map(function(i){
+            return x[i][j] * x[i][k];
+          }));
+          for(i = 0; i < n; i++){
+            x[i][k] = x[i][k] - x[i][j]*r[j][k];
+          }
+        }
+      }
+      return [x, r];
+    }
+
+    return qr2;
+  }()),
+
+  lstsq: (function(A, b) {
+    // solve least squard problem for Ax=b as QR decomposition way if b is
+    // [[b1],[b2],[b3]] form will return [[x1],[x2],[x3]] array form solution
+    // else b is [b1,b2,b3] form will return [x1,x2,x3] array form solution
+    function R_I(A) {
+      A = jStat.copy(A);
+      var size = A.length;
+      var I = jStat.identity(size);
+      jStat.arange(size - 1, -1, -1).forEach(function(i) {
+        jStat.sliceAssign(
+            I, { row: i }, jStat.divide(jStat.slice(I, { row: i }), A[i][i]));
+        jStat.sliceAssign(
+            A, { row: i }, jStat.divide(jStat.slice(A, { row: i }), A[i][i]));
+        jStat.arange(i).forEach(function(j) {
+          var c = jStat.multiply(A[j][i], -1);
+          var Aj = jStat.slice(A, { row: j });
+          var cAi = jStat.multiply(jStat.slice(A, { row: i }), c);
+          jStat.sliceAssign(A, { row: j }, jStat.add(Aj, cAi));
+          var Ij = jStat.slice(I, { row: j });
+          var cIi = jStat.multiply(jStat.slice(I, { row: i }), c);
+          jStat.sliceAssign(I, { row: j }, jStat.add(Ij, cIi));
+        })
+      });
+      return I;
+    }
+
+    function qr_solve(A, b){
+      var array_mode = false;
+      if (b[0].length === undefined) {
+        // [c1,c2,c3] mode
+        b = b.map(function(x){ return [x] });
+        array_mode = true;
+      }
+      var QR = jStat.QR(A);
+      var Q = QR[0];
+      var R = QR[1];
+      var attrs = A[0].length;
+      var Q1 = jStat.slice(Q,{col:{end:attrs}});
+      var R1 = jStat.slice(R,{row:{end:attrs}});
+      var RI = R_I(R1);
+	  var Q2 = jStat.transpose(Q1);
+
+	  if(Q2[0].length === undefined){
+		  Q2 = [Q2]; // The confusing jStat.multifly implementation threat nature process again.
+	  }
+
+      var x = jStat.multiply(jStat.multiply(RI, Q2), b);
+
+	  if(x.length === undefined){
+		  x = [[x]]; // The confusing jStat.multifly implementation threat nature process again.
+	  }
+
+
+      if (array_mode)
+        return x.map(function(i){ return i[0] });
+      return x;
+    }
+
+    return qr_solve;
+  }()),
+
+  jacobi: function jacobi(a) {
+    var condition = 1;
+    var count = 0;
+    var n = a.length;
+    var e = jStat.identity(n, n);
+    var ev = [];
+    var b, i, j, p, q, maxim, theta, s;
+    // condition === 1 only if tolerance is not reached
+    while (condition === 1) {
+      count++;
+      maxim = a[0][1];
+      p = 0;
+      q = 1;
+      for (var i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+          if (i != j) {
+            if (maxim < Math.abs(a[i][j])) {
+              maxim = Math.abs(a[i][j]);
+              p = i;
+              q = j;
+            }
+          }
+        }
+      }
+      if (a[p][p] === a[q][q])
+        theta = (a[p][q] > 0) ? Math.PI / 4 : -Math.PI / 4;
+      else
+        theta = Math.atan(2 * a[p][q] / (a[p][p] - a[q][q])) / 2;
+      s = jStat.identity(n, n);
+      s[p][p] = Math.cos(theta);
+      s[p][q] = -Math.sin(theta);
+      s[q][p] = Math.sin(theta);
+      s[q][q] = Math.cos(theta);
+      // eigen vector matrix
+      e = jStat.multiply(e, s);
+      b = jStat.multiply(jStat.multiply(jStat.inv(s), a), s);
+      a = b;
+      condition = 0;
+      for (var i = 1; i < n; i++) {
+        for (j = 1; j < n; j++) {
+          if (i != j && Math.abs(a[i][j]) > 0.001) {
+            condition = 1;
+          }
+        }
+      }
+    }
+    for (var i = 0; i < n; i++) ev.push(a[i][i]);
+    //returns both the eigenvalue and eigenmatrix
+    return [e, ev];
+  },
+
+  rungekutta: function rungekutta(f, h, p, t_j, u_j, order) {
+    var k1, k2, u_j1, k3, k4;
+    if (order === 2) {
+      while (t_j <= p) {
+        k1 = h * f(t_j, u_j);
+        k2 = h * f(t_j + h, u_j + k1);
+        u_j1 = u_j + (k1 + k2) / 2;
+        u_j = u_j1;
+        t_j = t_j + h;
+      }
+    }
+    if (order === 4) {
+      while (t_j <= p) {
+        k1 = h * f(t_j, u_j);
+        k2 = h * f(t_j + h / 2, u_j + k1 / 2);
+        k3 = h * f(t_j + h / 2, u_j + k2 / 2);
+        k4 = h * f(t_j +h, u_j + k3);
+        u_j1 = u_j + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+        u_j = u_j1;
+        t_j = t_j + h;
+      }
+    }
+    return u_j;
+  },
+
+  romberg: function romberg(f, a, b, order) {
+    var i = 0;
+    var h = (b - a) / 2;
+    var x = [];
+    var h1 = [];
+    var g = [];
+    var m, a1, j, k, I, d;
+    while (i < order / 2) {
+      I = f(a);
+      for (j = a, k = 0; j <= b; j = j + h, k++) x[k] = j;
+      m = x.length;
+      for (j = 1; j < m - 1; j++) {
+        I += (((j % 2) !== 0) ? 4 : 2) * f(x[j]);
+      }
+      I = (h / 3) * (I + f(b));
+      g[i] = I;
+      h /= 2;
+      i++;
+    }
+    a1 = g.length;
+    m = 1;
+    while (a1 !== 1) {
+      for (j = 0; j < a1 - 1; j++)
+      h1[j] = ((Math.pow(4, m)) * g[j + 1] - g[j]) / (Math.pow(4, m) - 1);
+      a1 = h1.length;
+      g = h1;
+      h1 = [];
+      m++;
+    }
+    return g;
+  },
+
+  richardson: function richardson(X, f, x, h) {
+    function pos(X, x) {
+      var i = 0;
+      var n = X.length;
+      var p;
+      for (; i < n; i++)
+        if (X[i] === x) p = i;
+      return p;
+    }
+    var n = X.length,
+    h_min = Math.abs(x - X[pos(X, x) + 1]),
+    i = 0,
+    g = [],
+    h1 = [],
+    y1, y2, m, a, j;
+    while (h >= h_min) {
+      y1 = pos(X, x + h);
+      y2 = pos(X, x);
+      g[i] = (f[y1] - 2 * f[y2] + f[2 * y2 - y1]) / (h * h);
+      h /= 2;
+      i++;
+    }
+    a = g.length;
+    m = 1;
+    while (a != 1) {
+      for (j = 0; j < a - 1; j++)
+      h1[j] = ((Math.pow(4, m)) * g[j + 1] - g[j]) / (Math.pow(4, m) - 1);
+      a = h1.length;
+      g = h1;
+      h1 = [];
+      m++;
+    }
+    return g;
+  },
+
+  simpson: function simpson(f, a, b, n) {
+    var h = (b - a) / n;
+    var I = f(a);
+    var x = [];
+    var j = a;
+    var k = 0;
+    var i = 1;
+    var m;
+    for (; j <= b; j = j + h, k++)
+      x[k] = j;
+    m = x.length;
+    for (; i < m - 1; i++) {
+      I += ((i % 2 !== 0) ? 4 : 2) * f(x[i]);
+    }
+    return (h / 3) * (I + f(b));
+  },
+
+  hermite: function hermite(X, F, dF, value) {
+    var n = X.length;
+    var p = 0;
+    var i = 0;
+    var l = [];
+    var dl = [];
+    var A = [];
+    var B = [];
+    var j;
+    for (; i < n; i++) {
+      l[i] = 1;
+      for (j = 0; j < n; j++) {
+        if (i != j) l[i] *= (value - X[j]) / (X[i] - X[j]);
+      }
+      dl[i] = 0;
+      for (j = 0; j < n; j++) {
+        if (i != j) dl[i] += 1 / (X [i] - X[j]);
+      }
+      A[i] = (1 - 2 * (value - X[i]) * dl[i]) * (l[i] * l[i]);
+      B[i] = (value - X[i]) * (l[i] * l[i]);
+      p += (A[i] * F[i] + B[i] * dF[i]);
+    }
+    return p;
+  },
+
+  lagrange: function lagrange(X, F, value) {
+    var p = 0;
+    var i = 0;
+    var j, l;
+    var n = X.length;
+    for (; i < n; i++) {
+      l = F[i];
+      for (j = 0; j < n; j++) {
+        // calculating the lagrange polynomial L_i
+        if (i != j) l *= (value - X[j]) / (X[i] - X[j]);
+      }
+      // adding the lagrange polynomials found above
+      p += l;
+    }
+    return p;
+  },
+
+  cubic_spline: function cubic_spline(X, F, value) {
+    var n = X.length;
+    var i = 0, j;
+    var A = [];
+    var B = [];
+    var alpha = [];
+    var c = [];
+    var h = [];
+    var b = [];
+    var d = [];
+    for (; i < n - 1; i++)
+      h[i] = X[i + 1] - X[i];
+    alpha[0] = 0;
+    for (var i = 1; i < n - 1; i++) {
+      alpha[i] = (3 / h[i]) * (F[i + 1] - F[i]) -
+          (3 / h[i-1]) * (F[i] - F[i-1]);
+    }
+    for (var i = 1; i < n - 1; i++) {
+      A[i] = [];
+      B[i] = [];
+      A[i][i-1] = h[i-1];
+      A[i][i] = 2 * (h[i - 1] + h[i]);
+      A[i][i+1] = h[i];
+      B[i][0] = alpha[i];
+    }
+    c = jStat.multiply(jStat.inv(A), B);
+    for (j = 0; j < n - 1; j++) {
+      b[j] = (F[j + 1] - F[j]) / h[j] - h[j] * (c[j + 1][0] + 2 * c[j][0]) / 3;
+      d[j] = (c[j + 1][0] - c[j][0]) / (3 * h[j]);
+    }
+    for (j = 0; j < n; j++) {
+      if (X[j] > value) break;
+    }
+    j -= 1;
+    return F[j] + (value - X[j]) * b[j] + jStat.sq(value-X[j]) *
+        c[j] + (value - X[j]) * jStat.sq(value - X[j]) * d[j];
+  },
+
+  gauss_quadrature: function gauss_quadrature() {
+    throw new Error('gauss_quadrature not yet implemented');
+  },
+
+  PCA: function PCA(X) {
+    var m = X.length;
+    var n = X[0].length;
+    var flag = false;
+    var i = 0;
+    var j, temp1;
+    var u = [];
+    var D = [];
+    var result = [];
+    var temp2 = [];
+    var Y = [];
+    var Bt = [];
+    var B = [];
+    var C = [];
+    var V = [];
+    var Vt = [];
+    for (var i = 0; i < m; i++) {
+      u[i] = jStat.sum(X[i]) / n;
+    }
+    for (var i = 0; i < n; i++) {
+      B[i] = [];
+      for(j = 0; j < m; j++) {
+        B[i][j] = X[j][i] - u[j];
+      }
+    }
+    B = jStat.transpose(B);
+    for (var i = 0; i < m; i++) {
+      C[i] = [];
+      for (j = 0; j < m; j++) {
+        C[i][j] = (jStat.dot([B[i]], [B[j]])) / (n - 1);
+      }
+    }
+    result = jStat.jacobi(C);
+    V = result[0];
+    D = result[1];
+    Vt = jStat.transpose(V);
+    for (var i = 0; i < D.length; i++) {
+      for (j = i; j < D.length; j++) {
+        if(D[i] < D[j])  {
+          temp1 = D[i];
+          D[i] = D[j];
+          D[j] = temp1;
+          temp2 = Vt[i];
+          Vt[i] = Vt[j];
+          Vt[j] = temp2;
+        }
+      }
+    }
+    Bt = jStat.transpose(B);
+    for (var i = 0; i < m; i++) {
+      Y[i] = [];
+      for (j = 0; j < Bt.length; j++) {
+        Y[i][j] = jStat.dot([Vt[i]], [Bt[j]]);
+      }
+    }
+    return [X, D, Vt, Y];
+  }
+});
+
+// extend jStat.fn with methods that require one argument
+(function(funcs) {
+  for (var i = 0; i < funcs.length; i++) (function(passfunc) {
+    jStat.fn[passfunc] = function(arg, func) {
+      var tmpthis = this;
+      // check for callback
+      if (func) {
+        setTimeout(function() {
+          func.call(tmpthis, jStat.fn[passfunc].call(tmpthis, arg));
+        }, 15);
+        return this;
+      }
+      if (typeof jStat[passfunc](this, arg) === 'number')
+        return jStat[passfunc](this, arg);
+      else
+        return jStat(jStat[passfunc](this, arg));
+    };
+  }(funcs[i]));
+}('add divide multiply subtract dot pow exp log abs norm angle'.split(' ')));
+
+}(jStat, Math));
+(function(jStat, Math) {
+
+var slice = [].slice;
+var isNumber = jStat.utils.isNumber;
+var isArray = jStat.utils.isArray;
+
+// flag==true denotes use of sample standard deviation
+// Z Statistics
+jStat.extend({
+  // 2 different parameter lists:
+  // (value, mean, sd)
+  // (value, array, flag)
+  zscore: function zscore() {
+    var args = slice.call(arguments);
+    if (isNumber(args[1])) {
+      return (args[0] - args[1]) / args[2];
+    }
+    return (args[0] - jStat.mean(args[1])) / jStat.stdev(args[1], args[2]);
+  },
+
+  // 3 different paramter lists:
+  // (value, mean, sd, sides)
+  // (zscore, sides)
+  // (value, array, sides, flag)
+  ztest: function ztest() {
+    var args = slice.call(arguments);
+    var z;
+    if (isArray(args[1])) {
+      // (value, array, sides, flag)
+      z = jStat.zscore(args[0],args[1],args[3]);
+      return (args[2] === 1) ?
+        (jStat.normal.cdf(-Math.abs(z), 0, 1)) :
+        (jStat.normal.cdf(-Math.abs(z), 0, 1)*2);
+    } else {
+      if (args.length > 2) {
+        // (value, mean, sd, sides)
+        z = jStat.zscore(args[0],args[1],args[2]);
+        return (args[3] === 1) ?
+          (jStat.normal.cdf(-Math.abs(z),0,1)) :
+          (jStat.normal.cdf(-Math.abs(z),0,1)* 2);
+      } else {
+        // (zscore, sides)
+        z = args[0];
+        return (args[1] === 1) ?
+          (jStat.normal.cdf(-Math.abs(z),0,1)) :
+          (jStat.normal.cdf(-Math.abs(z),0,1)*2);
+      }
+    }
+  }
+});
+
+jStat.extend(jStat.fn, {
+  zscore: function zscore(value, flag) {
+    return (value - this.mean()) / this.stdev(flag);
+  },
+
+  ztest: function ztest(value, sides, flag) {
+    var zscore = Math.abs(this.zscore(value, flag));
+    return (sides === 1) ?
+      (jStat.normal.cdf(-zscore, 0, 1)) :
+      (jStat.normal.cdf(-zscore, 0, 1) * 2);
+  }
+});
+
+// T Statistics
+jStat.extend({
+  // 2 parameter lists
+  // (value, mean, sd, n)
+  // (value, array)
+  tscore: function tscore() {
+    var args = slice.call(arguments);
+    return (args.length === 4) ?
+      ((args[0] - args[1]) / (args[2] / Math.sqrt(args[3]))) :
+      ((args[0] - jStat.mean(args[1])) /
+       (jStat.stdev(args[1], true) / Math.sqrt(args[1].length)));
+  },
+
+  // 3 different paramter lists:
+  // (value, mean, sd, n, sides)
+  // (tscore, n, sides)
+  // (value, array, sides)
+  ttest: function ttest() {
+    var args = slice.call(arguments);
+    var tscore;
+    if (args.length === 5) {
+      tscore = Math.abs(jStat.tscore(args[0], args[1], args[2], args[3]));
+      return (args[4] === 1) ?
+        (jStat.studentt.cdf(-tscore, args[3]-1)) :
+        (jStat.studentt.cdf(-tscore, args[3]-1)*2);
+    }
+    if (isNumber(args[1])) {
+      tscore = Math.abs(args[0])
+      return (args[2] == 1) ?
+        (jStat.studentt.cdf(-tscore, args[1]-1)) :
+        (jStat.studentt.cdf(-tscore, args[1]-1) * 2);
+    }
+    tscore = Math.abs(jStat.tscore(args[0], args[1]))
+    return (args[2] == 1) ?
+      (jStat.studentt.cdf(-tscore, args[1].length-1)) :
+      (jStat.studentt.cdf(-tscore, args[1].length-1) * 2);
+  }
+});
+
+jStat.extend(jStat.fn, {
+  tscore: function tscore(value) {
+    return (value - this.mean()) / (this.stdev(true) / Math.sqrt(this.cols()));
+  },
+
+  ttest: function ttest(value, sides) {
+    return (sides === 1) ?
+      (1 - jStat.studentt.cdf(Math.abs(this.tscore(value)), this.cols()-1)) :
+      (jStat.studentt.cdf(-Math.abs(this.tscore(value)), this.cols()-1)*2);
+  }
+});
+
+// F Statistics
+jStat.extend({
+  // Paramter list is as follows:
+  // (array1, array2, array3, ...)
+  // or it is an array of arrays
+  // array of arrays conversion
+  anovafscore: function anovafscore() {
+    var args = slice.call(arguments),
+    expVar, sample, sampMean, sampSampMean, tmpargs, unexpVar, i, j;
+    if (args.length === 1) {
+      tmpargs = new Array(args[0].length);
+      for (var i = 0; i < args[0].length; i++) {
+        tmpargs[i] = args[0][i];
+      }
+      args = tmpargs;
+    }
+    // 2 sample case
+    if (args.length === 2) {
+      return jStat.variance(args[0]) / jStat.variance(args[1]);
+    }
+    // Builds sample array
+    sample = new Array();
+    for (var i = 0; i < args.length; i++) {
+      sample = sample.concat(args[i]);
+    }
+    sampMean = jStat.mean(sample);
+    // Computes the explained variance
+    expVar = 0;
+    for (var i = 0; i < args.length; i++) {
+      expVar = expVar + args[i].length * Math.pow(jStat.mean(args[i]) - sampMean, 2);
+    }
+    expVar /= (args.length - 1);
+    // Computes unexplained variance
+    unexpVar = 0;
+    for (var i = 0; i < args.length; i++) {
+      sampSampMean = jStat.mean(args[i]);
+      for (j = 0; j < args[i].length; j++) {
+        unexpVar += Math.pow(args[i][j] - sampSampMean, 2);
+      }
+    }
+    unexpVar /= (sample.length - args.length);
+    return expVar / unexpVar;
+  },
+
+  // 2 different paramter setups
+  // (array1, array2, array3, ...)
+  // (anovafscore, df1, df2)
+  anovaftest: function anovaftest() {
+    var args = slice.call(arguments),
+    df1, df2, n, i;
+    if (isNumber(args[0])) {
+      return 1 - jStat.centralF.cdf(args[0], args[1], args[2]);
+    }
+    anovafscore = jStat.anovafscore(args);
+    df1 = args.length - 1;
+    n = 0;
+    for (var i = 0; i < args.length; i++) {
+      n = n + args[i].length;
+    }
+    df2 = n - df1 - 1;
+    return 1 - jStat.centralF.cdf(anovafscore, df1, df2);
+  },
+
+  ftest: function ftest(fscore, df1, df2) {
+    return 1 - jStat.centralF.cdf(fscore, df1, df2);
+  }
+});
+
+jStat.extend(jStat.fn, {
+  anovafscore: function anovafscore() {
+    return jStat.anovafscore(this.toArray());
+  },
+
+  anovaftes: function anovaftes() {
+    var n = 0;
+    var i;
+    for (var i = 0; i < this.length; i++) {
+      n = n + this[i].length;
+    }
+    return jStat.ftest(this.anovafscore(), this.length - 1, n - this.length);
+  }
+});
+
+// Tukey's range test
+jStat.extend({
+  // 2 parameter lists
+  // (mean1, mean2, n1, n2, sd)
+  // (array1, array2, sd)
+  qscore: function qscore() {
+    var args = slice.call(arguments);
+    var mean1, mean2, n1, n2, sd;
+    if (isNumber(args[0])) {
+        mean1 = args[0];
+        mean2 = args[1];
+        n1 = args[2];
+        n2 = args[3];
+        sd = args[4];
+    } else {
+        mean1 = jStat.mean(args[0]);
+        mean2 = jStat.mean(args[1]);
+        n1 = args[0].length;
+        n2 = args[1].length;
+        sd = args[2];
+    }
+    return Math.abs(mean1 - mean2) / (sd * Math.sqrt((1 / n1 + 1 / n2) / 2));
+  },
+
+  // 3 different parameter lists:
+  // (qscore, n, k)
+  // (mean1, mean2, n1, n2, sd, n, k)
+  // (array1, array2, sd, n, k)
+  qtest: function qtest() {
+    var args = slice.call(arguments);
+
+    var qscore;
+    if (args.length === 3) {
+      qscore = args[0];
+      args = args.slice(1);
+    } else if (args.length === 7) {
+      qscore = jStat.qscore(args[0], args[1], args[2], args[3], args[4]);
+      args = args.slice(5);
+    } else {
+      qscore = jStat.qscore(args[0], args[1], args[2]);
+      args = args.slice(3);
+    }
+
+    var n = args[0];
+    var k = args[1];
+
+    return 1 - jStat.tukey.cdf(qscore, k, n - k);
+  },
+
+  tukeyhsd: function tukeyhsd(arrays) {
+    var sd = jStat.pooledstdev(arrays);
+    var means = arrays.map(function (arr) {return jStat.mean(arr);});
+    var n = arrays.reduce(function (n, arr) {return n + arr.length;}, 0);
+
+    var results = [];
+    for (var i = 0; i < arrays.length; ++i) {
+        for (var j = i + 1; j < arrays.length; ++j) {
+            var p = jStat.qtest(means[i], means[j], arrays[i].length, arrays[j].length, sd, n, arrays.length);
+            results.push([[i, j], p]);
+        }
+    }
+
+    return results;
+  }
+});
+
+// Error Bounds
+jStat.extend({
+  // 2 different parameter setups
+  // (value, alpha, sd, n)
+  // (value, alpha, array)
+  normalci: function normalci() {
+    var args = slice.call(arguments),
+    ans = new Array(2),
+    change;
+    if (args.length === 4) {
+      change = Math.abs(jStat.normal.inv(args[1] / 2, 0, 1) *
+                        args[2] / Math.sqrt(args[3]));
+    } else {
+      change = Math.abs(jStat.normal.inv(args[1] / 2, 0, 1) *
+                        jStat.stdev(args[2]) / Math.sqrt(args[2].length));
+    }
+    ans[0] = args[0] - change;
+    ans[1] = args[0] + change;
+    return ans;
+  },
+
+  // 2 different parameter setups
+  // (value, alpha, sd, n)
+  // (value, alpha, array)
+  tci: function tci() {
+    var args = slice.call(arguments),
+    ans = new Array(2),
+    change;
+    if (args.length === 4) {
+      change = Math.abs(jStat.studentt.inv(args[1] / 2, args[3] - 1) *
+                        args[2] / Math.sqrt(args[3]));
+    } else {
+      change = Math.abs(jStat.studentt.inv(args[1] / 2, args[2].length - 1) *
+                        jStat.stdev(args[2], true) / Math.sqrt(args[2].length));
+    }
+    ans[0] = args[0] - change;
+    ans[1] = args[0] + change;
+    return ans;
+  },
+
+  significant: function significant(pvalue, alpha) {
+    return pvalue < alpha;
+  }
+});
+
+jStat.extend(jStat.fn, {
+  normalci: function normalci(value, alpha) {
+    return jStat.normalci(value, alpha, this.toArray());
+  },
+
+  tci: function tci(value, alpha) {
+    return jStat.tci(value, alpha, this.toArray());
+  }
+});
+
+// internal method for calculating the z-score for a difference of proportions test
+function differenceOfProportions(p1, n1, p2, n2) {
+  if (p1 > 1 || p2 > 1 || p1 <= 0 || p2 <= 0) {
+    throw new Error("Proportions should be greater than 0 and less than 1")
+  }
+  var pooled = (p1 * n1 + p2 * n2) / (n1 + n2);
+  var se = Math.sqrt(pooled * (1 - pooled) * ((1/n1) + (1/n2)));
+  return (p1 - p2) / se;
+}
+
+// Difference of Proportions
+jStat.extend(jStat.fn, {
+  oneSidedDifferenceOfProportions: function oneSidedDifferenceOfProportions(p1, n1, p2, n2) {
+    var z = differenceOfProportions(p1, n1, p2, n2);
+    return jStat.ztest(z, 1);
+  },
+
+  twoSidedDifferenceOfProportions: function twoSidedDifferenceOfProportions(p1, n1, p2, n2) {
+    var z = differenceOfProportions(p1, n1, p2, n2);
+    return jStat.ztest(z, 2);
+  }
+});
+
+}(jStat, Math));
+jStat.models = (function(){
+
+  function sub_regress(endog, exog) {
+    return ols(endog, exog);
+  }
+
+  function sub_regress(exog) {
+    var var_count = exog[0].length;
+    var modelList = jStat.arange(var_count).map(function(endog_index) {
+      var exog_index =
+          jStat.arange(var_count).filter(function(i){return i!==endog_index});
+      return ols(jStat.col(exog, endog_index).map(function(x){ return x[0] }),
+                 jStat.col(exog, exog_index))
+    });
+    return modelList;
+  }
+
+  // do OLS model regress
+  // exog have include const columns ,it will not generate it .In fact, exog is
+  // "design matrix" look at
+  //https://en.wikipedia.org/wiki/Design_matrix
+  function ols(endog, exog) {
+    var nobs = endog.length;
+    var df_model = exog[0].length - 1;
+    var df_resid = nobs-df_model - 1;
+    var coef = jStat.lstsq(exog, endog);
+    var predict =
+        jStat.multiply(exog, coef.map(function(x) { return [x] }))
+            .map(function(p) { return p[0] });
+    var resid = jStat.subtract(endog, predict);
+    var ybar = jStat.mean(endog);
+    // constant cause problem
+    // var SST = jStat.sum(endog.map(function(y) {
+    //   return Math.pow(y-ybar,2);
+    // }));
+    var SSE = jStat.sum(predict.map(function(f) {
+      return Math.pow(f - ybar, 2);
+    }));
+    var SSR = jStat.sum(endog.map(function(y, i) {
+      return Math.pow(y - predict[i], 2);
+    }));
+    var SST = SSE + SSR;
+    var R2 = (SSE / SST);
+    return {
+        exog:exog,
+        endog:endog,
+        nobs:nobs,
+        df_model:df_model,
+        df_resid:df_resid,
+        coef:coef,
+        predict:predict,
+        resid:resid,
+        ybar:ybar,
+        SST:SST,
+        SSE:SSE,
+        SSR:SSR,
+        R2:R2
+    };
+  }
+
+  // H0: b_I=0
+  // H1: b_I!=0
+  function t_test(model) {
+    var subModelList = sub_regress(model.exog);
+    //var sigmaHat=jStat.stdev(model.resid);
+    var sigmaHat = Math.sqrt(model.SSR / (model.df_resid));
+    var seBetaHat = subModelList.map(function(mod) {
+      var SST = mod.SST;
+      var R2 = mod.R2;
+      return sigmaHat / Math.sqrt(SST * (1 - R2));
+    });
+    var tStatistic = model.coef.map(function(coef, i) {
+      return (coef - 0) / seBetaHat[i];
+    });
+    var pValue = tStatistic.map(function(t) {
+      var leftppf = jStat.studentt.cdf(t, model.df_resid);
+      return (leftppf > 0.5 ? 1 - leftppf : leftppf) * 2;
+    });
+    var c = jStat.studentt.inv(0.975, model.df_resid);
+    var interval95 = model.coef.map(function(coef, i) {
+      var d = c * seBetaHat[i];
+      return [coef - d, coef + d];
+    })
+    return {
+        se: seBetaHat,
+        t: tStatistic,
+        p: pValue,
+        sigmaHat: sigmaHat,
+        interval95: interval95
+    };
+  }
+
+  function F_test(model) {
+    var F_statistic =
+        (model.R2 / model.df_model) / ((1 - model.R2) / model.df_resid);
+    var fcdf = function(x, n1, n2) {
+      return jStat.beta.cdf(x / (n2 / n1 + x), n1 / 2, n2 / 2)
+    }
+    var pvalue = 1 - fcdf(F_statistic, model.df_model, model.df_resid);
+    return { F_statistic: F_statistic, pvalue: pvalue };
+  }
+
+  function ols_wrap(endog, exog) {
+    var model = ols(endog,exog);
+    var ttest = t_test(model);
+    var ftest = F_test(model);
+    // Provide the Wherry / Ezekiel / McNemar / Cohen Adjusted R^2
+    // Which matches the 'adjusted R^2' provided by R's lm package
+    var adjust_R2 =
+        1 - (1 - model.R2) * ((model.nobs - 1) / (model.df_resid));
+    model.t = ttest;
+    model.f = ftest;
+    model.adjust_R2 = adjust_R2;
+    return model;
+  }
+
+  return { ols: ols_wrap };
+})();
+  // Make it compatible with previous version.
+  jStat.jStat = jStat;
+
+  return jStat;
+});
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/pathval/index.js":
+/*!*******************************************!*\
+  !*** ../p4/node_modules/pathval/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* !
+ * Chai - pathval utility
+ * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
+ * @see https://github.com/logicalparadox/filtr
+ * MIT Licensed
+ */
+
+/**
+ * ### .hasProperty(object, name)
+ *
+ * This allows checking whether an object has own
+ * or inherited from prototype chain named property.
+ *
+ * Basically does the same thing as the `in`
+ * operator but works properly with null/undefined values
+ * and other primitives.
+ *
+ *     var obj = {
+ *         arr: ['a', 'b', 'c']
+ *       , str: 'Hello'
+ *     }
+ *
+ * The following would be the results.
+ *
+ *     hasProperty(obj, 'str');  // true
+ *     hasProperty(obj, 'constructor');  // true
+ *     hasProperty(obj, 'bar');  // false
+ *
+ *     hasProperty(obj.str, 'length'); // true
+ *     hasProperty(obj.str, 1);  // true
+ *     hasProperty(obj.str, 5);  // false
+ *
+ *     hasProperty(obj.arr, 'length');  // true
+ *     hasProperty(obj.arr, 2);  // true
+ *     hasProperty(obj.arr, 3);  // false
+ *
+ * @param {Object} object
+ * @param {String|Symbol} name
+ * @returns {Boolean} whether it exists
+ * @namespace Utils
+ * @name hasProperty
+ * @api public
+ */
+
+function hasProperty(obj, name) {
+  if (typeof obj === 'undefined' || obj === null) {
+    return false;
+  }
+
+  // The `in` operator does not work with primitives.
+  return name in Object(obj);
+}
+
+/* !
+ * ## parsePath(path)
+ *
+ * Helper function used to parse string object
+ * paths. Use in conjunction with `internalGetPathValue`.
+ *
+ *      var parsed = parsePath('myobject.property.subprop');
+ *
+ * ### Paths:
+ *
+ * * Can be infinitely deep and nested.
+ * * Arrays are also valid using the formal `myobject.document[3].property`.
+ * * Literal dots and brackets (not delimiter) must be backslash-escaped.
+ *
+ * @param {String} path
+ * @returns {Object} parsed
+ * @api private
+ */
+
+function parsePath(path) {
+  var str = path.replace(/([^\\])\[/g, '$1.[');
+  var parts = str.match(/(\\\.|[^.]+?)+/g);
+  return parts.map(function mapMatches(value) {
+    var regexp = /^\[(\d+)\]$/;
+    var mArr = regexp.exec(value);
+    var parsed = null;
+    if (mArr) {
+      parsed = { i: parseFloat(mArr[1]) };
+    } else {
+      parsed = { p: value.replace(/\\([.\[\]])/g, '$1') };
+    }
+
+    return parsed;
+  });
+}
+
+/* !
+ * ## internalGetPathValue(obj, parsed[, pathDepth])
+ *
+ * Helper companion function for `.parsePath` that returns
+ * the value located at the parsed address.
+ *
+ *      var value = getPathValue(obj, parsed);
+ *
+ * @param {Object} object to search against
+ * @param {Object} parsed definition from `parsePath`.
+ * @param {Number} depth (nesting level) of the property we want to retrieve
+ * @returns {Object|Undefined} value
+ * @api private
+ */
+
+function internalGetPathValue(obj, parsed, pathDepth) {
+  var temporaryValue = obj;
+  var res = null;
+  pathDepth = (typeof pathDepth === 'undefined' ? parsed.length : pathDepth);
+
+  for (var i = 0; i < pathDepth; i++) {
+    var part = parsed[i];
+    if (temporaryValue) {
+      if (typeof part.p === 'undefined') {
+        temporaryValue = temporaryValue[part.i];
+      } else {
+        temporaryValue = temporaryValue[part.p];
+      }
+
+      if (i === (pathDepth - 1)) {
+        res = temporaryValue;
+      }
+    }
+  }
+
+  return res;
+}
+
+/* !
+ * ## internalSetPathValue(obj, value, parsed)
+ *
+ * Companion function for `parsePath` that sets
+ * the value located at a parsed address.
+ *
+ *  internalSetPathValue(obj, 'value', parsed);
+ *
+ * @param {Object} object to search and define on
+ * @param {*} value to use upon set
+ * @param {Object} parsed definition from `parsePath`
+ * @api private
+ */
+
+function internalSetPathValue(obj, val, parsed) {
+  var tempObj = obj;
+  var pathDepth = parsed.length;
+  var part = null;
+  // Here we iterate through every part of the path
+  for (var i = 0; i < pathDepth; i++) {
+    var propName = null;
+    var propVal = null;
+    part = parsed[i];
+
+    // If it's the last part of the path, we set the 'propName' value with the property name
+    if (i === (pathDepth - 1)) {
+      propName = typeof part.p === 'undefined' ? part.i : part.p;
+      // Now we set the property with the name held by 'propName' on object with the desired val
+      tempObj[propName] = val;
+    } else if (typeof part.p !== 'undefined' && tempObj[part.p]) {
+      tempObj = tempObj[part.p];
+    } else if (typeof part.i !== 'undefined' && tempObj[part.i]) {
+      tempObj = tempObj[part.i];
+    } else {
+      // If the obj doesn't have the property we create one with that name to define it
+      var next = parsed[i + 1];
+      // Here we set the name of the property which will be defined
+      propName = typeof part.p === 'undefined' ? part.i : part.p;
+      // Here we decide if this property will be an array or a new object
+      propVal = typeof next.p === 'undefined' ? [] : {};
+      tempObj[propName] = propVal;
+      tempObj = tempObj[propName];
+    }
+  }
+}
+
+/**
+ * ### .getPathInfo(object, path)
+ *
+ * This allows the retrieval of property info in an
+ * object given a string path.
+ *
+ * The path info consists of an object with the
+ * following properties:
+ *
+ * * parent - The parent object of the property referenced by `path`
+ * * name - The name of the final property, a number if it was an array indexer
+ * * value - The value of the property, if it exists, otherwise `undefined`
+ * * exists - Whether the property exists or not
+ *
+ * @param {Object} object
+ * @param {String} path
+ * @returns {Object} info
+ * @namespace Utils
+ * @name getPathInfo
+ * @api public
+ */
+
+function getPathInfo(obj, path) {
+  var parsed = parsePath(path);
+  var last = parsed[parsed.length - 1];
+  var info = {
+    parent: parsed.length > 1 ? internalGetPathValue(obj, parsed, parsed.length - 1) : obj,
+    name: last.p || last.i,
+    value: internalGetPathValue(obj, parsed),
+  };
+  info.exists = hasProperty(info.parent, info.name);
+
+  return info;
+}
+
+/**
+ * ### .getPathValue(object, path)
+ *
+ * This allows the retrieval of values in an
+ * object given a string path.
+ *
+ *     var obj = {
+ *         prop1: {
+ *             arr: ['a', 'b', 'c']
+ *           , str: 'Hello'
+ *         }
+ *       , prop2: {
+ *             arr: [ { nested: 'Universe' } ]
+ *           , str: 'Hello again!'
+ *         }
+ *     }
+ *
+ * The following would be the results.
+ *
+ *     getPathValue(obj, 'prop1.str'); // Hello
+ *     getPathValue(obj, 'prop1.att[2]'); // b
+ *     getPathValue(obj, 'prop2.arr[0].nested'); // Universe
+ *
+ * @param {Object} object
+ * @param {String} path
+ * @returns {Object} value or `undefined`
+ * @namespace Utils
+ * @name getPathValue
+ * @api public
+ */
+
+function getPathValue(obj, path) {
+  var info = getPathInfo(obj, path);
+  return info.value;
+}
+
+/**
+ * ### .setPathValue(object, path, value)
+ *
+ * Define the value in an object at a given string path.
+ *
+ * ```js
+ * var obj = {
+ *     prop1: {
+ *         arr: ['a', 'b', 'c']
+ *       , str: 'Hello'
+ *     }
+ *   , prop2: {
+ *         arr: [ { nested: 'Universe' } ]
+ *       , str: 'Hello again!'
+ *     }
+ * };
+ * ```
+ *
+ * The following would be acceptable.
+ *
+ * ```js
+ * var properties = require('tea-properties');
+ * properties.set(obj, 'prop1.str', 'Hello Universe!');
+ * properties.set(obj, 'prop1.arr[2]', 'B');
+ * properties.set(obj, 'prop2.arr[0].nested.value', { hello: 'universe' });
+ * ```
+ *
+ * @param {Object} object
+ * @param {String} path
+ * @param {Mixed} value
+ * @api private
+ */
+
+function setPathValue(obj, path, val) {
+  var parsed = parsePath(path);
+  internalSetPathValue(obj, val, parsed);
+  return obj;
+}
+
+module.exports = {
+  hasProperty: hasProperty,
+  getPathInfo: getPathInfo,
+  getPathValue: getPathValue,
+  setPathValue: setPathValue,
+};
+
+
+/***/ }),
+
+/***/ "../p4/node_modules/type-detect/type-detect.js":
+/*!*****************************************************!*\
+  !*** ../p4/node_modules/type-detect/type-detect.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {(function (global, factory) {
+	 true ? module.exports = factory() :
+	undefined;
+}(this, (function () { 'use strict';
+
+/* !
+ * type-detect
+ * Copyright(c) 2013 jake luer <jake@alogicalparadox.com>
+ * MIT Licensed
+ */
+var promiseExists = typeof Promise === 'function';
+
+/* eslint-disable no-undef */
+var globalObject = typeof self === 'object' ? self : global; // eslint-disable-line id-blacklist
+
+var symbolExists = typeof Symbol !== 'undefined';
+var mapExists = typeof Map !== 'undefined';
+var setExists = typeof Set !== 'undefined';
+var weakMapExists = typeof WeakMap !== 'undefined';
+var weakSetExists = typeof WeakSet !== 'undefined';
+var dataViewExists = typeof DataView !== 'undefined';
+var symbolIteratorExists = symbolExists && typeof Symbol.iterator !== 'undefined';
+var symbolToStringTagExists = symbolExists && typeof Symbol.toStringTag !== 'undefined';
+var setEntriesExists = setExists && typeof Set.prototype.entries === 'function';
+var mapEntriesExists = mapExists && typeof Map.prototype.entries === 'function';
+var setIteratorPrototype = setEntriesExists && Object.getPrototypeOf(new Set().entries());
+var mapIteratorPrototype = mapEntriesExists && Object.getPrototypeOf(new Map().entries());
+var arrayIteratorExists = symbolIteratorExists && typeof Array.prototype[Symbol.iterator] === 'function';
+var arrayIteratorPrototype = arrayIteratorExists && Object.getPrototypeOf([][Symbol.iterator]());
+var stringIteratorExists = symbolIteratorExists && typeof String.prototype[Symbol.iterator] === 'function';
+var stringIteratorPrototype = stringIteratorExists && Object.getPrototypeOf(''[Symbol.iterator]());
+var toStringLeftSliceLength = 8;
+var toStringRightSliceLength = -1;
+/**
+ * ### typeOf (obj)
+ *
+ * Uses `Object.prototype.toString` to determine the type of an object,
+ * normalising behaviour across engine versions & well optimised.
+ *
+ * @param {Mixed} object
+ * @return {String} object type
+ * @api public
+ */
+function typeDetect(obj) {
+  /* ! Speed optimisation
+   * Pre:
+   *   string literal     x 3,039,035 ops/sec ±1.62% (78 runs sampled)
+   *   boolean literal    x 1,424,138 ops/sec ±4.54% (75 runs sampled)
+   *   number literal     x 1,653,153 ops/sec ±1.91% (82 runs sampled)
+   *   undefined          x 9,978,660 ops/sec ±1.92% (75 runs sampled)
+   *   function           x 2,556,769 ops/sec ±1.73% (77 runs sampled)
+   * Post:
+   *   string literal     x 38,564,796 ops/sec ±1.15% (79 runs sampled)
+   *   boolean literal    x 31,148,940 ops/sec ±1.10% (79 runs sampled)
+   *   number literal     x 32,679,330 ops/sec ±1.90% (78 runs sampled)
+   *   undefined          x 32,363,368 ops/sec ±1.07% (82 runs sampled)
+   *   function           x 31,296,870 ops/sec ±0.96% (83 runs sampled)
+   */
+  var typeofObj = typeof obj;
+  if (typeofObj !== 'object') {
+    return typeofObj;
+  }
+
+  /* ! Speed optimisation
+   * Pre:
+   *   null               x 28,645,765 ops/sec ±1.17% (82 runs sampled)
+   * Post:
+   *   null               x 36,428,962 ops/sec ±1.37% (84 runs sampled)
+   */
+  if (obj === null) {
+    return 'null';
+  }
+
+  /* ! Spec Conformance
+   * Test: `Object.prototype.toString.call(window)``
+   *  - Node === "[object global]"
+   *  - Chrome === "[object global]"
+   *  - Firefox === "[object Window]"
+   *  - PhantomJS === "[object Window]"
+   *  - Safari === "[object Window]"
+   *  - IE 11 === "[object Window]"
+   *  - IE Edge === "[object Window]"
+   * Test: `Object.prototype.toString.call(this)``
+   *  - Chrome Worker === "[object global]"
+   *  - Firefox Worker === "[object DedicatedWorkerGlobalScope]"
+   *  - Safari Worker === "[object DedicatedWorkerGlobalScope]"
+   *  - IE 11 Worker === "[object WorkerGlobalScope]"
+   *  - IE Edge Worker === "[object WorkerGlobalScope]"
+   */
+  if (obj === globalObject) {
+    return 'global';
+  }
+
+  /* ! Speed optimisation
+   * Pre:
+   *   array literal      x 2,888,352 ops/sec ±0.67% (82 runs sampled)
+   * Post:
+   *   array literal      x 22,479,650 ops/sec ±0.96% (81 runs sampled)
+   */
+  if (
+    Array.isArray(obj) &&
+    (symbolToStringTagExists === false || !(Symbol.toStringTag in obj))
+  ) {
+    return 'Array';
+  }
+
+  // Not caching existence of `window` and related properties due to potential
+  // for `window` to be unset before tests in quasi-browser environments.
+  if (typeof window === 'object' && window !== null) {
+    /* ! Spec Conformance
+     * (https://html.spec.whatwg.org/multipage/browsers.html#location)
+     * WhatWG HTML$7.7.3 - The `Location` interface
+     * Test: `Object.prototype.toString.call(window.location)``
+     *  - IE <=11 === "[object Object]"
+     *  - IE Edge <=13 === "[object Object]"
+     */
+    if (typeof window.location === 'object' && obj === window.location) {
+      return 'Location';
+    }
+
+    /* ! Spec Conformance
+     * (https://html.spec.whatwg.org/#document)
+     * WhatWG HTML$3.1.1 - The `Document` object
+     * Note: Most browsers currently adher to the W3C DOM Level 2 spec
+     *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-26809268)
+     *       which suggests that browsers should use HTMLTableCellElement for
+     *       both TD and TH elements. WhatWG separates these.
+     *       WhatWG HTML states:
+     *         > For historical reasons, Window objects must also have a
+     *         > writable, configurable, non-enumerable property named
+     *         > HTMLDocument whose value is the Document interface object.
+     * Test: `Object.prototype.toString.call(document)``
+     *  - Chrome === "[object HTMLDocument]"
+     *  - Firefox === "[object HTMLDocument]"
+     *  - Safari === "[object HTMLDocument]"
+     *  - IE <=10 === "[object Document]"
+     *  - IE 11 === "[object HTMLDocument]"
+     *  - IE Edge <=13 === "[object HTMLDocument]"
+     */
+    if (typeof window.document === 'object' && obj === window.document) {
+      return 'Document';
+    }
+
+    if (typeof window.navigator === 'object') {
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/multipage/webappapis.html#mimetypearray)
+       * WhatWG HTML$8.6.1.5 - Plugins - Interface MimeTypeArray
+       * Test: `Object.prototype.toString.call(navigator.mimeTypes)``
+       *  - IE <=10 === "[object MSMimeTypesCollection]"
+       */
+      if (typeof window.navigator.mimeTypes === 'object' &&
+          obj === window.navigator.mimeTypes) {
+        return 'MimeTypeArray';
+      }
+
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
+       * WhatWG HTML$8.6.1.5 - Plugins - Interface PluginArray
+       * Test: `Object.prototype.toString.call(navigator.plugins)``
+       *  - IE <=10 === "[object MSPluginsCollection]"
+       */
+      if (typeof window.navigator.plugins === 'object' &&
+          obj === window.navigator.plugins) {
+        return 'PluginArray';
+      }
+    }
+
+    if ((typeof window.HTMLElement === 'function' ||
+        typeof window.HTMLElement === 'object') &&
+        obj instanceof window.HTMLElement) {
+      /* ! Spec Conformance
+      * (https://html.spec.whatwg.org/multipage/webappapis.html#pluginarray)
+      * WhatWG HTML$4.4.4 - The `blockquote` element - Interface `HTMLQuoteElement`
+      * Test: `Object.prototype.toString.call(document.createElement('blockquote'))``
+      *  - IE <=10 === "[object HTMLBlockElement]"
+      */
+      if (obj.tagName === 'BLOCKQUOTE') {
+        return 'HTMLQuoteElement';
+      }
+
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/#htmltabledatacellelement)
+       * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableDataCellElement`
+       * Note: Most browsers currently adher to the W3C DOM Level 2 spec
+       *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
+       *       which suggests that browsers should use HTMLTableCellElement for
+       *       both TD and TH elements. WhatWG separates these.
+       * Test: Object.prototype.toString.call(document.createElement('td'))
+       *  - Chrome === "[object HTMLTableCellElement]"
+       *  - Firefox === "[object HTMLTableCellElement]"
+       *  - Safari === "[object HTMLTableCellElement]"
+       */
+      if (obj.tagName === 'TD') {
+        return 'HTMLTableDataCellElement';
+      }
+
+      /* ! Spec Conformance
+       * (https://html.spec.whatwg.org/#htmltableheadercellelement)
+       * WhatWG HTML$4.9.9 - The `td` element - Interface `HTMLTableHeaderCellElement`
+       * Note: Most browsers currently adher to the W3C DOM Level 2 spec
+       *       (https://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075)
+       *       which suggests that browsers should use HTMLTableCellElement for
+       *       both TD and TH elements. WhatWG separates these.
+       * Test: Object.prototype.toString.call(document.createElement('th'))
+       *  - Chrome === "[object HTMLTableCellElement]"
+       *  - Firefox === "[object HTMLTableCellElement]"
+       *  - Safari === "[object HTMLTableCellElement]"
+       */
+      if (obj.tagName === 'TH') {
+        return 'HTMLTableHeaderCellElement';
+      }
+    }
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   Float64Array       x 625,644 ops/sec ±1.58% (80 runs sampled)
+  *   Float32Array       x 1,279,852 ops/sec ±2.91% (77 runs sampled)
+  *   Uint32Array        x 1,178,185 ops/sec ±1.95% (83 runs sampled)
+  *   Uint16Array        x 1,008,380 ops/sec ±2.25% (80 runs sampled)
+  *   Uint8Array         x 1,128,040 ops/sec ±2.11% (81 runs sampled)
+  *   Int32Array         x 1,170,119 ops/sec ±2.88% (80 runs sampled)
+  *   Int16Array         x 1,176,348 ops/sec ±5.79% (86 runs sampled)
+  *   Int8Array          x 1,058,707 ops/sec ±4.94% (77 runs sampled)
+  *   Uint8ClampedArray  x 1,110,633 ops/sec ±4.20% (80 runs sampled)
+  * Post:
+  *   Float64Array       x 7,105,671 ops/sec ±13.47% (64 runs sampled)
+  *   Float32Array       x 5,887,912 ops/sec ±1.46% (82 runs sampled)
+  *   Uint32Array        x 6,491,661 ops/sec ±1.76% (79 runs sampled)
+  *   Uint16Array        x 6,559,795 ops/sec ±1.67% (82 runs sampled)
+  *   Uint8Array         x 6,463,966 ops/sec ±1.43% (85 runs sampled)
+  *   Int32Array         x 5,641,841 ops/sec ±3.49% (81 runs sampled)
+  *   Int16Array         x 6,583,511 ops/sec ±1.98% (80 runs sampled)
+  *   Int8Array          x 6,606,078 ops/sec ±1.74% (81 runs sampled)
+  *   Uint8ClampedArray  x 6,602,224 ops/sec ±1.77% (83 runs sampled)
+  */
+  var stringTag = (symbolToStringTagExists && obj[Symbol.toStringTag]);
+  if (typeof stringTag === 'string') {
+    return stringTag;
+  }
+
+  var objPrototype = Object.getPrototypeOf(obj);
+  /* ! Speed optimisation
+  * Pre:
+  *   regex literal      x 1,772,385 ops/sec ±1.85% (77 runs sampled)
+  *   regex constructor  x 2,143,634 ops/sec ±2.46% (78 runs sampled)
+  * Post:
+  *   regex literal      x 3,928,009 ops/sec ±0.65% (78 runs sampled)
+  *   regex constructor  x 3,931,108 ops/sec ±0.58% (84 runs sampled)
+  */
+  if (objPrototype === RegExp.prototype) {
+    return 'RegExp';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   date               x 2,130,074 ops/sec ±4.42% (68 runs sampled)
+  * Post:
+  *   date               x 3,953,779 ops/sec ±1.35% (77 runs sampled)
+  */
+  if (objPrototype === Date.prototype) {
+    return 'Date';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-promise.prototype-@@tostringtag)
+   * ES6$25.4.5.4 - Promise.prototype[@@toStringTag] should be "Promise":
+   * Test: `Object.prototype.toString.call(Promise.resolve())``
+   *  - Chrome <=47 === "[object Object]"
+   *  - Edge <=20 === "[object Object]"
+   *  - Firefox 29-Latest === "[object Promise]"
+   *  - Safari 7.1-Latest === "[object Promise]"
+   */
+  if (promiseExists && objPrototype === Promise.prototype) {
+    return 'Promise';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   set                x 2,222,186 ops/sec ±1.31% (82 runs sampled)
+  * Post:
+  *   set                x 4,545,879 ops/sec ±1.13% (83 runs sampled)
+  */
+  if (setExists && objPrototype === Set.prototype) {
+    return 'Set';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   map                x 2,396,842 ops/sec ±1.59% (81 runs sampled)
+  * Post:
+  *   map                x 4,183,945 ops/sec ±6.59% (82 runs sampled)
+  */
+  if (mapExists && objPrototype === Map.prototype) {
+    return 'Map';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   weakset            x 1,323,220 ops/sec ±2.17% (76 runs sampled)
+  * Post:
+  *   weakset            x 4,237,510 ops/sec ±2.01% (77 runs sampled)
+  */
+  if (weakSetExists && objPrototype === WeakSet.prototype) {
+    return 'WeakSet';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   weakmap            x 1,500,260 ops/sec ±2.02% (78 runs sampled)
+  * Post:
+  *   weakmap            x 3,881,384 ops/sec ±1.45% (82 runs sampled)
+  */
+  if (weakMapExists && objPrototype === WeakMap.prototype) {
+    return 'WeakMap';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-dataview.prototype-@@tostringtag)
+   * ES6$24.2.4.21 - DataView.prototype[@@toStringTag] should be "DataView":
+   * Test: `Object.prototype.toString.call(new DataView(new ArrayBuffer(1)))``
+   *  - Edge <=13 === "[object Object]"
+   */
+  if (dataViewExists && objPrototype === DataView.prototype) {
+    return 'DataView';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-%mapiteratorprototype%-@@tostringtag)
+   * ES6$23.1.5.2.2 - %MapIteratorPrototype%[@@toStringTag] should be "Map Iterator":
+   * Test: `Object.prototype.toString.call(new Map().entries())``
+   *  - Edge <=13 === "[object Object]"
+   */
+  if (mapExists && objPrototype === mapIteratorPrototype) {
+    return 'Map Iterator';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-%setiteratorprototype%-@@tostringtag)
+   * ES6$23.2.5.2.2 - %SetIteratorPrototype%[@@toStringTag] should be "Set Iterator":
+   * Test: `Object.prototype.toString.call(new Set().entries())``
+   *  - Edge <=13 === "[object Object]"
+   */
+  if (setExists && objPrototype === setIteratorPrototype) {
+    return 'Set Iterator';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-%arrayiteratorprototype%-@@tostringtag)
+   * ES6$22.1.5.2.2 - %ArrayIteratorPrototype%[@@toStringTag] should be "Array Iterator":
+   * Test: `Object.prototype.toString.call([][Symbol.iterator]())``
+   *  - Edge <=13 === "[object Object]"
+   */
+  if (arrayIteratorExists && objPrototype === arrayIteratorPrototype) {
+    return 'Array Iterator';
+  }
+
+  /* ! Spec Conformance
+   * (http://www.ecma-international.org/ecma-262/6.0/index.html#sec-%stringiteratorprototype%-@@tostringtag)
+   * ES6$21.1.5.2.2 - %StringIteratorPrototype%[@@toStringTag] should be "String Iterator":
+   * Test: `Object.prototype.toString.call(''[Symbol.iterator]())``
+   *  - Edge <=13 === "[object Object]"
+   */
+  if (stringIteratorExists && objPrototype === stringIteratorPrototype) {
+    return 'String Iterator';
+  }
+
+  /* ! Speed optimisation
+  * Pre:
+  *   object from null   x 2,424,320 ops/sec ±1.67% (76 runs sampled)
+  * Post:
+  *   object from null   x 5,838,000 ops/sec ±0.99% (84 runs sampled)
+  */
+  if (objPrototype === null) {
+    return 'Object';
+  }
+
+  return Object
+    .prototype
+    .toString
+    .call(obj)
+    .slice(toStringLeftSliceLength, toStringRightSliceLength);
+}
+
+return typeDetect;
+
+})));
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../p5/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -28743,9 +44517,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "randomArrays", function() { return randomArrays; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "randomTypedColumns", function() { return randomTypedColumns; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validate", function() { return validate; });
-/* harmony import */ var chai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chai */ "chai");
+/* harmony import */ var chai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chai */ "../p4/node_modules/chai/index.js");
 /* harmony import */ var chai__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(chai__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var jStat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jStat */ "jStat");
+/* harmony import */ var jStat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jStat */ "../p4/node_modules/jStat/dist/jstat.js");
 /* harmony import */ var jStat__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jStat__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _src_cstore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../src/cstore */ "../p4/src/cstore.js");
 /* harmony import */ var _src_ctypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../src/ctypes */ "../p4/src/ctypes.js");
@@ -28884,6 +44658,184 @@ function validate(actual, expected, _delta) {
 
 /***/ }),
 
+/***/ "./demos/babies.js":
+/*!*************************!*\
+  !*** ./demos/babies.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "./index.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function() {
+  let config = {
+    container: 'pv-vis',
+    viewport: [960, 720],
+    profiling: true
+  }
+
+  let views = [
+    {
+      id: 'v1', width: 480, height: 360,
+      padding: {left: 100, right: 10, top: 20, bottom: 50},
+      offset: [0, 0],
+      gridlines: {y: true},
+      legend: false
+    },
+    {
+      id: 'v2', width: 480, height: 360, 
+      gridlines: {y: true},
+      padding: {left: 100, right: 10, top: 20, bottom: 50},
+      offset: [480, 0]
+    },
+    {
+      id: 'v3', width: 960, height: 360, 
+      gridlines: {y: true},
+      padding: {left: 100, right: 10, top: 20, bottom: 50},
+      offset: [0, 360]
+    }
+  ];
+
+  let p = Object(___WEBPACK_IMPORTED_MODULE_0__["default"])(config).view(views);
+
+  p.input({
+    method: 'memory',
+    source: function(nrows) {
+      let dataset = ___WEBPACK_IMPORTED_MODULE_0__["default"].datasets.Babies({size: nrows, type: 'array'});
+      let data = dataset.data;
+      return data;
+    },
+    batchSize: 100000,
+    schema: ___WEBPACK_IMPORTED_MODULE_0__["default"].datasets.Babies.schema
+  });
+
+  p.batch([
+    {
+      aggregate:{
+        $group: 'MotherEdu',
+        $collect: {
+          count: {$count: '*'}
+        }
+      },
+      out: 'byMotherEdu'
+    },
+    {
+      aggregate:{
+        $group: 'FatherEdu',
+        $collect: {
+          count: {$count: '*'}
+        }
+      },
+      out: 'byFatherEdu'
+    },
+    {
+      aggregate:{
+        $group: 'FatherAge',
+        $collect: {
+          count: {$count: '*'}
+        }
+      },
+      out: 'byFatherAge'
+    }
+  ])
+  .progress([
+    {
+      visualize: {
+        id: 'v1',
+        in: 'byMotherEdu',
+        mark: 'column',
+        x: 'MotherEdu',
+        y: 'count',
+        zero: true,
+        color: '#FA0000'
+      }
+    },
+    {
+      visualize: {
+        id: 'v2',
+        in: 'byFatherEdu',
+        mark: 'column',
+        x: 'FatherEdu',
+        y: 'count',
+        zero: true,
+        color: 'steelblue'
+      }
+    },
+    {
+      visualize: {
+        id: 'v3',
+        in: 'byFatherAge',
+        mark: 'area',
+        x: 'FatherAge',
+        y: 'count',
+        zero: true,
+        color: 'steelblue'
+      }
+    }
+  ])
+  .interact([
+    {
+      event: "brush",
+      from: "v3",
+      condition: {x: true},
+      response: {
+        v1: {
+          selected: { color: 'orange' }
+        },
+        v2: {
+          selected: { color: 'orange' }
+        },
+      }
+    }
+  ])
+  .onEach(function(stats, profile) {
+    document.getElementById('stats').innerHTML = '(completed: ' + stats.completed + ')';
+  })
+
+  document.getElementById('next-button').onclick = () => {
+    try {
+      p.next();
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
+
+  document.getElementById('pv-demo-description').innerHTML = `
+  <h3>PV Demo </h3>
+  <p>
+    This demo uses sythnetic data to show how PV can be used to create a progressive visualization application with mulitple linked views and interactions.
+  </p>
+  <p>
+    Press "progress" butoon to incrementally process and visualize data. "Brush-and-link" interaction can be used on the area chart at the bottom to highlight data at the two bar charts above.
+    The incremental data processing, visualizations, and interactions are accelerated using the GPU.
+  </p>
+  `;
+});
+
+
+/***/ }),
+
+/***/ "./demos/demo.js":
+/*!***********************!*\
+  !*** ./demos/demo.js ***!
+  \***********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./babies */ "./demos/babies.js");
+
+
+Object(_babies__WEBPACK_IMPORTED_MODULE_0__["default"])();
+
+
+/***/ }),
+
 /***/ "./index.js":
 /*!******************!*\
   !*** ./index.js ***!
@@ -28893,7 +44845,7 @@ function validate(actual, expected, _delta) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var p4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! p4 */ "../p4/index.js");
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var p4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! p4 */ "../p4/index.js");
 /* harmony import */ var _src_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/main */ "./src/main.js");
 /* harmony import */ var _src_Transpiler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/Transpiler */ "./src/Transpiler.js");
 
@@ -28914,7 +44866,38 @@ root.pv = _src_main__WEBPACK_IMPORTED_MODULE_1__["default"];
 if( true && module.exports)
     module.exports = _src_main__WEBPACK_IMPORTED_MODULE_1__["default"];
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 
@@ -28967,7 +44950,7 @@ let formats = {
   text: 'text',
   array: 'array',
   json: 'json'
-};
+}
 
 class FileLoader {
 
@@ -28977,139 +44960,140 @@ class FileLoader {
     chunk = 64 * 1024,
     delimiter = ','
   }) {
-    if (typeof file === 'undefined') {
-      throw Error('No file provided for FileLoader.');
+    if (typeof (file) === 'undefined') {
+      throw Error('No file provided for FileLoader.')
     }
-    this.file = file;
-    this.fileSize = file.size;
-    this.reader = new FileReader();
-    this.skip = skip;
-    this.chunk = chunk;
-    this.delimiter = delimiter;
-    this.reset();
+    this.file = file
+    this.fileSize = file.size
+    this.reader = new FileReader()
+    this.skip = skip
+    this.chunk = chunk
+    this.delimiter = delimiter
+    this.reset()
   }
 
   static get format() {
-    return formats;
+    return formats
   }
 
   reset() {
-    this.offset = 0;
-    this.lineTotal = 0;
-    this.leftOver = '';
+    this.offset = 0
+    this.lineTotal = 0
+    this.leftOver = ''
   }
 
   parseDataSchema(rows) {
-    let delimiter = rows[0].match(/(\,|\:|\t|\s{2,})/g)[0] || ',';
-    let header = rows[0].split(delimiter);
-    let values = rows[1].split(delimiter);
+    let delimiter = rows[0].match(/(\,|\:|\t|\s{2,})/g)[0] || ','
+    let header = rows[0].split(delimiter)
+    let values = rows[1].split(delimiter)
     let schema = header.map((f, i) => {
       return {
         name: f,
         dtype: Number.isNaN(Number(values[i])) ? 'string' : 'int'
-      };
-    });
-    this.delimiter = delimiter;
+      }
+    })
+    this.delimiter = delimiter
     for (let rid = 1; rid < rows.length; rid++) {
-      let values = rows[rid].split(delimiter);
+      let values = rows[rid].split(delimiter)
       for (let fid = 0; fid < header.length; fid++) {
-        let value = values[fid];
+        let value = values[fid]
         if (schema[fid].dtype === 'int' && parseInt(value) !== parseFloat(value)) {
-          schema[fid].dtype = 'float';
+          schema[fid].dtype = 'float'
         }
       }
     }
-    return schema;
+    return schema
   }
 
   errorHandler(evt) {
     switch (evt.target.error.code) {
       case evt.target.error.NOT_FOUND_ERR:
-        throw Error('File Not Found!', evt.target.error);
+        throw Error('File Not Found!', evt.target.error)
 
       case evt.target.error.NOT_READABLE_ERR:
-        throw Error('File is not readable', evt.target.error);
+        throw Error('File is not readable', evt.target.error)
       case evt.target.error.ABORT_ERR:
-        throw Error('Aborted', evt.target.error);
+        throw Error('Aborted', evt.target.error)
       default:
-        throw Error('An error occurred reading this file.', evt.target.error);
+        throw Error('An error occurred reading this file.', evt.target.error)
     };
   }
 
   getSchema() {
     this.reader.readAsBinaryString(this.file.slice(0, this.chunk / 16));
     return new Promise((resolve, reject) => {
-      this.reader.onloadend = evt => {
+      this.reader.onloadend = (evt) => {
         if (evt.target.readyState == FileReader.DONE) {
-          let rawText = this.leftOver + evt.target.result;
-          let lines = rawText.split('\n');
-          let schema = this.parseDataSchema(lines.slice(0, 10));
-          resolve(schema);
+          let rawText = this.leftOver + evt.target.result
+          let lines = rawText.split('\n')
+          let schema = this.parseDataSchema(lines.slice(0, 10))
+          resolve(schema)
         }
-      };
-      this.reader.onerror = evt => {
-        reject(this.errorHandler(evt));
-      };
-    });
+      }
+      this.reader.onerror = (evt) => {
+        reject(this.errorHandler(evt))
+      }
+    })
   }
 
   read(format) {
     this.reader.readAsBinaryString(this.file.slice(this.offset, Math.min(this.file.size, this.offset + this.chunk)));
     return new Promise((resolve, reject) => {
-      this.reader.onloadend = evt => {
+      this.reader.onloadend = (evt) => {
         if (evt.target.readyState == FileReader.DONE) {
-          let rawText = this.leftOver + evt.target.result;
-          let lines = rawText.split('\n');
-          this.leftOver = lines.pop();
-          this.offset += this.chunk;
-          let results;
+          let rawText = this.leftOver + evt.target.result
+          let lines = rawText.split('\n')
+          this.leftOver = lines.pop()
+          this.offset += this.chunk
+          let results
           if (format == FileLoader.format.text) {
-            results = lines;
+            results = lines
           } else {
-            results = lines.map(line => line.split(this.delimiter));
+            results = lines.map((line) => line.split(this.delimiter))
           }
-          resolve(results);
+          resolve(results)
         }
-      };
-      this.reader.onerror = evt => {
-        reject(this.errorHandler(evt));
-      };
-    });
+      }
+      this.reader.onerror = (evt) => {
+        reject(this.errorHandler(evt))
+      }
+    })
   }
 
   readAll(onprocess) {
     if (typeof onprocess !== 'function') {
-      throw Error('undefined function specified for reading file content');
+      throw Error('undefined function specified for reading file content')
     }
-    this.reader.readAsBinaryString(this.file.slice(this.offset, this.offset + this.chunk));
+    this.reader.readAsBinaryString(this.file.slice(this.offset, this.offset + this.chunk))
     return new Promise((resolve, reject) => {
-      this.reader.onloadend = evt => {
+      this.reader.onloadend = (evt) => {
         if (evt.target.readyState == FileReader.DONE) {
-          let rawText = this.leftOver + evt.target.result;
-          let lines = rawText.split('\n');
-          this.leftOver = lines.pop();
+          let rawText = this.leftOver + evt.target.result
+          let lines = rawText.split('\n')
+          this.leftOver = lines.pop()
 
           if (this.offset == 0 && this.skip > 0) {
-            if (this.skip > 0) lines.shift();
+            if (this.skip > 0) lines.shift()
           }
 
-          onprocess(lines.map(line => line.split(this.delimiter)));
-          this.lineTotal += lines.length;
+          onprocess(lines.map((line) => line.split(this.delimiter)))
+          this.lineTotal += lines.length
 
           if (this.offset < this.file.size) {
-            this.offset += this.chunk;
+            this.offset += this.chunk
             this.reader.readAsBinaryString(this.file.slice(this.offset, this.offset + this.chunk));
           } else {
-            resolve(this.lineTotal);
+            resolve(this.lineTotal)
           }
         }
-      };
-      this.reader.onerror = evt => {
+      }
+      this.reader.onerror = (evt) => {
         reject(this.errorHandler(evt));
-      };
-    });
+      }
+    })
   }
 }
+
 
 /***/ }),
 
@@ -29123,252 +45107,83 @@ class FileLoader {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Transpiler; });
-
+ 
 class Transpiler {
   constructor(attributes, categories) {
-    this.attributes = attributes;
+   this.attributes = attributes
   }
 
-  transpile(rules) {
-    let spec = [];
+  transpile (rules) {
+    let spec = []
     for (let rule of rules) {
-      let opt = Object.keys(rule)[0];
-      if (opt == '$aggregate') {
-        spec.push({ $aggregate: this.aggregate(rule[opt]) });
-        // } else if(opt == '$visualize') {
-        //   spec.push({$visualize: this.visualize(rule[opt])})
+      let opt = Object.keys(rule)[0]
+      if(opt == '$aggregate') {
+        spec.push({$aggregate: this.aggregate(rule[opt])})
+      // } else if(opt == '$visualize') {
+      //   spec.push({$visualize: this.visualize(rule[opt])})
       } else {
-        spec.push(Object.assign({}, rule));
+        spec.push(Object.assign({}, rule))
       }
     }
-    return spec;
+    return spec
   }
 
-  aggregate(rule) {
-    let includes = rule.$include || this.attributes;
-    let excludes = rule.$exclude || [];
-    let calculates = rule.$calculate || [];
-    let fields = includes.filter(attr => excludes.indexOf(attr) === -1);
-    let collection = {};
+  aggregate (rule) {
+    let includes = rule.$include || this.attributes
+    let excludes = rule.$exclude || []
+    let calculates = rule.$calculate || []
+    let fields = includes.filter(attr => excludes.indexOf(attr) === -1)
+    let collection = {}
 
     for (let opt of calculates) {
       if (opt === 'count') {
-        collection['count'] = { $count: '*' };
+        collection['count'] = {$count: '*'}
       } else {
-        fields.forEach(field => {
+        fields.forEach( field => {
           let metric = [opt, field].join('.');
-          collection[metric] = {};
-          collection[metric]['$' + opt] = field;
-        });
+          collection[metric] = {}
+          collection[metric]['$'+opt] = field
+        })
       }
     }
-    return Object.assign({ $collect: collection }, rule);
+    return Object.assign({$collect: collection}, rule)
   }
 
-  visualize(rule) {
-    let facets = rule.facets || rule.facet;
+  visualize (rule) {
+    let facets = rule.facets || rule.facet
 
-    if (facets === undefined) return rule;
+    if (facets === undefined) return rule
 
-    let rows = facets.rows || facets.row;
-    let columns = facets.columns || facets.column;
-    let spec = rows || columns;
+    let rows = facets.rows || facets.row
+    let columns = facets.columns || facets.column
+    let spec = rows || columns
 
-    let encodings = Object.keys(rule).filter(k => k !== 'facets');
+    let encodings = Object.keys(rule).filter(k => k !== 'facets')
 
-    let variables = Object.keys(spec);
+    let variables = Object.keys(spec)
 
-    let minLoopCount = Math.min(...variables.map(v => spec[v].length));
+    let minLoopCount = Math.min(...variables.map(v => spec[v].length))
 
-    let vmaps = new Array(minLoopCount);
-    for (let i = 0; i < minLoopCount; i++) {
-      let vmap = {};
+    let vmaps = new Array(minLoopCount)
+    for(let i = 0; i < minLoopCount; i++) {
+      let vmap = {}
       encodings.forEach(code => {
-        let vi = variables.indexOf(rule[code]);
-        if (vi < 0) {
-          vmap[code] = rule[code];
+        let vi = variables.indexOf(rule[code])
+        if(vi < 0) {
+          vmap[code] = rule[code]     
         } else {
-          vmap[code] = spec[variables[vi]][i];
+          vmap[code] = spec[variables[vi]][i]
         }
-      });
-      vmaps[i] = vmap;
+      })
+      vmaps[i] = vmap
     }
-    vmaps.facets = facets;
-    vmaps.order = facets.order;
-    vmaps.sortBy = facets.sortBy;
-    return vmaps;
+    vmaps.facets = facets
+    vmaps.order = facets.order
+    vmaps.sortBy = facets.sortBy
+    return vmaps
   }
 }
 
-/***/ }),
-
-/***/ "./src/loaders/Csv.js":
-/*!****************************!*\
-  !*** ./src/loaders/Csv.js ***!
-  \****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Csv; });
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! fs */ "fs");
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
-
-class Csv {
-  constructor({
-    path,
-    chunkSize = 4 * 1024 * 1024,
-    offset = 0,
-    delimiter = ','
-  }) {
-    this.filePath = path;
-    this.offset = offset;
-    this.chunkSize = chunkSize;
-    this.delimiter = delimiter;
-    this.leftOver = '';
-    this.rows = [];
-  }
-
-  fetch(nrows = 1000) {
-    if (nrows > this.rows.length) {
-      return this.loadFromFile().then(rows => {
-        this.rows = this.rows.concat(rows);
-        return this.fetch(nrows);
-      });
-    } else {
-      this.leftOver = '';
-      return new Promise((resolve, reject) => {
-        resolve(this.rows.slice(0, nrows));
-        this.rows = this.rows.slice(nrows);
-      });
-    }
-  }
-
-  loadFromFile() {
-    let data = [];
-    this.leftOver = '';
-    console.log(this.offset);
-    return new Promise((resolve, reject) => {
-      fs__WEBPACK_IMPORTED_MODULE_0___default.a.open(this.filePath, 'r', (err, fd) => {
-        let buffer = new Buffer(this.chunkSize);
-        fs__WEBPACK_IMPORTED_MODULE_0___default.a.read(fd, buffer, 0, this.chunkSize, this.offset, (err, nread) => {
-          if (err) {
-            reject(err);
-            fs__WEBPACK_IMPORTED_MODULE_0___default.a.close();
-          }
-          if (nread === 0) fs__WEBPACK_IMPORTED_MODULE_0___default.a.close();
-
-          if (nread < this.chunkSize) {
-            data = buffer.slice(0, nread);
-          } else {
-            data = buffer;
-          }
-          let text = this.leftOver + data.toString('utf8');
-          let rows = text.split('\n');
-          this.leftOver = rows.pop();
-          data = rows.map(row => row.split(this.delimiter));
-          this.offset += this.chunkSize;
-
-          resolve(data);
-        });
-      });
-    });
-  }
-}
-
-/***/ }),
-
-/***/ "./src/loaders/Model.js":
-/*!******************************!*\
-  !*** ./src/loaders/Model.js ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Models; });
-/* harmony import */ var p4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! p4 */ "../p4/index.js");
-
-
-let dataModels = {
-  TimeSeries: {
-    timesteps: 1,
-    series: 512,
-    interval: 100,
-    props: [{ name: 'traffic', dtype: 'int', dist: 'normal', min: 0, max: 10000, mean: 500, std: 180 }, { name: 'sattime', dtype: 'float', dist: 'normal', min: 0, max: 10000, mean: 500, std: 180 }]
-  },
-  Babies: {}
-};
-
-class Models {
-  constructor({
-    name = 'Babies',
-    prop = {}
-  }) {
-    if (Object.keys(dataModels).indexOf(name) === -1) {
-      throw Error('No data model found for ' + name);
-    }
-    this.model = name;
-    this.prop = prop;
-  }
-
-  fetch(nrows = 1000) {
-    let modelProps = Object.assign(this.prop, dataModels[this.model]);
-    modelProps.size = nrows;
-    modelProps.timesteps = nrows;
-    modelProps.type = 'array';
-    let dataset = p4__WEBPACK_IMPORTED_MODULE_0__["default"].datasets[this.model](modelProps);
-    return new Promise((resolve, reject) => {
-      resolve(dataset.data);
-    });
-  }
-}
-
-/***/ }),
-
-/***/ "./src/loaders/Mysql.js":
-/*!******************************!*\
-  !*** ./src/loaders/Mysql.js ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rdb; });
-/* harmony import */ var mysql__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mysql */ "mysql");
-/* harmony import */ var mysql__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mysql__WEBPACK_IMPORTED_MODULE_0__);
-
-
-class Rdb {
-    constructor({
-        host = 'localhost',
-        user,
-        password,
-        database,
-        query
-    }) {
-        this.source = { host, user, password, database };
-        this.query = query || 'select * from ' + database;
-        this.loaded = 0;
-    }
-
-    fetch(numRows = 1000, offset) {
-        let db = mysql__WEBPACK_IMPORTED_MODULE_0___default.a.createConnection(this.source);
-        let start = offset || this.loaded;
-        db.connect();
-        return new Promise((resolve, reject) => {
-            db.query(this.query + ' limit ' + [start, numRows].join(','), (error, results, fields) => {
-                if (error) reject(error);
-                resolve(results);
-                db.end();
-                this.loaded += numRows;
-            });
-        });
-    }
-}
 
 /***/ }),
 
@@ -29394,9 +45209,9 @@ const PROGRESS_MODES = ['automatic', 'semi-automatic', 'manual'];
 const INPUT_METHODS = ['http', 'file', 'websocket'];
 const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
 
-/* harmony default export */ __webpack_exports__["default"] = (function (arg) {
-  let p4x = Object(p4__WEBPACK_IMPORTED_MODULE_0__["default"])(Object.assign({ preserveDrawingBuffer: true }, arg));
-  let pv = {};
+/* harmony default export */ __webpack_exports__["default"] = (function(arg) {
+  let p4x = Object(p4__WEBPACK_IMPORTED_MODULE_0__["default"])(Object.assign({preserveDrawingBuffer: true}, arg));
+  let pv = {}
   let dataSchema;
   let dataSource;
   let fetchData;
@@ -29408,32 +45223,28 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
   let batchProcessing;
   let progression;
   let crossViewProc = [];
-  let inputType = 'array';
-  let profiling = arg.profiling || false;
+  let inputType = 'array'
+  let profiling = arg.profiling || false
   let profile = {
     LoadTime: 0,
     ProcTime: 0,
     AccuTime: 0
-  };
+  }
   let strValues = null;
 
-  let onEach = () => {};
+  let onEach = () => {}
 
   let interactionData = [];
 
   pv.batchSize = 0;
   pv.pipeline = p4x;
   pv.mode = arg.mode || PROGRESS_MODES[2];
-  pv.data = function (arg) {
-    p4x.data(arg);return pv;
-  };
+  pv.data = function(arg) {p4x.data(arg); return pv};
 
-  pv.view = function (arg) {
-    p4x.view(arg);return pv;
-  };
+  pv.view = function(arg) {p4x.view(arg); return pv};
 
   pv.runSpec = p4x.runSpec;
-  pv.input = function ({
+  pv.input = function({
     method = 'file',
     type = 'csv',
     delimiter = ',',
@@ -29443,170 +45254,175 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
   }) {
     dataSchema = schema;
     pv.batchSize = batchSize;
-
-    if (method == 'file') {
+    
+    if(method == 'file') {
       dataSource = new _FileLoader__WEBPACK_IMPORTED_MODULE_2__["default"]({
         file: source,
         chunk: batchSize,
         delimiter
-      });
+      })
       dataSize = source.size;
       if (dataSchema === undefined) {
         fetchData = () => {
-          return new Promise((resolve, reject) => {
-            dataSource.getSchema().then(schema => {
+          return new Promise( (resolve, reject) => {
+            dataSource.getSchema().then( schema => {
               dataSchema = schema;
               return dataSource.read('json');
-            }).then(res => {
-              resolve(res);
-            }).catch(err => {
-              reject(err);
-            });
+            })
+            .then(res => {
+              resolve(res)
+            })
+            .catch(err => {
+              reject(err)
+            })
           });
         };
       } else {
         fetchData = () => {
-          return dataSource.read('json');
+          return dataSource.read('json')
         };
       }
+
     } else if (method == 'memory') {
       fetchData = () => {
-        return new Promise((resolve, reject) => {
-          resolve(source(batchSize));
+        return new Promise( (resolve, reject) => {
+          resolve(source(batchSize))
         });
       };
     } else {
-      inputType = 'json';
+      inputType = 'json'
       fetchData = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise( (resolve, reject) => {
           p4__WEBPACK_IMPORTED_MODULE_0__["default"].ajax.get({
             url: source + '?nrows=' + batchSize,
             dataType: 'json'
-          }).then(res => {
+          })
+          .then((res) => {
             dataSchema = res.schema;
             resolve(res.data);
-          }).catch(err => {
+          })
+          .catch((err) =>  {
             reject(err);
-          });
-        });
+          })
+        })
       };
     }
-
+  
     return pv;
-  };
+  }
 
-  for (let ops of OPERATIONS) {
-    pv[ops] = function (arg) {
+  for(let ops of OPERATIONS) {
+    pv[ops] = function(arg) {
       let job = {};
       job[ops] = arg;
       jobs.push(job);
       return pv;
-    };
+    }
   }
 
-  pv.transpile = function (spec) {
-    let tplr = new _Transpiler__WEBPACK_IMPORTED_MODULE_3__["default"](p4x.ctx.fields);
-    return tplr.transpile(spec);
-  };
+  pv.transpile = function(spec) {
+    let tplr = new _Transpiler__WEBPACK_IMPORTED_MODULE_3__["default"](p4x.ctx.fields)
+    return tplr.transpile(spec)
+  }
 
-  pv.compile = function (specs) {
+  pv.compile = function(specs) {
     let jobs = [];
-    if (Array.isArray(specs)) {
-      specs.forEach(function (spec) {
+    if(Array.isArray(specs)) {
+      specs.forEach(function(spec){
         let job = {};
         let opt = Object.keys(spec)[0];
         let arg = spec[opt];
-        if (opt[0] === '$') {
+        if (opt[0] === '$'){
           opt = opt.slice(1); // ignore $ sign 
         }
-        if (typeof pv[opt] == 'function') {
+        if(typeof pv[opt] == 'function') {
           job[opt] = arg;
         }
         jobs.push(job);
-      });
+      })
     }
     return jobs;
-  };
+  }
 
-  pv.jobs = function () {
-    return jobs;
-  };
+  pv.jobs = function() {
+    return jobs; 
+  }
 
-  pv.jobsToPipeline = function (jobs) {
+  pv.jobsToPipeline = function(jobs) {
     let pipeline = [];
     Object.keys(jobs).forEach(opt => {
       let task = {};
       task[opt] = jobs[opt];
-      if (opt == 'aggregate' && jobs.out) {
+      if(opt == 'aggregate' && jobs.out) {
         task[opt].out = jobs.out;
       }
       pipeline.push(task);
-    });
+    })
     return pipeline;
-  };
+  }
 
-  pv.batch = function (jobs) {
+  pv.batch = function(jobs) {
     let batches = [];
     jobs.forEach(jobs => {
-      let opts = pv.jobsToPipeline(jobs);
+      let opts = pv.jobsToPipeline(jobs)
       batches.push(opts);
-    });
+    })
     batchProcessing = batches.map(batch => {
       return pv.compile(pv.transpile(batch));
     });
     // console.log(batchProcessing);
     return pv;
-  };
+  }
 
-  pv.update = function (newData, specs) {
+  pv.update = function(newData, specs) {
     p4x.ctx._progress = true;
     p4x.head();
     p4x.updateData(newData);
     p4x.run(pv.compile(pv.transpile(specs)));
     return pv;
-  };
+  }
 
-  pv.progress = function (specs) {
+  pv.progress = function(specs) {
     progression = pv.compile(specs);
     return pv;
-  };
+  }
 
-  pv.prepareData = function (data) {
+  pv.prepareData = function(data) {
 
-    let cache = p4__WEBPACK_IMPORTED_MODULE_0__["default"].cstore(strValues !== null ? { strValues } : {});
+    let cache = p4__WEBPACK_IMPORTED_MODULE_0__["default"].cstore((strValues !== null) ? {strValues} : {})
     cache.import({
       data: data.slice(1),
       schema: dataSchema,
       type: inputType
     });
-    let cdata = cache.data();
+    let cdata = cache.data()
     if (strValues === null) {
       strValues = cdata.strValues;
     }
     return cdata;
-  };
+  }
 
-  pv.onEach = function (f) {
+  pv.onEach = function(f) {
     onEach = f;
     return pv;
-  };
-  pv.onComplete = function () {};
+  }
+  pv.onComplete = function() {}
 
-  pv.autoProgress = function () {
-    pv.next().then(function (status) {
+  pv.autoProgress = function() {
+    pv.next().then(function(status){
       if (!status.done) {
         requestAnimationFrame(pv.autoProgress);
       }
     });
-  };
+  }
 
-  pv.start = function () {
+  pv.start = function() {
     requestAnimationFrame(pv.autoProgress);
     return pv;
-  };
+  }
 
-  pv.next = function (callback) {
-    if (typeof callback === 'function') {
+  pv.next = function(callback) {
+    if(typeof(callback) === 'function') {
       onEach = callback;
     }
 
@@ -29614,28 +45430,28 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
     progressedSize += pv.batchSize;
     // let done = (progressedSize >= dataSize ) ? true : false;
 
-    let status = {
-      count: progressStep,
-      completed: progressedSize
-      // percentage: progressedSize / dataSize
+    let status =  {
+        count: progressStep,
+        completed: progressedSize,
+        // percentage: progressedSize / dataSize
+    }
 
+    // if (done) {
+    //     return new Promise((resolve, reject) => { resolve(status) })
+    // }
 
-      // if (done) {
-      //     return new Promise((resolve, reject) => { resolve(status) })
-      // }
-
-    };return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       fetchData().then(data => {
         let loadStart = performance.now();
         let inputData;
-        if (data._p4_cstore_version) {
+        if(data._p4_cstore_version) {
           inputData = data;
         } else {
           inputData = pv.prepareData(data);
         }
         profile.LoadTime = performance.now() - loadStart;
-        let processStart = performance.now();
-        if (progressStep == 1) {
+        let processStart = performance.now()
+        if(progressStep == 1) {
           p4x.data(inputData);
         } else {
           p4x.ctx._progress = true;
@@ -29643,17 +45459,17 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
           p4x.updateData(inputData);
         }
 
-        if (batchProcessing.length) {
+        if(batchProcessing.length) {
           batchProcessing.forEach(pp => {
             p4x.head().run(pp);
-          });
+          })
         }
 
-        if (crossViewProc.length) {
+        if(crossViewProc.length) {
           crossViewProc.forEach(pp => {
             p4x.head().run(pv.jobsToPipeline(pp.jobs));
-            pp.result = p4x.result({ outputTag: pp.jobs.out }).filter(d => d.count !== 0);
-          });
+            pp.result = p4x.result({outputTag: pp.jobs.out}).filter(d=>d.count !== 0)
+          })
         }
 
         p4x.run(progression);
@@ -29662,15 +45478,19 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
         // console.log(profile)
         resolve(status);
         onEach(status, profile);
-      });
-    });
-  };
+      })
+    })
+  }
 
-  pv.mergedPipeline = function (p1, p2) {
-    let props = Object.keys(p1).concat(Object.keys(p2)).filter(prop => prop !== 'out').reduce(function (b, c) {
+  pv.mergedPipeline = function(p1, p2) {
+    let props = Object.keys(p1).concat(Object.keys(p2))
+    .filter(prop => prop !== 'out')
+    .reduce(function(b, c) {
       if (b.indexOf(c) < 0) b.push(c);
       return b;
-    }, []).sort().reverse();
+    }, [])
+    .sort()
+    .reverse();
 
     let merged = {};
     props.forEach(prop => {
@@ -29678,27 +45498,27 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
       if (typeof p1[prop].$group === 'string' && typeof p2[prop].$group === 'string') {
         merged[prop].$group = [p1[prop].$group, p2[prop].$group];
       }
-    });
+    })
 
     return merged;
-  };
+  }
 
-  pv.setup = jsonSpecs => {
-    jsonSpecs.forEach(spec => {
-      let opt = Object.keys(spec)[0];
-      if (typeof pv[opt] === 'function') {
+  pv.setup = (jsonSpecs) => {
+    jsonSpecs.forEach((spec) => {
+      let opt = Object.keys(spec)[0]
+      if (typeof(pv[opt]) === 'function') {
         pv[opt](spec[opt]);
       }
-    });
+    })
     return pv;
-  };
+  }
 
-  pv.runSpec = jsonSpecs => {
+  pv.runSpec = (jsonSpecs) => {
     pv.setup(jsonSpecs);
     pv.next();
-  };
+  }
 
-  pv.interact = function (interactions) {
+  pv.interact = function(interactions) {
     interactions.forEach(interaction => {
       let spec = interaction;
 
@@ -29706,37 +45526,39 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
       let connection = {
         sourceView: spec.from,
         targetViews: Object.keys(spec.response)
-      };
+      }
 
       let sourceProc = progression.find(p => {
         let key = Object.keys(p)[0];
-
+      
         return p[key].id === connection.sourceView;
-      });
+      })
 
       let sourcePipeline = {};
-
+      
       batchProcessing.find(pipeline => {
-        let out = pipeline.find(p => p.out);
-        return out.out === sourceProc.visualize.in;
-      }).forEach(p => Object.assign(sourcePipeline, p));
+        let out = pipeline.find(p => p.out)
+        return out.out === sourceProc.visualize.in
+      })
+      .forEach(p => Object.assign(sourcePipeline, p))
 
-      batchProcessing.filter(p => p.out && p.out === '');
+      batchProcessing.filter(p => p.out && p.out ==='')
 
       connection.targetViews.forEach(tv => {
         let vmap = progression.find(p => {
           let key = Object.keys(p)[0];
           return p[key].id === tv;
-        }).visualize;
+        }).visualize
 
-        let targetPipeline = {};
-
+        let targetPipeline = {}
+        
         batchProcessing.find(pipeline => {
-          let out = pipeline.find(p => p.out);
-          return out.out === vmap.in;
-        }).forEach(p => Object.assign(targetPipeline, p));
+          let out = pipeline.find(p => p.out)
+          return out.out === vmap.in
+        })
+        .forEach(p => Object.assign(targetPipeline, p));
         // console.log(targetPipeline);
-
+ 
         let interProc = pv.mergedPipeline(sourcePipeline, targetPipeline);
         interProc.out = ['interResult', connection.sourceView, tv].join('-');
         crossViewProc.push({
@@ -29744,11 +45566,11 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
           result: [],
           sourceView: connection.sourceView,
           targetView: tv
-        });
-      });
+        })
+      })
       // console.log(crossViewProc)
 
-      spec.callback = selection => {
+      spec.callback = (selection) => {
         let selectedAttrs = Object.keys(selection);
 
         if (interaction.condition) {
@@ -29763,232 +45585,53 @@ const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
         let connections = crossViewProc.filter(p => p.sourceView === connection.sourceView);
         connections.forEach(conn => {
           let view = p4x.getViews().find(v => v.id === conn.targetView);
-
+          
           let matches = conn.result.filter(d => {
             let validate = true;
             selectedAttrs.forEach(attr => {
               if (selection[attr].length === 1) {
-                validate = validate && d[attr] === parseInt(selection[attr][0]);
+                validate = validate && (d[attr] === parseInt(selection[attr][0]));
               } else {
-
-                validate = validate && d[attr] > selection[attr][0] && d[attr] < selection[attr][1];
+               
+                validate = validate && (d[attr] > selection[attr][0] && d[attr] < selection[attr][1]);
               }
-            });
+            })
             return validate;
-          });
+          })
 
-          if (matches.length) {
+          if(matches.length) {
             let result = p3__WEBPACK_IMPORTED_MODULE_1__["default"].pipeline().aggregate({
               $group: view.vmap.x,
               $collect: {
-                count: { $sum: 'count' }
+                count: {$sum: 'count'}
               }
-            }).execute(matches);
+            })
+            .execute(matches);
 
-            if (result.length) {
-              let updateData = result.sort((a, b) => {
-                if (a[view.vmap.x] < b[view.vmap.x]) return -1;
-                if (a[view.vmap.x] > b[view.vmap.x]) return 1;
+            if(result.length) {
+              let updateData = result.sort((a,b) => {
+                if (a[view.vmap.x] <  b[view.vmap.x]) return -1;
+                if (a[view.vmap.x] >  b[view.vmap.x]) return 1;
                 return 0;
               });
-              view.plot.update(updateData, interaction.response[view.id].selected.color);
+              view.plot.update(updateData, interaction.response[view.id].selected.color)
             }
-          }
-        });
-      };
-    });
+          }         
+        })
+      }
+    })
 
-    pv.getProfile = function () {
+    pv.getProfile = function() {
       return profile;
-    };
+    }
 
-    return pv;
-  };
+    return pv
+  }
 
   return pv;
 });
 
-/***/ }),
-
-/***/ "./src/server.js":
-/*!***********************!*\
-  !*** ./src/server.js ***!
-  \***********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! http */ "http");
-/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(http__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ */ "./index.js");
-/* harmony import */ var _loaders_Mysql__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loaders/Mysql */ "./src/loaders/Mysql.js");
-/* harmony import */ var _test_datasets_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../test/datasets.json */ "./test/datasets.json");
-var _test_datasets_json__WEBPACK_IMPORTED_MODULE_4___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../test/datasets.json */ "./test/datasets.json", 1);
-/* harmony import */ var _loaders_Csv__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./loaders/Csv */ "./src/loaders/Csv.js");
-/* harmony import */ var _loaders_Model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./loaders/Model */ "./src/loaders/Model.js");
-
-
-
-
-let app = express__WEBPACK_IMPORTED_MODULE_0___default()();
-let server = http__WEBPACK_IMPORTED_MODULE_1___default.a.Server(app);
-let port = process.env.PORT || 7000;
-let host = process.env.HOST || "localhost";
-let WebSocketServer = __webpack_require__(/*! ws */ "ws").Server;
-let wss = new WebSocketServer({ server: server });
-
-app.use('/dist', express__WEBPACK_IMPORTED_MODULE_0___default.a.static('dist'));
-app.use('/test', express__WEBPACK_IMPORTED_MODULE_0___default.a.static('test'));
-app.use('/demos', express__WEBPACK_IMPORTED_MODULE_0___default.a.static('demos'));
-
-wss.on('connection', function connection(ws) {
-  console.log('new connection');
-  ws.on('message', function incoming(msg) {
-    console.log(msg);
-  });
-});
-
-
-
-
-
-
-function Dataset(dsName) {
-  let dataset = _test_datasets_json__WEBPACK_IMPORTED_MODULE_4__[dsName];
-  if (dataset.type === 'mysql') {
-    return {
-      schema: dataset.schema,
-      source: new _loaders_Mysql__WEBPACK_IMPORTED_MODULE_3__["default"](dataset.source)
-    };
-  } else if (dataset.type === 'file') {
-    return {
-      schema: dataset.schema,
-      source: new _loaders_Csv__WEBPACK_IMPORTED_MODULE_5__["default"](dataset.source)
-    };
-  } else if (dataset.type === 'synthetic' || dataset.type === 'model') {
-    return {
-      schema: dataset.schema,
-      source: new _loaders_Model__WEBPACK_IMPORTED_MODULE_6__["default"](dataset.source)
-    };
-  }
-}
-
-let selectedDataset = null;
-
-app.get('/data/:dataset', function (req, res) {
-  let dataset = req.params.dataset;
-  let start = req.query.start;
-  let nrows = req.query.nrows || 10000;
-  if (selectedDataset === null) selectedDataset = Dataset(dataset);
-
-  selectedDataset.source.fetch(nrows, start).then(result => {
-    res.json({
-      schema: selectedDataset.schema,
-      data: result
-    });
-  });
-});
-
-app.get('/testdata', function (req, res) {
-  res.json({ data: 'test' });
-});
-
-server.listen(port, host, function () {
-  console.log("server started, listening", host, port);
-});
-
-/***/ }),
-
-/***/ "./test/datasets.json":
-/*!****************************!*\
-  !*** ./test/datasets.json ***!
-  \****************************/
-/*! exports provided: brightkitedb, brightkitefile, tsmodel, babymodel, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"brightkitedb\":{\"type\":\"mysql\",\"source\":{\"host\":\"localhost\",\"database\":\"brightkite\",\"user\":\"pix\",\"password\":\"AGreatVisToolkit\",\"query\":\"SELECT uid, ts, X(geo) as lat, Y(geo) as lng from checkins\"},\"schema\":{\"uid\":\"int\",\"ts\":\"time\",\"lat\":\"float\",\"lng\":\"float\"}},\"brightkitefile\":{\"type\":\"file\",\"source\":{\"path\":\"/home/kelvin/Workspace/datasets/brightkite.csv\",\"delimiter\":\"\\t\",\"chunkSize\":4194304},\"schema\":{\"uid\":\"int\",\"time\":\"time\",\"lat\":\"float\",\"lng\":\"float\",\"loc\":\"float\"}},\"tsmodel\":{\"type\":\"model\",\"source\":{\"name\":\"TimeSeries\",\"series\":512,\"timesteps\":128}},\"babymodel\":{\"type\":\"model\",\"source\":{\"name\":\"Babies\",\"type\":\"array\"},\"schema\":{\"BabyMonth\":\"int\",\"BabyGender\":\"string\",\"BabyWeight\":\"float\",\"MotherAge\":\"int\",\"MotherRace\":\"string\",\"MotherStatus\":\"string\",\"MotherEdu\":\"string\",\"MotherHeight\":\"float\",\"MotherWeight\":\"float\",\"MotherWgtGain\":\"float\",\"FatherAge\":\"int\",\"FatherRace\":\"string\",\"FatherEdu\":\"string\"}}}");
-
-/***/ }),
-
-/***/ "chai":
-/*!***********************!*\
-  !*** external "chai" ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("chai");
-
-/***/ }),
-
-/***/ "express":
-/*!**************************!*\
-  !*** external "express" ***!
-  \**************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("express");
-
-/***/ }),
-
-/***/ "fs":
-/*!*********************!*\
-  !*** external "fs" ***!
-  \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ "http":
-/*!***********************!*\
-  !*** external "http" ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("http");
-
-/***/ }),
-
-/***/ "jStat":
-/*!************************!*\
-  !*** external "jStat" ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("jStat");
-
-/***/ }),
-
-/***/ "mysql":
-/*!************************!*\
-  !*** external "mysql" ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("mysql");
-
-/***/ }),
-
-/***/ "ws":
-/*!*********************!*\
-  !*** external "ws" ***!
-  \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("ws");
-
 /***/ })
 
 /******/ });
-//# sourceMappingURL=server.js.map
+//# sourceMappingURL=pv-demo.js.map

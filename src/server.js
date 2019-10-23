@@ -11,6 +11,7 @@ let wss = new WebSocketServer({ server: server })
 
 app.use('/dist', express.static('dist'))
 app.use('/test', express.static('test'))
+app.use('/demos', express.static('demos'))
 
 wss.on('connection', function connection (ws) {
   console.log('new connection');

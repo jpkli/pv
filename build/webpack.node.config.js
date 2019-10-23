@@ -61,7 +61,8 @@ module.exports = [
     {
         entry: {
             "pv": "./index.js",
-            "pv-test": "./test/main.js",
+            // "pv-test": "./test/main.js",
+            "pv-demo": './demos/demo.js',
             // "p5-benchmark": "./test/benchmark/index.js"
         },
         mode: "development",
