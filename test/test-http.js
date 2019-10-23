@@ -177,7 +177,6 @@ export default function() {
     ])
 
   p.onEach(function(stats) {
-    console.log(stats)
     document.getElementById('stats').innerHTML = '(completed: ' + stats.completed + ')';
   })
 

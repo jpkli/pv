@@ -28,6 +28,7 @@ export default function(arg) {
     ProcTime: 0,
     AccuTime: 0
   }
+  let strValues = null;
 
   let onEach = () => {}
 
@@ -185,13 +186,18 @@ export default function(arg) {
   }
 
   p5.prepareData = function(data) {
-    let cache = p4.cstore({})
+
+    let cache = p4.cstore((strValues !== null) ? {strValues} : {})
     cache.import({
       data: data.slice(1),
       schema: dataSchema,
       type: inputType
     });
-    return cache.data();
+    let cdata = cache.data()
+    if (strValues === null) {
+      strValues = cdata.strValues;
+    }
+    return cdata;
   }
 
   p5.onEach = function(f) {
@@ -221,7 +227,7 @@ export default function(arg) {
     progressStep++;
     progressedSize += p5.batchSize;
     // let done = (progressedSize >= dataSize ) ? true : false;
-    
+
     let status =  {
         count: progressStep,
         // done: done,
@@ -234,7 +240,6 @@ export default function(arg) {
     // }
 
     return new Promise((resolve, reject) => {
-     
       fetchData().then(data => {
         let loadStart = performance.now();
         let inputData;
@@ -290,6 +295,9 @@ export default function(arg) {
     let merged = {};
     props.forEach(prop => {
       merged[prop] = Object.assign({}, p1[prop], p2[prop]);
+      if (typeof p1[prop].$group === 'string' && typeof p2[prop].$group === 'string') {
+        merged[prop].$group = [p1[prop].$group, p2[prop].$group];
+      }
     })
 
     return merged;
@@ -360,24 +368,39 @@ export default function(arg) {
           targetView: tv
         })
       })
-      console.log(crossViewProc)
+      // console.log(crossViewProc)
 
       spec.callback = (selection) => {
+        let selectedAttrs = Object.keys(selection);
 
+        if (interaction.condition) {
+          if (interaction.condition.hasOwnProperty('x') && !interaction.condition.x) {
+            selectedAttrs.shift();
+          }
+          if (interaction.condition.hasOwnProperty('y') && !interaction.condition.y) {
+            selectedAttrs.pop();
+          }
+        }
         // let interactionStart = performance.now();
         let connections = crossViewProc.filter(p => p.sourceView === connection.sourceView);
         connections.forEach(conn => {
           let view = p4x.getViews().find(v => v.id === conn.targetView);
-          // console.log(selection)
-          // let matches = conn.result.filter(d => d.lng > selection.lng[0] && d.lng < selection.lng[1] && d.lat > selection.lat[0] && d.lat < selection.lat[1])
-          // console.log(conn.result)
+          
           let matches = conn.result.filter(d => {
             let validate = true;
-            Object.keys(selection).forEach(attr => {
-              validate = validate && (d[attr] > selection[attr][0] && d[attr] < selection[attr][1])
+            // console.log( selectedAttrs);
+            selectedAttrs.forEach(attr => {
+              // console.log(selection[attr])
+              if (selection[attr].length === 1) {
+                validate = validate && (d[attr] === parseInt(selection[attr][0]));
+              } else {
+               
+                validate = validate && (d[attr] > selection[attr][0] && d[attr] < selection[attr][1]);
+              }
             })
             return validate;
           })
+
           if(matches.length) {
             let result = p3.pipeline().aggregate({
               $group: view.vmap.x,
@@ -388,12 +411,15 @@ export default function(arg) {
             .execute(matches);
 
             if(result.length) {
-              view.plot.update(result, 'orange')
+              let updateData = result.sort((a,b) => {
+                if (a[view.vmap.x] <  b[view.vmap.x]) return -1;
+                if (a[view.vmap.x] >  b[view.vmap.x]) return 1;
+                return 0;
+              });
+              view.plot.update(updateData, interaction.response[view.id].selected.color)
             }
           }         
         })
-        // console.log(performance.now() - interactionStart)
-        
       }
     })
 
