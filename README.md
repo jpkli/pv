@@ -3,7 +3,7 @@
 PV is a JavaScript toolkit for progressive parallel processing and visualization. PV leverages [P4](https://github.com/jpkli/p4) for parallel data processing and rendering, and provides an intuitive API for implementing progressive workflows. 
 
 ## Demo
-This [demo](https://jpkli.github.io/pv/dmeos) shows how PV can support progressive visualizations with multiple views and user interactions. 
+This [demo](https://jpkli.github.io/pv/demos) shows how PV can support progressive visualizations with multiple views and user interactions. 
 
 ## Example 
 ```javascript
