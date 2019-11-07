@@ -1,6 +1,6 @@
 {
   "name": "pv",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Progressive and portable parallel processing pipelines. ",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,6 @@
   "scripts": {
     "build": "node build/build.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.config.js",
-    "test": "webpack-dev-server --inline --progress --config build/webpack.config.js --host 0.0.0.0",
     "server": "webpack --watch --config build/webpack.node.config.js",
     "start": "npm run dev"
   },

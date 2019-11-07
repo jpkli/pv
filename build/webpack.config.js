@@ -5,8 +5,7 @@ module.exports = {
     entry: {
         "pv": "./index.js",
         "pv-demo": './demos/demo.js',
-        "pv-test": "./test/main.js",
-        "pv-benchmark": "./test/benchmark/index.js"
+        "pv-test": "./test/main.js"
     },
     mode: "development",
     devtool: "source-map",
