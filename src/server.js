@@ -1,13 +1,12 @@
 import express from 'express'
 import http from 'http'
-import p5 from '../'
 
 let app = express()
 let server = http.Server(app)
 let port = process.env.PORT || 7000
 let host = process.env.HOST || "localhost"
 let WebSocketServer = require('ws').Server
-let wss = new WebSocketServer({ server: server })
+let wss = new WebSocketServer({ server })
 
 app.use('/dist', express.static('dist'))
 app.use('/test', express.static('test'))
@@ -60,7 +59,6 @@ app.get('/data/:dataset', function (req, res) {
     })
   })
 })
-
 
 app.get('/testdata', function (req, res) {
   res.json({data: 'test'})

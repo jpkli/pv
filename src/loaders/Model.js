@@ -1,4 +1,4 @@
-import p4 from 'p4';
+import {datasets} from 'p4';
 
 let dataModels = {
   TimeSeries: {
@@ -30,7 +30,7 @@ export default class Models {
     modelProps.size = nrows
     modelProps.timesteps = nrows
     modelProps.type = 'array'
-    let dataset = p4.datasets[this.model](modelProps)
+    let dataset = datasets[this.model](modelProps)
     return new Promise((resolve, reject) => {
       resolve(dataset.data)
     })

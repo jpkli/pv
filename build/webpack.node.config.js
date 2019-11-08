@@ -16,7 +16,11 @@ module.exports = [
         cache: false,
         target: 'node',
         resolve: {
-            modules: ['../node_modules', path.resolve(__dirname, '../..')]
+            modules: ['../node_modules', path.resolve(__dirname, '../..')],
+            alias: {
+                p3$: 'p3.js',
+                p4$: 'p4.js'
+            } 
         },
         output: {
             path: path.resolve(__dirname, "../dist"),
@@ -61,16 +65,19 @@ module.exports = [
     {
         entry: {
             "pv": "./index.js",
-            // "pv-test": "./test/main.js",
+            "pv-test": "./test/main.js",
             "pv-demo": './demos/demo.js',
-            // "p5-benchmark": "./test/benchmark/index.js"
         },
         mode: "development",
         devtool: "source-map",
         cache: false,
         target: 'web',
         resolve: {
-            modules: ['../node_modules', path.resolve(__dirname, '../..')]
+            modules: ['../node_modules', path.resolve(__dirname, '../..')],
+            alias: {
+                p3$: 'p3.js',
+                p4$: 'p4.js'
+            }
         },
         output: {
             path: path.resolve(__dirname, "../dist"),
@@ -79,11 +86,6 @@ module.exports = [
         module: {
             exprContextCritical: false,
             rules: [
-                // {
-                //     test: /\.js$/,
-                //     loader: 'babel-loader',
-                //     include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
-                // },
                 {
                     test: /\.css$/,
                     use: ['style-loader', 'css-loader',]

@@ -7,7 +7,10 @@ const PROGRESS_MODES = ['automatic', 'semi-automatic', 'manual'];
 const INPUT_METHODS = ['http', 'file', 'websocket'];
 const OPERATIONS = ['aggregate', 'derive', 'match', 'visualize', 'in', 'out'];
 
-export default function(arg) {
+pv.cstore = p4.cstore
+pv.datasets = p4.datasets
+
+export default function pv(arg) {
   let p4x = p4(Object.assign({preserveDrawingBuffer: true}, arg));
   let pv = {}
   let dataSchema;
