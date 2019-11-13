@@ -27,7 +27,7 @@ npm install
 npm start
 ```
 
-The demos can be accessed via http://localhost:7000/demos/
+The demos can be accessed via http://localhost:8080/demos/
 
 ## Example 
 ```javascript
