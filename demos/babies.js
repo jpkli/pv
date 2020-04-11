@@ -1,4 +1,5 @@
 import pv from '..';
+import Babies from '../data/babies'
 
 export default function() {
   let config = {
@@ -34,12 +35,12 @@ export default function() {
   p.input({
     method: 'memory',
     source: function(nrows) {
-      let dataset = pv.datasets.Babies({size: nrows, type: 'array'});
+      let dataset = Babies({size: nrows, type: 'array'});
       let data = dataset.data;
       return data;
     },
     batchSize: 100000,
-    schema: pv.datasets.Babies.schema
+    schema: Babies.schema
   });
 
   p.batch([
