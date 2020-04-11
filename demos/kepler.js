@@ -121,7 +121,6 @@ export default function() {
   }
 }
 
-
 document.getElementById('pv-demo-description').innerHTML = `
 <h3>Kepler Demo </h3>
 <p>
