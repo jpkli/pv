@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const webpack = require('webpack')
 const webpackConfig = require('./webpack.config')
 
-webpackConfig.mode = 'production'
+webpackConfig.mode = 'development'
 webpack(webpackConfig, (err, stats) => {
   if (err) throw err
   
